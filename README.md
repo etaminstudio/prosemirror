@@ -1,6 +1,6 @@
 # ProseMirror
 
-Easily convert text or HTML to [ProseMirror](https://prosemirror.net/) JSON.
+Easily convert text or HTML to [ProseMirror](https://prosemirror.net/) JSON, then render text of HTML from ProseMirror JSON.
 
 This gem merges [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror) and [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror) to a single gem.
 
@@ -23,36 +23,42 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 ## Usage
 
-This is a preview of what will be possible with the gem.
+**NOTE**: This is a preview of what will be possible with the gem. This is not implemented yet.
+
+```rb
+require 'prosemirror'
+```
 
 ### ProseMirror to HTML
 
 ```rb
-require 'prosemirror'
+json = '{"type": "doc", "content": [{ "type": "paragraph", "content": [{ "text": "Hello World!", "type": "text" }] }] }'
+Prosemirror.from_json(json).to_html
+# <p>Hello World!</p>
+```
 
-json = JSON.parse('{"type": "doc", "content": [{ "type": "paragraph", "content": [{ "text": "Hello World!", "type": "text" }] }] }')
-pm = Prosemirror::Html::Renderer.new
-pm.render(json) # <p>Hello World!</p>
+### ProseMirror to text
+
+```rb
+json = '{"type": "doc", "content": [{ "type": "paragraph", "content": [{ "text": "Hello World!", "type": "text" }] }] }'
+Prosemirror.from_json(json).to_text
+# Hello World!
 ```
 
 ### HTML to ProseMirror
 
 ```rb
-require 'prosemirror'
-
 html = "<p>Hello World!</p>"
-pm = Prosemirror::Html::Renderer.new
-pm.render(html) # {"type": "doc", "content": [{ "type": "paragraph", "content": [{ "text": "Hello World!", "type": "text" }] }] }
+Prosemirror.from_html(html).to_json
+# {"type": "doc", "content": [{ "type": "paragraph", "content": [{ "text": "Hello World!", "type": "text" }] }] }
 ```
 
 ### Text to ProseMirror
 
 ```rb
-require 'prosemirror'
-
 text = "Hello World!"
-pm = Prosemirror::Text::Renderer.new
-pm.render(text) # {"type": "doc", "content": [{ "type": "paragraph", "content": [{ "text": "Hello World!", "type": "text" }] }] }
+Prosemirror.from_text(text).to_json
+# {"type": "doc", "content": [{ "type": "paragraph", "content": [{ "text": "Hello World!", "type": "text" }] }] }
 ```
 
 ## Development
