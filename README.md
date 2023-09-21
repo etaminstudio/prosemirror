@@ -33,7 +33,7 @@ require 'prosemirror'
 
 ```rb
 json = '{"type": "doc", "content": [{ "type": "paragraph", "content": [{ "text": "Hello World!", "type": "text" }] }] }'
-Prosemirror.from_json(json).to_html
+Prosemirror.new(json: json).to_html
 # <p>Hello World!</p>
 ```
 
@@ -41,7 +41,7 @@ Prosemirror.from_json(json).to_html
 
 ```rb
 json = '{"type": "doc", "content": [{ "type": "paragraph", "content": [{ "text": "Hello World!", "type": "text" }] }] }'
-Prosemirror.from_json(json).to_text
+Prosemirror.new(json: json).to_text
 # Hello World!
 ```
 
@@ -49,7 +49,7 @@ Prosemirror.from_json(json).to_text
 
 ```rb
 html = "<p>Hello World!</p>"
-Prosemirror.from_html(html).to_json
+Prosemirror.new(html: html).to_json
 # {"type": "doc", "content": [{ "type": "paragraph", "content": [{ "text": "Hello World!", "type": "text" }] }] }
 ```
 
@@ -57,7 +57,7 @@ Prosemirror.from_html(html).to_json
 
 ```rb
 text = "Hello World!"
-Prosemirror.from_text(text).to_json
+Prosemirror.new(text: text).to_json
 # {"type": "doc", "content": [{ "type": "paragraph", "content": [{ "text": "Hello World!", "type": "text" }] }] }
 ```
 
