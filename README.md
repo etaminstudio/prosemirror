@@ -2,7 +2,7 @@
 
 Easily convert text or HTML to [ProseMirror](https://prosemirror.net/) JSON, then render text of HTML from ProseMirror JSON.
 
-This gem merges [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror) and [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror) to a single gem.
+This gem merges [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror) and [prosemirror_to_html](https://github.com/etaminstudio/prosemirror_to_html) to a single gem.
 
 For instance, it can be used in a Rails app as such:
 - implement a [Tiptap](https://tiptap.dev) editor in your forms, instead of `<textarea>`
@@ -10,6 +10,10 @@ For instance, it can be used in a Rails app as such:
 - in your view, convert the ProseMirror JSON to HTML and render it
 
 The reverse conversion (HTML to ProseMirror) is useful to migrate your existing data.
+
+
+> [!WARNING]
+> **This README describes our plans for this gem, but nothing is implemented yet.**
 
 ## Installation
 
@@ -22,8 +26,6 @@ If bundler is not being used to manage dependencies, install the gem by executin
     $ gem install prosemirror
 
 ## Usage
-
-**NOTE**: This is a preview of what will be possible with the gem. This is not implemented yet.
 
 ```rb
 require 'prosemirror'
