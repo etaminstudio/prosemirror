@@ -33,7 +33,7 @@ module Prosemirror
       end
 
       def classes
-        self["class"].to_s.split
+        @classes ||= self["class"].to_s.split.freeze
       end
 
       # The declarations of the `style` attribute, with lowercase properties: `{"font-weight" => "bold"}`.

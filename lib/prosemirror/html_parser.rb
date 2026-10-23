@@ -34,6 +34,11 @@ module Prosemirror
       rules = (schema.marks + schema.nodes).flat_map(&:parse_rules)
       rules = rules.each_with_index.sort_by { |rule, index| [-rule.priority, index] }.map(&:first)
       @tags = rules.select(&:tag)
+      @selectors = @tags.map { |rule| HTML::Selector.parse(rule.tag) }
+      # The indexes of the tag rules that can match an element with this name, in order.
+      @candidates = Hash.new do |candidates, name|
+        candidates[name] = @selectors.each_index.select { |index| @selectors[index].names.nil? || @selectors[index].names.include?(name) }.freeze
+      end
       @styles = rules.select(&:style)
       @matched_styles = @styles.map(&:style_property).uniq
       @normalize_lists = @tags.none? { |rule| lists_contain_themselves?(rule) }
@@ -53,9 +58,11 @@ module Prosemirror
 
     # The first tag rule after `after` that matches the element in this context.
     def match_tag(element, context, after = nil)
-      ((after ? after + 1 : 0)...@tags.size).each do |index|
+      @candidates[element.name].each do |index|
+        next if after && index <= after
+
         rule = @tags[index]
-        next unless HTML::Selector.parse(rule.tag).match?(element)
+        next unless @selectors[index].match?(element)
         next if rule.context && !context.matches_context?(rule.context)
 
         match = build_match(rule, index, element) { |get_attrs| call_get_attrs(get_attrs, element) }

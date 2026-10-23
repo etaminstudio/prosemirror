@@ -13,5 +13,12 @@ module Prosemirror
 
     # A frozen copy, unless the value is already frozen.
     FROZEN = proc { |value| value.frozen? ? value : value.dup.freeze }
+
+    # The coercions above, which don't use `self`.
+    PLAIN = [INTEGER, SYMBOL, FROZEN].freeze
+
+    def self.frozen(value)
+      value.frozen? ? value : value.dup.freeze
+    end
   end
 end

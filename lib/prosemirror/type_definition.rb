@@ -3,6 +3,7 @@
 module Prosemirror
   # Class-level declarations shared by node types and mark types.
   module TypeDefinition
+    EMPTY_HASH = {}.freeze
     # The name of the type, as a snake_case Symbol. It defaults to the class name (`BulletList` → `:bullet_list`),
     # and subclasses of a concrete type keep its name.
     def type_name(name = nil)
@@ -24,7 +25,12 @@ module Prosemirror
     # - `parse_html:` a block reading the attribute from an HTML element, when importing HTML. By default,
     #   the HTML attribute with the JSON name is read.
     def prop(name, type, kind = :keyword, json: nil, aliases: [], parse_html: nil, **, &)
-      attribute_names[name] = {json: (json || name).to_s, aliases: aliases.map(&:to_s), parse_html:}.freeze
+      json = (json || name).to_s
+      aliases = aliases.map(&:to_s)
+      # The keys accepted in JSON: each name as written, in snake_case and in camelCase.
+      keys = [json, *aliases].flat_map { |key| [key, Naming.snake(key), Naming.camel(key)] }.uniq.map(&:freeze).freeze
+      attribute_names[name] = {json:, aliases:, parse_html:, keys:}.freeze
+      @known_keys = nil
       super(name, type, kind, **, &)
     end
 
@@ -54,7 +60,10 @@ module Prosemirror
     # Invalid values are converted when the meaning is clear, or replaced by their default.
     # Returns nil when a required attribute is missing or invalid.
     def build_attrs(given, report:)
-      given = given.is_a?(Hash) ? given.transform_keys(&:to_s) : {}
+      given = if !given.is_a?(Hash) then EMPTY_HASH
+      elsif keys?(given) { |key| key.is_a?(String) } then given
+      else given.transform_keys(&:to_s)
+      end
 
       literal_properties.each_with_object({}) do |property, attrs|
         json_name = attribute_names.dig(property.name, :json)
@@ -86,12 +95,17 @@ module Prosemirror
 
     # The JSON attributes this type doesn't declare, with String keys, so that `to_h` gives them back.
     def unknown_attrs(given)
-      return {} unless given.is_a?(Hash)
+      return EMPTY_HASH unless given.is_a?(Hash)
 
-      known = attribute_names.values.flat_map do |names|
-        [names[:json], *names[:aliases]].flat_map { |name| [name, Naming.snake(name), Naming.camel(name)] }
-      end
+      known = known_keys
+      return EMPTY_HASH if keys?(given) { |key| known.include?(key.is_a?(Symbol) ? key.name : key) }
+
       given.transform_keys(&:to_s).except(*known)
+    end
+
+    # The JSON keys of the declared attributes, in all their spellings.
+    def known_keys
+      @known_keys ||= attribute_names.each_value.flat_map { |names| names[:keys] }.to_set.freeze
     end
 
     # Attributes as JSON, with their JSON names.
@@ -122,17 +136,23 @@ module Prosemirror
       superclass.send(:inherited_setting, ivar, default)
     end
 
-    def attribute_key(given, names)
-      [names[:json], *names[:aliases]].each do |name|
-        [name, Naming.snake(name), Naming.camel(name)].each do |candidate|
-          return candidate if given.key?(candidate)
-        end
-      end
-      nil
+    # Whether the block is true for all keys of the hash, without the Enumerator `each_key.all?` allocates.
+    def keys?(hash)
+      hash.each_key { |key| return false unless yield(key) }
+      true
     end
 
+    def attribute_key(given, names)
+      names[:keys].find { |key| given.key?(key) }
+    end
+
+    # The gem's coercions don't use `self`: they are called directly, without Literal's `instance_exec`.
     def coerce_attribute(property, value)
-      property.coercion ? property.coerce(value, context: self) : value
+      coercion = property.coercion
+      if coercion.nil? then value
+      elsif Coerce::PLAIN.include?(coercion) then coercion.call(value)
+      else property.coerce(value, context: self)
+      end
     rescue
       value
     end
