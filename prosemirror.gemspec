@@ -8,13 +8,17 @@ Gem::Specification.new do |spec|
   spec.authors = ["Hans Lemuet"]
   spec.email = ["hans@etamin.studio"]
 
-  spec.summary = "Convert HTML to ProseMirror JSON and back."
+  spec.summary = "Render ProseMirror and Tiptap documents to HTML and text."
+  spec.description = "Render ProseMirror and Tiptap JSON documents to safe HTML or plain text, " \
+                     "with typed attributes and custom node types."
   spec.homepage = "https://github.com/etaminstudio/prosemirror"
-  spec.required_ruby_version = ">= 2.6.0"
+  spec.license = "MIT"
+  spec.required_ruby_version = ">= 3.2.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/etaminstudio/prosemirror"
   spec.metadata["changelog_uri"] = "https://github.com/etaminstudio/prosemirror/blob/main/CHANGELOG.md"
+  spec.metadata["rubygems_mfa_required"] = "true"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -27,9 +31,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  # Uncomment to register a new dependency of your gem
-  # spec.add_dependency "example-gem", "~> 1.0"
-
-  # For more information and examples about making a new gem, check out our
-  # guide at: https://bundler.io/guides/creating_gem.html
+  spec.add_dependency "literal", "~> 1.9"
+  spec.add_dependency "phlex", "~> 2.4"
+  spec.add_dependency "zeitwerk", "~> 2.6"
 end

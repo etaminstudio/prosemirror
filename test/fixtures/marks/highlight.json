@@ -1,0 +1,35 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Plain",
+            "marks": [
+              {
+                "type": "highlight"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "Yellow",
+            "marks": [
+              {
+                "type": "highlight",
+                "attrs": {
+                  "color": "#ffff00"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p><mark>Plain</mark><mark data-color=\"#ffff00\" style=\"background-color: #ffff00; color: inherit\">Yellow</mark></p>",
+  "text": "PlainYellow"
+}

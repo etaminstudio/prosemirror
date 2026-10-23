@@ -1,0 +1,30 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Above"
+          }
+        ]
+      },
+      {
+        "type": "horizontalRule"
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Below"
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p>Above</p><hr><p>Below</p>",
+  "text": "Above\n\nBelow"
+}

@@ -1,0 +1,47 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "One"
+                  }
+                ]
+              },
+              {
+                "type": "orderedList",
+                "content": [
+                  {
+                    "type": "listItem",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Nested"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<ul><li><p>One</p><ol><li><p>Nested</p></li></ol></li></ul>",
+  "text": "One\n\nNested"
+}

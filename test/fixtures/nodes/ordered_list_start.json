@@ -1,0 +1,32 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "orderedList",
+        "attrs": {
+          "start": 3,
+          "type": "a"
+        },
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Three"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<ol start=\"3\" type=\"a\"><li><p>Three</p></li></ol>",
+  "text": "Three"
+}

@@ -1,5 +1,7 @@
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 3.2
+  NewCops: enable
+  SuggestExtensions: false
 
 Style/StringLiterals:
   Enabled: true
@@ -11,3 +13,36 @@ Style/StringLiteralsInInterpolation:
 
 Layout/LineLength:
   Max: 120
+
+# Node and mark types are small classes named after what they render.
+Style/Documentation:
+  Enabled: false
+
+# Literal types are checked with `===`.
+Style/CaseEquality:
+  Enabled: false
+
+# Class-level declarations, like `inline` and `code`, follow ProseMirror's boolean options.
+Style/OptionalBooleanParameter:
+  AllowedMethods: [inline, code]
+
+Metrics/AbcSize:
+  Max: 30
+  Exclude: [test/**/*]
+
+Metrics/MethodLength:
+  Max: 16
+  Exclude: [test/**/*]
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Metrics/ClassLength:
+  Max: 200
+  Exclude: [test/**/*]
+
+Metrics/ParameterLists:
+  CountKeywordArgs: false

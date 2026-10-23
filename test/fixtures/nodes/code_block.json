@@ -1,0 +1,21 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "codeBlock",
+        "attrs": {
+          "language": "ruby"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "puts 1 < 2\nputs 3"
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<pre><code class=\"language-ruby\">puts 1 &lt; 2\nputs 3</code></pre>",
+  "text": "puts 1 < 2\nputs 3"
+}

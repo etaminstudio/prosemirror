@@ -1,0 +1,23 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Italic",
+            "marks": [
+              {
+                "type": "italic"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p><em>Italic</em></p>",
+  "text": "Italic"
+}

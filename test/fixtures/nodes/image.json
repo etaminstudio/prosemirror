@@ -1,0 +1,17 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "image",
+        "attrs": {
+          "src": "https://example.com/a.png",
+          "alt": "An image",
+          "title": "Title"
+        }
+      }
+    ]
+  },
+  "html": "<img src=\"https://example.com/a.png\" alt=\"An image\" title=\"Title\">",
+  "text": ""
+}

@@ -1,0 +1,23 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Strike",
+            "marks": [
+              {
+                "type": "strike"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p><s>Strike</s></p>",
+  "text": "Strike"
+}

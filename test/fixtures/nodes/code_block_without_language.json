@@ -1,0 +1,18 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "codeBlock",
+        "content": [
+          {
+            "type": "text",
+            "text": "x = 1"
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<pre><code>x = 1</code></pre>",
+  "text": "x = 1"
+}

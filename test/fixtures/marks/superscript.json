@@ -1,0 +1,27 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "E = mc"
+          },
+          {
+            "type": "text",
+            "text": "2",
+            "marks": [
+              {
+                "type": "superscript"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p>E = mc<sup>2</sup></p>",
+  "text": "E = mc2"
+}

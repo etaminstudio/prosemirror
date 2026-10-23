@@ -1,0 +1,31 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "H"
+          },
+          {
+            "type": "text",
+            "text": "2",
+            "marks": [
+              {
+                "type": "subscript"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "O"
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p>H<sub>2</sub>O</p>",
+  "text": "H2O"
+}
