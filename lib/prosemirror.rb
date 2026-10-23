@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Phlex 2.4.1 checks attribute values against Date without loading it. Remove once a release includes the fix:
+# https://github.com/yippee-fun/phlex/issues/974
+require "date"
 require "json"
 require "literal"
 require "phlex"

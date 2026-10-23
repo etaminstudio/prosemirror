@@ -149,7 +149,7 @@ The attributes are built from the rule's `attrs` or block, then from the values 
 | `close_parent: true` | Close the current node: the content that follows goes after it. |
 | `content_element: "figcaption"` | A selector, or a block called with the element, giving the descendant that holds the content. |
 | `get_content: ->(element, schema) { … }` | Returns the nodes to use as content, instead of parsing the element's children. |
-| `preserve_whitespace: true` | Keep spaces. `:full` also keeps newlines. |
+| `preserve_whitespace: true` | Keep spaces. Newlines become `hard_break` nodes where they fit, and spaces otherwise. With `:full`, newlines stay in the text. |
 | `clear_mark: true` | For style rules: remove the marks of this type, as `font-weight: normal` does for bold. Also takes a block called with each mark. |
 
 ### Selectors
