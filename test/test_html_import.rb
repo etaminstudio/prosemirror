@@ -43,6 +43,13 @@ class TestHTMLImport < Minitest::Test
     assert_equal "Price <%= price %>", Prosemirror.from_html("<p>Price <%= price %></p>").text_content
   end
 
+  # Word marks list bullets with `<![if !supportLists]>`, which browsers read as comments.
+  def test_word_conditional_comments_are_dropped
+    html = %(<p><![if !supportLists]>·&nbsp;<![endif]>Item</p><![if gte mso 9]><p>b</p><![endif]>)
+
+    assert_equal "· Item\n\nb", Prosemirror.from_html(html).to_text
+  end
+
   def test_unclosed_elements_apply_to_the_rest_of_their_parent
     marks = import("<p>a <strong>b</p><p>c</p>").dig("content", 0, "content", 1, "marks")
 

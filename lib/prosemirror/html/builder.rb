@@ -7,12 +7,14 @@ module Prosemirror
     # - decodes character references, in text and attribute values;
     # - keeps ERB tags (`<% %>`) as text;
     # - applies an opening tag without a closing tag to the rest of its parent, as browsers do;
-    # - drops comments, doctypes and CDATA;
+    # - drops comments (including Word's `<![if …]>`), doctypes and CDATA;
     # - walks the tree without recursion, and flattens elements nested deeper than MAX_DEPTH.
     class Builder
       MAX_DEPTH = 256
       # The size of the pieces Herb parses, in bytes. See Splitter.
       PIECE_SIZE = 65_536
+      # What browsers read as a comment, and Herb leaves in text, like Word's `<![if !supportLists]>`.
+      BOGUS_COMMENT = /<![^>]*>/
 
       def self.load_herb
         require "herb"
@@ -66,7 +68,7 @@ module Prosemirror
         case node
         when Herb::AST::HTMLElementNode then add_element(node, target, depth)
         when Herb::AST::HTMLOpenTagNode then add_open_tag(node, target, depth)
-        when Herb::AST::HTMLTextNode then add_text(Entities.decode(node.content.to_s), target)
+        when Herb::AST::HTMLTextNode then add_text(Entities.decode(node.content.to_s.gsub(BOGUS_COMMENT, "")), target)
         when Herb::AST::LiteralNode then add_text(node.content.to_s, target)
         when Herb::AST::WhitespaceNode then add_text(node.value&.value.to_s, target)
         when Herb::AST::HTMLCommentNode, Herb::AST::HTMLDoctypeNode, Herb::AST::XMLDeclarationNode,
