@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-24
+
 - `Document#transform` builds a new document from a block called with each node, children first, which keeps, replaces, removes or splices nodes. Required content that goes missing is added back and reported.
 - `Document#check` raises `InvalidDocument` for the first problem with the schema, with its path, and `Document#valid?` returns true or false.
 - `Node#blank?` is true for nodes that show nothing, like empty paragraphs.
