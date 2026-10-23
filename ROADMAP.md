@@ -177,7 +177,7 @@ They differ in more than names:
 - Raw HTML in Markdown goes through the HTML importer if Herb is installed.
 - `Prosemirror.from_text`: blank lines make paragraphs, line breaks make hard breaks.
 
-### 0.4: Working with documents
+### 0.4: Working with documents (released)
 
 - Transformations that return a new document: rewrite links, unwrap lists, split paragraphs, remove empty ones.
 
