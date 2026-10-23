@@ -88,6 +88,26 @@ class TestMarkdownImport < Minitest::Test
     assert_equal "deep", Prosemirror.from_markdown(("> " * 300) + "deep").text_content
   end
 
+  def test_front_matter_is_dropped
+    assert_equal [{"type" => "heading", "attrs" => {"level" => 1}, "content" => [{"type" => "text", "text" => "Body"}]}],
+      content("---\ntitle: Hello\ntags: [a]\n---\n\n# Body\n")
+  end
+
+  def test_nil_and_binary_strings
+    assert_equal [{"type" => "paragraph"}], content(nil)
+    assert_equal "café", Prosemirror.from_markdown("café".b).text_content
+  end
+
+  def test_invalid_utf8_is_replaced
+    assert_equal "caf\uFFFD x", Prosemirror.from_markdown("caf\xE9 *x*".dup.force_encoding("UTF-8")).text_content
+  end
+
+  def test_too_deep_nesting_raises
+    error = assert_raises(Prosemirror::Error) { Prosemirror.from_markdown(("*a " * 2000) + "x" + (" a*" * 2000)) }
+
+    assert_match(/nested too deeply/, error.message)
+  end
+
   def test_needs_commonmarker
     Prosemirror::Markdown::Builder.stub(:load_commonmarker, -> { raise Prosemirror::Error, "needs commonmarker" }) do
       assert_raises(Prosemirror::Error) { Prosemirror.from_markdown("x") }

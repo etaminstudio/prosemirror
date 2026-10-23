@@ -31,6 +31,12 @@ class TestTextImport < Minitest::Test
     assert_equal "<p>a &lt;b&gt;&amp;amp;</p>", Prosemirror.from_text("a <b>&amp;").to_html
   end
 
+  def test_nil_binary_and_invalid_utf8
+    assert_equal [{"type" => "paragraph"}], content(nil)
+    assert_equal [paragraph(text("café"))], content("café".b)
+    assert_equal [paragraph(text("caf\uFFFD"))], content("caf\xE9".dup.force_encoding("UTF-8"))
+  end
+
   def test_without_a_line_break_type
     schema = Prosemirror::Schema.tiptap.with_options(nodes: Prosemirror::Schema.tiptap.nodes - [Prosemirror::Nodes::HardBreak])
 
