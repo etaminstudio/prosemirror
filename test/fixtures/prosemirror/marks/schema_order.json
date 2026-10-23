@@ -1,0 +1,35 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "All",
+            "marks": [
+              {
+                "type": "code"
+              },
+              {
+                "type": "strong"
+              },
+              {
+                "type": "em"
+              },
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "/"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p><a href=\"/\"><em><strong><code>All</code></strong></em></a></p>",
+  "text": "All"
+}

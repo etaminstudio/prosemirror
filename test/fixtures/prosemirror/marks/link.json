@@ -1,0 +1,27 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Link",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "https://example.com",
+                  "title": "Example"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p><a href=\"https://example.com\" title=\"Example\">Link</a></p>",
+  "text": "Link"
+}
