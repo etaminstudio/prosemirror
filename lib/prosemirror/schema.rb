@@ -103,14 +103,15 @@ module Prosemirror
       @textblocks.fetch(type, false)
     end
 
-    # The URL after `resolve_url`, when its scheme is allowed. Otherwise nil.
+    # The URL after `resolve_url`, when its scheme is allowed. Otherwise nil, and the problem is reported.
     def safe_url(url)
-      url = @resolve_url.call(url) if @resolve_url && url
       return nil unless url.is_a?(String)
-      return url.gsub("&", "&amp;") if allowed_url?(url)
 
-      report("URL scheme not allowed: #{url.inspect}")
-      nil
+      resolved = @resolve_url ? @resolve_url.call(url) : url
+      return report("URL could not be resolved: #{url.inspect}") unless resolved.is_a?(String)
+      return report("URL scheme not allowed: #{resolved.inspect}") unless allowed_url?(resolved)
+
+      resolved.gsub("&", "&amp;")
     end
 
     # Raise in strict mode, otherwise call `on_invalid`.

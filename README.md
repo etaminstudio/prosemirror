@@ -93,6 +93,8 @@ When an attribute has another name in JSON, declare it with `json:`:
 prop :text_align, _String?, json: "textAlign"
 ```
 
+See the [cookbook](COOKBOOK.md) for recipes, like skipping empty paragraphs.
+
 ### Content expressions
 
 `content` says which children a node can have. It works like a regular expression, with node names or group names instead of characters:
