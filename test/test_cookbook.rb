@@ -14,13 +14,7 @@ class TestCookbook < Minitest::Test
 
   class SkipBlankParagraphs < Prosemirror::Nodes::Paragraph
     def view_template(&)
-      p(&) unless blank?
-    end
-
-    private
-
-    def blank?
-      node.text_content.strip.empty? && node.content.all? { |child| child.text? || child.type == :hard_break }
+      p(&) unless node.blank?(prosemirror_schema)
     end
   end
 
@@ -95,5 +89,23 @@ class TestCookbook < Minitest::Test
       paragraph({"type" => "image", "attrs" => {"src" => "/a.png"}}))
 
     assert_equal '<p>Hi</p><p><img src="/a.png"></p>', render(json, schema: schema)
+  end
+
+  def test_remove_empty_paragraphs_before_saving
+    item = ->(*content) { {"type" => "listItem", "content" => content} }
+    json = doc({"type" => "paragraph", "attrs" => {"textAlign" => "center"}, "content" => [text("Hi")]}, {"type" => "paragraph"},
+      {"type" => "bulletList", "content" => [item.call(paragraph(text(" "))), item.call(paragraph(text("a")))]},
+      {"type" => "orderedList", "content" => [item.call({"type" => "paragraph"})]})
+
+    document = Prosemirror.parse(json, schema: Prosemirror::Schema.tiptap(case: :camel)).transform do |node|
+      case node
+      in {type: :paragraph | :list_item} if node.blank? then nil
+      in {type: :bullet_list | :ordered_list} if node.content.empty? then nil
+      else node
+      end
+    end
+
+    assert_equal doc({"type" => "paragraph", "attrs" => {"textAlign" => "center"}, "content" => [text("Hi")]},
+      {"type" => "bulletList", "content" => [item.call(paragraph(text("a")))]}), document.to_h
   end
 end

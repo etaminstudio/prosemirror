@@ -48,6 +48,32 @@ doc.select { |node| node in { type: :heading, attrs: { level: 1 } } }
 doc.content.first.text_content
 ```
 
+## Transforming documents
+
+`transform` builds a new document from a block called with each node. The block returns the node to keep, another node, an array of nodes to put in its place, or nil to remove it:
+
+```ruby
+doc = doc.transform do |node|
+  case node
+  in { type: :paragraph } if node.blank? then nil
+  in { type: :heading, attrs: { level: 1 } } then node.with(attrs: { level: 2 })
+  in { type: :bullet_list } then node.content.flat_map(&:content)  # unwrap the list
+  else node
+  end
+end
+```
+
+- Children are transformed first: the block sees a node with its transformed content, and the nodes it returns aren't transformed again.
+- Nodes are immutable: `with` returns a copy with some properties changed, like `content`, `attrs`, `marks` or `text`. Attributes the schema doesn't declare are kept.
+- `blank?` is true for nodes that show nothing: no text but whitespace, and no leaf nodes but hard breaks.
+- Adjacent text nodes with the same marks are joined. When a node's content changed and lacks what its type requires, like the only paragraph of a list item, the required nodes are added and reported with `on_invalid`.
+
+`check` raises `Prosemirror::InvalidDocument` for the first problem with the schema, with its path: an unknown type, an invalid attribute, content that doesn't match a [content expression](TYPES.md#content-expressions), or marks a node doesn't allow. `valid?` returns true or false. Rendering doesn't need a valid document.
+
+```ruby
+doc.check  # raises "doc.content[0]: invalid content for blockquote: paragraph text"
+```
+
 ## HTML import
 
 HTML import uses [Herb](https://herb-tools.dev)'s parser, which never raises on malformed HTML. Add it to your Gemfile:
