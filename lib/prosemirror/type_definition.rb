@@ -54,6 +54,16 @@ module Prosemirror
       end
     end
 
+    # The JSON attributes this type doesn't declare, with String keys, so that `to_h` gives them back.
+    def unknown_attrs(given)
+      return {} unless given.is_a?(Hash)
+
+      known = attribute_names.values.flat_map do |names|
+        [names[:json], *names[:aliases]].flat_map { |name| [name, Naming.snake(name), Naming.camel(name)] }
+      end
+      given.transform_keys(&:to_s).except(*known)
+    end
+
     # Attributes as JSON, with their JSON names.
     def serialize_attrs(attrs)
       attrs.to_h { |name, value| [attribute_names.dig(name, :json) || name.to_s, value] }

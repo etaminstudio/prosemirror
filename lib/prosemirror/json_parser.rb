@@ -37,11 +37,12 @@ module Prosemirror
       node_type = @schema.node_type(name)
       return build_unknown(hash, name, path, depth) unless node_type
 
-      attrs = node_type.build_attrs(fetch(hash, "attrs"), report: reporter(path))
+      given = fetch(hash, "attrs")
+      attrs = node_type.build_attrs(given, report: reporter(path))
       return invalid("removed #{name} node", path) unless attrs
 
-      Node.new(type: node_type.type_name, attrs: attrs, content: build_content(hash, path, depth),
-        marks: build_marks(fetch(hash, "marks"), path))
+      Node.new(type: node_type.type_name, attrs: attrs, unknown_attrs: node_type.unknown_attrs(given),
+        content: build_content(hash, path, depth), marks: build_marks(fetch(hash, "marks"), path))
     end
 
     def build_text(hash, path)
@@ -102,10 +103,11 @@ module Prosemirror
         return Mark.new(type: Naming.snake(name), attrs: attrs.is_a?(Hash) ? attrs.transform_keys(&:to_sym) : {})
       end
 
-      attrs = mark_type.build_attrs(fetch(hash, "attrs"), report: reporter(path))
+      given = fetch(hash, "attrs")
+      attrs = mark_type.build_attrs(given, report: reporter(path))
       return invalid("removed #{name} mark", path) unless attrs
 
-      Mark.new(type: mark_type.type_name, attrs: attrs)
+      Mark.new(type: mark_type.type_name, attrs: attrs, unknown_attrs: mark_type.unknown_attrs(given))
     end
 
     def fetch(hash, key)

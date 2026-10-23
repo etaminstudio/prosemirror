@@ -170,15 +170,18 @@ module Prosemirror
       scheme.match?(/\A[a-z][a-z\d+.-]*\z/i) && @url_schemes.include?(scheme.downcase)
     end
 
+    # Declared attributes with their JSON names, then the unknown ones, as they were.
     def serialize_node_attrs(node)
       type = node_type(node.type)
-      type ? type.serialize_attrs(node.attrs) : node.attrs.transform_keys(&:to_s)
+      attrs = type ? type.serialize_attrs(node.attrs) : node.attrs.transform_keys(&:to_s)
+      attrs.merge(node.unknown_attrs)
     end
 
     def serialize_mark(mark)
       hash = {"type" => json_type_name(mark.type)}
       type = mark_type(mark.type)
       attrs = type ? type.serialize_attrs(mark.attrs) : mark.attrs.transform_keys(&:to_s)
+      attrs = attrs.merge(mark.unknown_attrs)
       hash["attrs"] = attrs unless attrs.empty?
       hash
     end

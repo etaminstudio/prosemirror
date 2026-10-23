@@ -6,9 +6,14 @@ module Prosemirror
   #   node in { type: :heading, attrs: { level: 1 } }
   #
   # Text nodes have the type `:text` and their content in `text`.
+  #
+  # `attrs` holds the attributes the node's type declares. `unknown_attrs` holds the others, as written
+  # in JSON (for example from a Tiptap extension the schema doesn't know): they are never rendered,
+  # and `to_h` gives them back unchanged.
   class Node < Literal::Data
     prop :type, Symbol, &Coerce::SYMBOL
     prop :attrs, _Hash(Symbol, _Any?), default: {}.freeze, &Coerce::FROZEN
+    prop :unknown_attrs, _Hash(String, _Any?), default: {}.freeze, &Coerce::FROZEN
     prop :content, _Array(Node), default: [].freeze, &Coerce::FROZEN
     prop :marks, _Array(Mark), default: [].freeze, &Coerce::FROZEN
     prop :text, _String?, &Coerce::FROZEN
@@ -54,7 +59,7 @@ module Prosemirror
     end
 
     def same_markup?(other)
-      @type == other.type && @attrs == other.attrs && @marks == other.marks
+      @type == other.type && @attrs == other.attrs && @unknown_attrs == other.unknown_attrs && @marks == other.marks
     end
   end
 end
