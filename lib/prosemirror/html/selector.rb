@@ -15,22 +15,30 @@ module Prosemirror
 
       def initialize(source)
         @source = source
-        @compounds = source.split(",").map { |part| parse_compound(part.strip) }
+        @names = []
+        @compounds = source.split(",").map { |part| parse_compound(part.strip, top: true) }
+        @names = @names.include?(nil) ? nil : @names.uniq.freeze
       end
 
       def match?(element)
         @compounds.any? { |tests| tests.all? { |test| test.call(element) } }
       end
 
+      # The element names it can match, or nil when it can match any element.
+      attr_reader :names
+
       private
 
-      def parse_compound(part)
+      def parse_compound(part, top: false)
         invalid! if part.empty?
 
         tests = []
         rest = part
-        if (type = rest[/\A(?:\*|#{IDENTIFIER})/o])
-          tests << ->(element) { element.name == type.downcase } unless type == "*"
+        type = rest[/\A(?:\*|#{IDENTIFIER})/o]
+        name = type.downcase.freeze if type && type != "*"
+        @names << name if top
+        if type
+          tests << ->(element) { element.name == name } if name
           rest = rest[type.length..]
         end
         until rest.empty?

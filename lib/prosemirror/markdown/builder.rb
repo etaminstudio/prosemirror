@@ -78,8 +78,12 @@ module Prosemirror
 
       # Adds a node to the target. Returns the element to add its children to, when they need adding.
       def add(node, target)
-        case node.type
-        when *TAGS.keys then HTML::Element.new(TAGS[node.type])
+        type = node.type # commonmarker allocates for each call
+        if (tag = TAGS[type])
+          return HTML::Element.new(tag)
+        end
+
+        case type
         when :heading then HTML::Element.new("h#{node.header_level}")
         when :list then list(node)
         when :code_block then code_block(node, target)
@@ -157,7 +161,10 @@ module Prosemirror
       end
 
       def raw_html?(document)
-        document.walk { |node| return true if node.type == :html_block || node.type == :html_inline }
+        document.walk do |node|
+          type = node.type
+          return true if type == :html_block || type == :html_inline
+        end
         false
       end
 

@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Faster: parsing JSON takes less than half the time, rendering and `to_h` about a third less, and HTML and Markdown import about a quarter less, with the same results. Strings in documents parsed from a JSON string are frozen, including the values of unknown attributes.
+
 ## [0.4.0] - 2026-10-24
 
 - `Document#transform` builds a new document from a block called with each node, children first, which keeps, replaces, removes or splices nodes. Required content that goes missing is added back and reported.

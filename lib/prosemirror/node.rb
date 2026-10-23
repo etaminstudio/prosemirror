@@ -14,15 +14,30 @@ module Prosemirror
     # Whitespace, including non-breaking spaces.
     BLANK = /\A[[:space:]]*\z/
 
-    prop :type, Symbol, &Coerce::SYMBOL
-    prop :attrs, _Hash(Symbol, _Any?), default: {}.freeze, &Coerce::FROZEN
-    prop :unknown_attrs, _Hash(String, _Any?), default: {}.freeze, &Coerce::FROZEN
-    prop :content, _Array(Node), default: [].freeze, &Coerce::FROZEN
-    prop :marks, _Array(Mark), default: [].freeze, &Coerce::FROZEN
-    prop :text, _String?, &Coerce::FROZEN
+    EMPTY_HASH = {}.freeze
+    EMPTY_ARRAY = [].freeze
+
+    prop :type, Symbol
+    prop :attrs, _Hash(Symbol, _Any?), default: EMPTY_HASH
+    prop :unknown_attrs, _Hash(String, _Any?), default: EMPTY_HASH
+    prop :content, _Array(Node), default: EMPTY_ARRAY
+    prop :marks, _Array(Mark), default: EMPTY_ARRAY
+    prop :text, _String?
+
+    # The type as a Symbol, and frozen values. Done here rather than with Literal coercion blocks, which
+    # cost an `instance_exec` each, for each of the many nodes a document has.
+    def initialize(type:, attrs: EMPTY_HASH, unknown_attrs: EMPTY_HASH, content: EMPTY_ARRAY, marks: EMPTY_ARRAY, text: nil)
+      super(type: type.is_a?(String) ? type.to_sym : type, attrs: Coerce.frozen(attrs), unknown_attrs: Coerce.frozen(unknown_attrs),
+            content: Coerce.frozen(content), marks: Coerce.frozen(marks), text: Coerce.frozen(text))
+    end
 
     # The nodes with adjacent text nodes that have the same marks joined, as in ProseMirror.
     def self.join_text(nodes)
+      return nodes unless (1...nodes.size).any? do |index|
+        previous, node = nodes[index - 1], nodes[index]
+        previous.text? && node.text? && previous.marks == node.marks
+      end
+
       nodes.each_with_object([]) do |node, joined|
         previous = joined.last
         if previous&.text? && node.text? && previous.marks == node.marks

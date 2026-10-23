@@ -57,6 +57,8 @@ module Prosemirror
     def after_initialize
       @node_lookup = lookup(@nodes)
       @mark_lookup = lookup(@marks)
+      @node_names = spellings(@node_lookup)
+      @mark_names = spellings(@mark_lookup)
       @textblocks = @nodes.to_h { |type| [type, textblock_type?(type)] }
       @content_matches = @nodes.to_h { |type| [type, ContentMatch.compile(type.content, self)] }
       raise ArgumentError, "the schema has no #{@top_node} node type" unless node_type(@top_node)
@@ -100,11 +102,11 @@ module Prosemirror
 
     # The node type for a name, alias, or camelCase name.
     def node_type(name)
-      @node_lookup[Naming.snake(name).to_sym]
+      @node_names[name] || @node_lookup[Naming.snake(name).to_sym]
     end
 
     def mark_type(name)
-      @mark_lookup[Naming.snake(name).to_sym]
+      @mark_names[name] || @mark_lookup[Naming.snake(name).to_sym]
     end
 
     # Build a document from JSON, given as a Hash or a String.
@@ -226,6 +228,16 @@ module Prosemirror
         [type.type_name, *type.aliases].each { |name| table[name] ||= type }
         table[type.type_name] = type
       end
+    end
+
+    # The names of a lookup table, as Symbols and Strings, in snake_case and camelCase, so that most names
+    # are found without converting them.
+    def spellings(lookup)
+      table = {}
+      lookup.each { |name, type| table[name] = table[name.name] = type }
+      lookup.each { |name, type| table[Naming.camel(name).freeze] ||= type }
+      table.each_key.select { |name| name.is_a?(String) }.each { |name| table[name.to_sym] ||= table[name] }
+      table.freeze
     end
 
     def merge_types(types, additions)
