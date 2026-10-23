@@ -127,9 +127,16 @@ class TestCustomTypes < Minitest::Test
   def test_rendering_inside_a_phlex_component
     document = Prosemirror.parse(doc(paragraph(text("x"))))
     page = Class.new(Phlex::HTML) do
-      define_method(:view_template) { article { render document.to_component } }
+      define_method(:view_template) { article { render document.to_phlex } }
     end
 
     assert_equal "<article><p>x</p></article>", page.new.call
+  end
+
+  # Rails' `render` calls `render_in` with the view context.
+  def test_rendering_with_rails
+    document = Prosemirror.parse(doc(paragraph(text("x"))))
+
+    assert_equal "<p>x</p>", document.render_in(Object.new)
   end
 end

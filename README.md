@@ -27,10 +27,16 @@ doc.to_text  # => "Hello\n\nWorld"
 doc.to_h     # => { "type" => "doc", "content" => [...] }
 ```
 
-In Rails, `to_html` returns an `html_safe` string. In a Phlex component, use `to_component`:
+In Rails, `to_html` returns an `html_safe` string, and documents can be rendered like other objects in ERB templates and ViewComponents:
+
+```erb
+<%= render doc %>
+```
+
+In a Phlex component, use `to_phlex`, which writes directly into the page:
 
 ```ruby
-render doc.to_component
+render doc.to_phlex
 ```
 
 Documents are `Enumerable`, and nodes support pattern matching:

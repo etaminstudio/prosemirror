@@ -26,15 +26,20 @@ module Prosemirror
 
     # The document as HTML. The string is `html_safe` when ActiveSupport is loaded.
     def to_html
-      html = to_component.call
+      html = to_phlex.call
       html.respond_to?(:html_safe) ? html.html_safe : html
     end
 
-    # A Phlex component rendering the document, to render it inside another component:
+    # A Phlex component rendering the document, to render it inside another Phlex component:
     #
-    #   render doc.to_component
-    def to_component
+    #   render doc.to_phlex
+    def to_phlex
       HTMLRenderer.new(self)
+    end
+
+    # Lets Rails render the document in ERB templates and ViewComponents: `<%= render doc %>`.
+    def render_in(_view_context, &)
+      to_html
     end
 
     # The document as plain text, with blocks separated by `block_separator`.
