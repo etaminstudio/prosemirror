@@ -10,6 +10,8 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.3)
+    herb (0.11.1)
+    herb (0.11.1-arm64-darwin)
     json (3.1.0)
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
@@ -72,6 +74,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  herb (~> 0.11)
   minitest (~> 5.0)
   prosemirror!
   rake (~> 13.0)
@@ -80,6 +83,8 @@ DEPENDENCIES
 CHECKSUMS
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   bundler (4.0.21) sha256=7cbf5499b426076aa16c8d28a59e4c2c3aad5a438402abcd961f0119f29f1dd0
+  herb (0.11.1) sha256=7a5a74c4931b341a2b7b7f5a530616801f5721a633d2655f002156ff553cd2d7
+  herb (0.11.1-arm64-darwin) sha256=c5d3c1d5f88a504bcfa6a4bb52f56650dc40345e23cdf051b02f3390cf184d9e
   json (3.1.0) sha256=3ce7ccf8fde58960177a3a756c31f292a4c1e1dedee884547096a5b0604e3bd8
   language_server-protocol (3.17.0.6) sha256=5ef2c0c138f8267e1bc631d3328347d354f96724b0af22f2c79516120443b7f0
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87

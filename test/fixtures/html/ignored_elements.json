@@ -1,0 +1,17 @@
+{
+  "html": "<script>alert(1)</script><style>p{}</style><p>visible</p><noscript>ns</noscript><title>t</title>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "visible"
+          }
+        ]
+      }
+    ]
+  }
+}

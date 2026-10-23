@@ -11,6 +11,7 @@ module Prosemirror
       prop :title, _String?
       prop :width, _Integer?(1..), &Coerce::INTEGER
       prop :height, _Integer?(1..), &Coerce::INTEGER
+      parse_html tag: %(img[src]:not([src^="data:"]))
 
       def view_template
         src = safe_url(@src)

@@ -9,6 +9,7 @@ module Prosemirror
         content "text*"
         marks ""
         code
+        parse_html tag: "pre", preserve_whitespace: :full
 
         def view_template(&)
           pre { code(&) }

@@ -8,7 +8,10 @@ module Prosemirror
         group :block, :list
         content "list_item+"
 
-        prop :order, Integer, default: 1, aliases: ["start"], &Coerce::INTEGER
+        prop :order, Integer, default: 1, aliases: ["start"],
+          parse_html: ->(element) { element.key?("start") ? element["start"].to_i : 1 }, &Coerce::INTEGER
+
+        parse_html tag: "ol"
 
         def view_template(&)
           ol(start: (@order unless @order == 1), &)

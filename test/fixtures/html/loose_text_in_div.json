@@ -1,0 +1,26 @@
+{
+  "html": "<div><p>in div</p>loose</div>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "in div"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "loose"
+          }
+        ]
+      }
+    ]
+  }
+}

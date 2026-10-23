@@ -10,3 +10,6 @@ gem "rake", "~> 13.0"
 gem "minitest", "~> 5.0"
 
 gem "standard", "~> 1.50"
+
+# Optional at runtime: loaded by Prosemirror.from_html.
+gem "herb", "~> 0.11"

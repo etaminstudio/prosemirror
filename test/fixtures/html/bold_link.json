@@ -1,0 +1,32 @@
+{
+  "html": "<p><a href=\"https://a.b\"><b>bold link</b></a></p>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "https://a.b",
+                  "target": null,
+                  "rel": null,
+                  "class": null,
+                  "title": null
+                }
+              },
+              {
+                "type": "bold"
+              }
+            ],
+            "text": "bold link"
+          }
+        ]
+      }
+    ]
+  }
+}

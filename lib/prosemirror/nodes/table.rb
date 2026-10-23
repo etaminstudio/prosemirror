@@ -5,6 +5,7 @@ module Prosemirror
     class Table < NodeType
       group :block
       content "table_row+"
+      parse_html tag: "table"
 
       def view_template(&)
         table { tbody(&) }

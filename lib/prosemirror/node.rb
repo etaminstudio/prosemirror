@@ -18,6 +18,18 @@ module Prosemirror
     prop :marks, _Array(Mark), default: [].freeze, &Coerce::FROZEN
     prop :text, _String?, &Coerce::FROZEN
 
+    # The nodes with adjacent text nodes that have the same marks joined, as in ProseMirror.
+    def self.join_text(nodes)
+      nodes.each_with_object([]) do |node, joined|
+        previous = joined.last
+        if previous&.text? && node.text? && previous.marks == node.marks
+          joined[-1] = previous.with(text: previous.text + node.text)
+        else
+          joined << node
+        end
+      end
+    end
+
     # A copy with some properties changed.
     def with(**changes)
       self.class.new(**to_h, **changes)

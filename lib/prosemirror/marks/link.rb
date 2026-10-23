@@ -9,6 +9,7 @@ module Prosemirror
       prop :rel, _String?
       prop :css_class, _String?, json: "class"
       prop :title, _String?
+      parse_html(tag: "a[href]") { |element, schema| schema.allowed_url?(element["href"]) && {} }
 
       def view_template(&)
         href = safe_url(@href)

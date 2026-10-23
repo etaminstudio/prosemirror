@@ -4,6 +4,7 @@ module Prosemirror
   module Nodes
     class ListItem < NodeType
       content "paragraph block*"
+      parse_html tag: "li"
 
       def view_template(&) = li(&)
     end

@@ -1,0 +1,26 @@
+{
+  "html": "<div>one</div><div>two <span>three</span></div>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "one"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "two three"
+          }
+        ]
+      }
+    ]
+  }
+}

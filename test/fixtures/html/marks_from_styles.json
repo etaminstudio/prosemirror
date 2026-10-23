@@ -1,0 +1,44 @@
+{
+  "html": "<p style=\"font-weight: bold\">styled <span style=\"font-style:italic\">it</span></p><img src=\"/a.png\" alt=\"A\">",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "bold"
+              }
+            ],
+            "text": "styled "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "bold"
+              },
+              {
+                "type": "italic"
+              }
+            ],
+            "text": "it"
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "attrs": {
+          "src": "/a.png",
+          "alt": "A",
+          "title": null,
+          "width": null,
+          "height": null
+        }
+      }
+    ]
+  }
+}

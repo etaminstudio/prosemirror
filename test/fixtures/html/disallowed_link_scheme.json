@@ -1,0 +1,33 @@
+{
+  "html": "<p><a href=\"javascript:alert(1)\">bad</a> <a href=\"/rel\" title=\"T\" target=\"_blank\" rel=\"nofollow\" class=\"x\">ok</a></p>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "bad "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "/rel",
+                  "target": "_blank",
+                  "rel": "nofollow",
+                  "class": "x",
+                  "title": "T"
+                }
+              }
+            ],
+            "text": "ok"
+          }
+        ]
+      }
+    ]
+  }
+}

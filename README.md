@@ -1,13 +1,13 @@
 # ProseMirror
 
-Render [ProseMirror](https://prosemirror.net) and [Tiptap](https://tiptap.dev) documents to HTML and text, in Ruby.
+Render [ProseMirror](https://prosemirror.net) and [Tiptap](https://tiptap.dev) documents to HTML and text, and import HTML into them, in Ruby.
 
 - HTML is built with [Phlex](https://www.phlex.fun) and escaped as it is written.
 - Attributes are typed with [Literal](https://literal.fun).
 - Link and image URLs must use an allowed scheme.
 - No Rails dependency.
 
-This gem replaces [prosemirror_to_html](https://github.com/etaminstudio/prosemirror_to_html) and [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror). HTML and Markdown import are planned: see the [roadmap](ROADMAP.md).
+This gem replaces [prosemirror_to_html](https://github.com/etaminstudio/prosemirror_to_html) and [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror). Markdown import is planned: see the [roadmap](ROADMAP.md).
 
 ## Installation
 
@@ -47,6 +47,28 @@ Documents are `Enumerable`, and nodes support pattern matching:
 doc.select { |node| node in { type: :heading, attrs: { level: 1 } } }
 doc.content.first.text_content
 ```
+
+## HTML import
+
+HTML import uses [Herb](https://herb-tools.dev)'s parser, which never raises on malformed HTML. Add it to your Gemfile:
+
+```sh
+bundle add herb
+```
+
+```ruby
+doc = Prosemirror.from_html("<h2>Hello</h2><p>World</p>")
+doc.to_h  # => { "type" => "doc", "content" => [{ "type" => "heading", ... }, ...] }
+```
+
+It works like ProseMirror's `DOMParser`, and for the built-in types gives the same JSON as Tiptap's `generateJSON`, apart from invalid attributes:
+
+- each node and mark type recognizes its elements with its parse rules: `<b>`, `<strong>` and `font-weight: bold` all give `bold`;
+- whitespace is collapsed, except in code blocks;
+- content that doesn't fit where it is gets wrapped or moved: loose text becomes a paragraph, an `<li>` outside a list gets a list;
+- elements without a rule are unwrapped, and `script`, `style` and similar are ignored;
+- entities are decoded, and ERB tags (`<%= … %>`) are kept as text;
+- invalid attributes are fixed and reported, as in [Invalid documents](#invalid-documents).
 
 ## Schemas
 
@@ -95,6 +117,25 @@ prop :text_align, _String?, json: "textAlign"
 
 See the [cookbook](COOKBOOK.md) for recipes, like skipping empty paragraphs.
 
+### Parse rules
+
+`parse_html` says which elements become this type in HTML import, as ProseMirror's [parse rules](https://prosemirror.net/docs/ref/#model.ParseRule). By default, each attribute is read from the HTML attribute with its JSON name. `parse_html:` on a property reads it another way.
+
+```ruby
+class ImageBlock < Prosemirror::NodeType
+  group :block
+
+  prop :src, String
+  prop :caption, _String?, parse_html: ->(element) { element.query("figcaption")&.text_content }
+
+  parse_html(tag: "figure.image") { |element| {src: element.query("img")&.[]("src")} }
+end
+```
+
+The block is called with the element, and returns the attributes, or `false` when the rule doesn't match. `tag` takes simple CSS selectors: types, classes, ids, attributes and `:not()`, without combinators. Mark types can also match a style, like `parse_html style: "font-style=italic"`. Rules also take `priority`, `context`, `ignore`, `skip`, `preserve_whitespace` and more: see `Prosemirror::ParseRule`.
+
+A subclass that declares rules replaces the rules of its parent. A type without rules is never created by HTML import.
+
 ### Content expressions
 
 `content` says which children a node can have. It works like a regular expression, with node names or group names instead of characters:
@@ -113,7 +154,7 @@ A node type joins a group with `group`, for example `group :block`. A node type 
 
 The built-in types use these groups: `block` for paragraphs, headings, lists, tables…, `inline` for text and hard breaks, and `list` for lists.
 
-Today, content expressions are used to find the nodes that contain text, for `to_text`. Rendering doesn't check them. They will also be used by HTML import and validation. See [ProseMirror's guide](https://prosemirror.net/docs/guide/#schema.content_expressions) for details.
+HTML import follows content expressions, and uses them to wrap or move content. `to_text` uses them to find the nodes that contain text. Rendering doesn't check them. See [ProseMirror's guide](https://prosemirror.net/docs/guide/#schema.content_expressions) for details.
 
 ### Other options
 

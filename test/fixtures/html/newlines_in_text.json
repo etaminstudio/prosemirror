@@ -1,0 +1,17 @@
+{
+  "html": "<p>tab\there\nnewline</p>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "tab here newline"
+          }
+        ]
+      }
+    ]
+  }
+}

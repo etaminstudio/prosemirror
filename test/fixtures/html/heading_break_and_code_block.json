@@ -1,0 +1,48 @@
+{
+  "html": "<h2>Title</h2><p>a<br>b</p><pre><code class=\"language-ruby\">x  =  1\n</code></pre>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Title"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "a"
+          },
+          {
+            "type": "hardBreak"
+          },
+          {
+            "type": "text",
+            "text": "b"
+          }
+        ]
+      },
+      {
+        "type": "codeBlock",
+        "attrs": {
+          "language": "ruby"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "x  =  1\n"
+          }
+        ]
+      }
+    ]
+  }
+}

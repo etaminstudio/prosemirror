@@ -5,6 +5,7 @@ module Prosemirror
     class Paragraph < NodeType
       group :block
       content "inline*"
+      parse_html tag: "p"
 
       def view_template(&) = p(&)
     end

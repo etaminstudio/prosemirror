@@ -1,0 +1,16 @@
+{
+  "html": "<table></table>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "table",
+        "content": [
+          {
+            "type": "tableRow"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "html": "<pre><b>bold in pre</b></pre>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "codeBlock",
+        "attrs": {
+          "language": null
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "bold in pre"
+          }
+        ]
+      }
+    ]
+  }
+}

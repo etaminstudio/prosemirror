@@ -7,6 +7,7 @@ module Prosemirror
       class Link < MarkType
         prop :href, _String(length: 1..)
         prop :title, _String?
+        parse_html(tag: "a[href]") { |element, schema| schema.allowed_url?(element["href"]) && {} }
 
         def view_template(&)
           href = safe_url(@href)
