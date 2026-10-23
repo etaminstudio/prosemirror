@@ -14,6 +14,8 @@ module Prosemirror
         0x9C => 0x0153, 0x9E => 0x017E, 0x9F => 0x0178
       }.freeze
 
+      # The length of the longest reference without `;`, like `middot`.
+      LONGEST_LEGACY_NAME = 6
       REFERENCE = /&(?:#(\d+);?|#[xX](\h+);?|([A-Za-z][A-Za-z0-9]*;?))/
 
       module_function
@@ -34,8 +36,29 @@ module Prosemirror
         end
       end
 
-      def table
-        @table ||= JSON.parse(File.read(File.join(__dir__, "entities.json"))).freeze
+      # The characters of a named reference ending with `;`, or nil. `entities.txt` has one reference per
+      # line, with its code points in hexadecimal (`nvlt; 3C,20D2`). It is kept as one string, searched with
+      # `index`, which takes a tenth of the memory of a Hash. The references found are cached, but not the
+      # unknown names, which documents could make up without limit.
+      def lookup(name)
+        @found ||= {}
+        @found[name] ||= begin
+          start = list.index("\n#{name} ") or return nil
+          characters(list[start + name.length + 2...list.index("\n", start + 1)])
+        end
+      end
+
+      # The references without `;`, which browsers also read at the start of a longer name (`&copy2`).
+      def legacy
+        @legacy ||= list.scan(/^([A-Za-z0-9]+) ([\h,]+)$/).to_h { |name, codes| [name, characters(codes)] }.freeze
+      end
+
+      def list
+        @list ||= "\n#{File.read(File.join(__dir__, "entities.txt"))}".freeze
+      end
+
+      def characters(codes)
+        codes.split(",").map { |code| code.to_i(16) }.pack("U*").freeze
       end
 
       def character(code)
@@ -44,14 +67,16 @@ module Prosemirror
         [WINDOWS_1252.fetch(code, code)].pack("U")
       end
 
-      # The longest reference starting the name, followed by the rest of the name.
+      # The longest reference starting the name, followed by the rest of the name. A `;` can only end the
+      # name, so a shorter reference is one without `;`.
       def named(name, following, attribute)
-        name.length.downto(1) do |length|
-          key = name[0, length]
-          next unless (characters = table[key])
+        return lookup(name) if name.end_with?(";") && lookup(name)
+
+        [name.length, LONGEST_LEGACY_NAME].min.downto(1) do |length|
+          next unless (characters = legacy[name[0, length]])
 
           rest = name[length..]
-          return nil if attribute && !key.end_with?(";") && "#{rest}#{following}".match?(/\A[A-Za-z0-9=]/)
+          return nil if attribute && "#{rest}#{following}".match?(/\A[A-Za-z0-9=]/)
 
           return characters + rest
         end
