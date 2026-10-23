@@ -104,6 +104,15 @@ class TestCustomTypes < Minitest::Test
     assert_equal '<p><a href="/pages/1">x</a></p>', render(json, schema: schema)
   end
 
+  def test_resolve_url_reports_urls_it_cannot_resolve
+    reported = []
+    schema = Prosemirror::Schema.tiptap(resolve_url: ->(_) {}, on_invalid: ->(error) { reported << error.message })
+    json = doc(paragraph(text("x", [{"type" => "link", "attrs" => {"href" => "gid://app/Page/0"}}])))
+
+    assert_equal "<p>x</p>", render(json, schema: schema)
+    assert_equal ['URL could not be resolved: "gid://app/Page/0"'], reported
+  end
+
   def test_type_names
     assert_equal :image_block, ImageBlock.type_name
     assert_equal :heading, Heading.type_name
