@@ -1,0 +1,34 @@
+name: Push gem
+
+# Publishes the gem to RubyGems.org with trusted publishing, when a version tag is pushed. It can also be
+# run by hand from main, for a version whose tag already exists.
+on:
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  push:
+    if: github.repository == 'etaminstudio/prosemirror'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write # `rake release` pushes the tag, when it doesn't exist yet
+      id-token: write # trusted publishing
+
+    # The GitHub environment configured on RubyGems.org, limited to version tags and main.
+    environment: release
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0"
+          bundler-cache: true
+      - uses: rubygems/release-gem@v1
