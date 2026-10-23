@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-23
+
 - Render ProseMirror and Tiptap JSON to HTML (`to_html`) and text (`to_text`). In Rails, `render doc` works in ERB templates and ViewComponents, and `render doc.to_phlex` in Phlex components.
 - `Schema.tiptap` and `Schema.prosemirror`, with `case: :camel` for camelCase type names.
 - Custom node and mark types, as Phlex components with Literal attributes.
