@@ -27,6 +27,17 @@ module Prosemirror
         inherited_setting(:@excludes, nil)
       end
 
+      # Whether this mark can't coexist with marks of the other type.
+      def excludes?(other)
+        case excludes
+        when nil then other.type_name == type_name
+        when "_" then true
+        else
+          names = excludes.split.map(&:to_sym)
+          names.include?(other.type_name) || names.intersect?(other.group)
+        end
+      end
+
       def group(*names)
         return @group = names.flat_map { |n| n.to_s.split }.map(&:to_sym) unless names.empty?
 

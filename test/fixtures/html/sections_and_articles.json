@@ -1,0 +1,29 @@
+{
+  "html": "<section><h2>S</h2><article><p>A</p></article></section>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "S"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "A"
+          }
+        ]
+      }
+    ]
+  }
+}

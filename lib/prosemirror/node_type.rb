@@ -86,6 +86,28 @@ module Prosemirror
         value = leaf_text
         value.respond_to?(:call) ? value.call(node).to_s : value.to_s
       end
+
+      # This inline node stands for a newline, as ProseMirror's `linebreakReplacement`: when importing
+      # HTML whose whitespace is preserved, newlines become nodes of this type.
+      def linebreak_replacement(value = true)
+        @linebreak_replacement = value
+      end
+
+      def linebreak_replacement?
+        inherited_setting(:@linebreak_replacement, false)
+      end
+
+      # Whether marks of this type can be applied inside this node, according to its `marks` option.
+      def allows_mark?(mark_type, schema)
+        case marks
+        when nil then schema.content_match(self).inline_content?
+        when "_" then true
+        when "" then false
+        else
+          names = marks.split.map(&:to_sym)
+          names.include?(mark_type.type_name) || names.intersect?(mark_type.group)
+        end
+      end
     end
 
     # The node being rendered.

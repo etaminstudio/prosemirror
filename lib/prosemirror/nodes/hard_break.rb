@@ -6,6 +6,8 @@ module Prosemirror
       group :inline
       inline
       leaf_text "\n"
+      linebreak_replacement
+      parse_html tag: "br"
 
       def view_template = br
     end

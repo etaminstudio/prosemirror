@@ -1,0 +1,22 @@
+{
+  "html": "<p><code><b>no bold in code mark?</b></code></p>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "code"
+              }
+            ],
+            "text": "no bold in code mark?"
+          }
+        ]
+      }
+    ]
+  }
+}

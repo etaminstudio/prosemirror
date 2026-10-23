@@ -1,0 +1,28 @@
+{
+  "html": "<p><span style=\"font-weight: 700; font-style: italic; text-decoration: underline\">all</span></p>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "bold"
+              },
+              {
+                "type": "italic"
+              },
+              {
+                "type": "underline"
+              }
+            ],
+            "text": "all"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "html": "<p><strong><em>both</em></strong> <s>s</s><del>d</del><strike>k</strike><u>u</u><code>c</code><sub>2</sub><sup>3</sup></p>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "bold"
+              },
+              {
+                "type": "italic"
+              }
+            ],
+            "text": "both"
+          },
+          {
+            "type": "text",
+            "text": " "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "strike"
+              }
+            ],
+            "text": "sdk"
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "underline"
+              }
+            ],
+            "text": "u"
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "code"
+              }
+            ],
+            "text": "c"
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "subscript"
+              }
+            ],
+            "text": "2"
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "superscript"
+              }
+            ],
+            "text": "3"
+          }
+        ]
+      }
+    ]
+  }
+}

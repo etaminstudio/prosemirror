@@ -1,0 +1,16 @@
+{
+  "html": "<br>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "hardBreak"
+          }
+        ]
+      }
+    ]
+  }
+}

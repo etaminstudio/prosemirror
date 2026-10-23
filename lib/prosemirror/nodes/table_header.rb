@@ -5,6 +5,8 @@ module Prosemirror
     class TableHeader < TableCell
       type_name :table_header
 
+      parse_html tag: "th"
+
       def view_template(&)
         th(**cell_attributes, &)
       end

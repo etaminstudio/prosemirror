@@ -9,7 +9,12 @@ module Prosemirror
       marks ""
       code
 
-      prop :language, _String?(/\A[\w#+.-]+\z/), aliases: ["params"]
+      # From the `language-*` class of the `<code>` inside `<pre>`.
+      prop :language, _String?(/\A[\w#+.-]+\z/), aliases: ["params"], parse_html: lambda { |element|
+        element.first_element_child&.classes&.find { |name| name.start_with?("language-") }&.delete_prefix("language-")
+      }
+
+      parse_html tag: "pre", preserve_whitespace: :full
 
       def view_template(&)
         pre { code(class: @language && "language-#{@language}", &) }

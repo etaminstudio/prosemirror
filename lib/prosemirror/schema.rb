@@ -32,8 +32,9 @@ module Prosemirror
           Nodes::OrderedList, Nodes::ListItem, Nodes::CodeBlock, Nodes::HardBreak, Nodes::HorizontalRule,
           Nodes::Image, Nodes::Table, Nodes::TableRow, Nodes::TableHeader, Nodes::TableCell
         ],
+        # In Tiptap's order, which sorts and nests marks.
         marks: [
-          Marks::Link, Marks::Bold, Marks::Italic, Marks::Underline, Marks::Strike, Marks::Code,
+          Marks::Link, Marks::Bold, Marks::Code, Marks::Italic, Marks::Strike, Marks::Underline,
           Marks::Subscript, Marks::Superscript, Marks::Highlight
         ],
         **
@@ -48,7 +49,7 @@ module Prosemirror
           Nodes::Basic::CodeBlock, Nodes::Text, Nodes::Basic::Image, Nodes::HardBreak, Nodes::Basic::OrderedList,
           Nodes::BulletList, Nodes::ListItem
         ],
-        marks: [Marks::Basic::Link, Marks::Basic::Em, Marks::Basic::Strong, Marks::Code],
+        marks: [Marks::Basic::Link, Marks::Basic::Em, Marks::Basic::Strong, Marks::Basic::Code],
         **
       )
     end
@@ -57,7 +58,30 @@ module Prosemirror
       @node_lookup = lookup(@nodes)
       @mark_lookup = lookup(@marks)
       @textblocks = @nodes.to_h { |type| [type, textblock_type?(type)] }
+      @content_matches = @nodes.to_h { |type| [type, ContentMatch.compile(type.content, self)] }
       raise ArgumentError, "the schema has no #{@top_node} node type" unless node_type(@top_node)
+    end
+
+    # The start state of a node type's content expression.
+    def content_match(type)
+      @content_matches.fetch(type)
+    end
+
+    # The node types with this name or in this group, in schema order.
+    def node_types_named(name)
+      @nodes.select { |type| type.type_name == name || type.group.include?(name) }
+    end
+
+    # A node of this type, created empty and filled with the content it requires, or nil when its
+    # type, or one it requires, has required attributes.
+    def create_and_fill(type)
+      return nil if type.required_attrs?
+
+      fill = content_match(type).fill_before([], self, to_end: true)
+      content = fill&.map { |child| create_and_fill(child) }
+      return nil if content.nil? || content.include?(nil)
+
+      Node.new(type: type.type_name, attrs: type.default_attrs, content: content)
     end
 
     # A copy of the schema with other options.
@@ -88,9 +112,49 @@ module Prosemirror
       Document.new(JSONParser.new(self).parse(json), schema: self)
     end
 
+    # Build a document from HTML, with the parse rules of the schema's types. Needs the `herb` gem.
+    def parse_html(html)
+      Document.new(HTMLParser.new(self).parse(html), schema: self)
+    end
+
     # The type name as written in JSON.
     def json_type_name(name)
       (@case == :camel) ? Naming.camel(name) : name.to_s
+    end
+
+    # The set of marks with this mark added, in schema order, as ProseMirror's `Mark#addToSet`: a mark
+    # replaces the marks it excludes, and isn't added when a mark of the set excludes it.
+    def add_mark(mark, set)
+      type = mark_type(mark.type)
+      result = []
+      placed = false
+      set.each do |other|
+        return set if other == mark
+
+        other_type = mark_type(other.type)
+        next if type.excludes?(other_type)
+        return set if other_type.excludes?(type)
+
+        if !placed && mark_rank(other.type) > mark_rank(mark.type)
+          result << mark
+          placed = true
+        end
+        result << other
+      end
+      result << mark unless placed
+      result
+    end
+
+    # Whether a URL's scheme is allowed, or the URL is relative. Browsers ignore leading control characters
+    # and spaces, and tabs and newlines anywhere in a URL.
+    def allowed_url?(url)
+      return false unless url.is_a?(String)
+
+      normalized = url.delete("\t\n\r").sub(/\A[\x00-\x20]+/, "")
+      scheme = normalized[%r{\A([^/?#]*):}, 1]
+      return true if scheme.nil?
+
+      scheme.match?(/\A[a-z][a-z\d+.-]*\z/i) && @url_schemes.include?(scheme.downcase)
     end
 
     # The order of marks in a node. Marks of unknown types come last.
@@ -156,19 +220,6 @@ module Prosemirror
       type.content.names.any? do |name|
         name == :text || name == :inline || node_types_named(name).any?(&:inline?)
       end
-    end
-
-    def node_types_named(name)
-      @nodes.select { |type| type.type_name == name || type.group.include?(name) }
-    end
-
-    # Browsers ignore leading control characters and spaces, and tabs and newlines anywhere in a URL.
-    def allowed_url?(url)
-      normalized = url.delete("\t\n\r").sub(/\A[\x00-\x20]+/, "")
-      scheme = normalized[%r{\A([^/?#]*):}, 1]
-      return true if scheme.nil?
-
-      scheme.match?(/\A[a-z][a-z\d+.-]*\z/i) && @url_schemes.include?(scheme.downcase)
     end
 
     # Declared attributes with their JSON names, then the unknown ones, as they were.

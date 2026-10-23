@@ -5,7 +5,7 @@ require "test_helper"
 # Each fixture holds a document, and its expected HTML and text. Fixtures in `prosemirror/` use
 # `Schema.prosemirror`, the others `Schema.tiptap`.
 class TestFixtures < Minitest::Test
-  Dir[File.join(TestHelpers::FIXTURES, "**/*.json")].each do |path|
+  Dir[File.join(TestHelpers::FIXTURES, "{,prosemirror/}{nodes,marks}/*.json")].each do |path|
     name = path.delete_prefix("#{TestHelpers::FIXTURES}/").delete_suffix(".json").tr("/", "_")
     fixture = JSON.parse(File.read(path))
     schema = name.start_with?("prosemirror_") ? :prosemirror : :tiptap

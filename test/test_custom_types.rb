@@ -113,6 +113,21 @@ class TestCustomTypes < Minitest::Test
     assert_equal ['URL could not be resolved: "gid://app/Page/0"'], reported
   end
 
+  # Phlex 2.4.1 checks attribute values against Date without loading it: https://github.com/yippee-fun/phlex/issues/974
+  def test_array_attribute_values_without_rails
+    callout = Class.new(Prosemirror::NodeType) do
+      type_name :callout
+      group :block
+      content "inline*"
+
+      def view_template(&) = aside(class: ["callout", "info"], &)
+    end
+
+    assert_equal %(<aside class="callout info">x</aside>),
+      render({"type" => "doc", "content" => [{"type" => "callout", "content" => [text("x")]}]},
+        schema: Prosemirror::Schema.tiptap.with(callout))
+  end
+
   def test_type_names
     assert_equal :image_block, ImageBlock.type_name
     assert_equal :heading, Heading.type_name

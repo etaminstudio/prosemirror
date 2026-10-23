@@ -68,18 +68,7 @@ module Prosemirror
       nodes = content.each_with_index.filter_map do |child, index|
         build_node(child, "#{path}.content[#{index}]", depth + 1)
       end
-      join_text(nodes)
-    end
-
-    def join_text(nodes)
-      nodes.each_with_object([]) do |node, joined|
-        previous = joined.last
-        if previous&.text? && node.text? && previous.marks == node.marks
-          joined[-1] = previous.with(text: previous.text + node.text)
-        else
-          joined << node
-        end
-      end
+      Node.join_text(nodes)
     end
 
     def build_marks(marks, path)

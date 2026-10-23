@@ -1,0 +1,36 @@
+{
+  "html": "<p>text<img src=\"/i.png\">more</p>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "text"
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "attrs": {
+          "src": "/i.png",
+          "alt": null,
+          "title": null,
+          "width": null,
+          "height": null
+        }
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "more"
+          }
+        ]
+      }
+    ]
+  }
+}

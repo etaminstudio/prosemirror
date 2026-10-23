@@ -1,0 +1,34 @@
+{
+  "html": "<p><span style=\"text-decoration: underline line-through\">ul</span><span style=\"vertical-align: sub\">sub</span></p>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "strike"
+              },
+              {
+                "type": "underline"
+              }
+            ],
+            "text": "ul"
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "subscript"
+              }
+            ],
+            "text": "sub"
+          }
+        ]
+      }
+    ]
+  }
+}

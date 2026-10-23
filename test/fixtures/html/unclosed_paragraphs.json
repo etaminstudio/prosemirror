@@ -1,0 +1,26 @@
+{
+  "html": "<p>x<p>y",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "x"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "y"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -5,6 +5,7 @@ module Prosemirror
     class Blockquote < NodeType
       group :block
       content "block+"
+      parse_html tag: "blockquote"
 
       def view_template(&) = blockquote(&)
     end

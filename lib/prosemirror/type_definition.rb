@@ -18,12 +18,32 @@ module Prosemirror
       inherited_setting(:@aliases, [])
     end
 
-    # Declare an attribute. Same as Literal's `prop`, with two options:
+    # Declare an attribute. Same as Literal's `prop`, with these options:
     # - `json:` the attribute name in JSON, when it differs from the property name (`"textAlign"`);
-    # - `aliases:` other JSON names accepted on input (`["order"]`).
-    def prop(name, type, kind = :keyword, json: nil, aliases: [], **, &)
-      attribute_names[name] = {json: (json || name).to_s, aliases: aliases.map(&:to_s)}.freeze
+    # - `aliases:` other JSON names accepted on input (`["order"]`);
+    # - `parse_html:` a block reading the attribute from an HTML element, when importing HTML. By default,
+    #   the HTML attribute with the JSON name is read.
+    def prop(name, type, kind = :keyword, json: nil, aliases: [], parse_html: nil, **, &)
+      attribute_names[name] = {json: (json || name).to_s, aliases: aliases.map(&:to_s), parse_html:}.freeze
       super(name, type, kind, **, &)
+    end
+
+    # Declare how to recognize this type in HTML. See ParseRule for the options. The block, if given, is the
+    # rule's `get_attrs`. A subclass that declares rules replaces the rules of its parent.
+    def parse_html(tag: nil, style: nil, **options, &get_attrs)
+      (@parse_rules ||= []) << ParseRule.new(type: self, tag:, style:, get_attrs:, **options)
+    end
+
+    def parse_rules
+      inherited_setting(:@parse_rules, [])
+    end
+
+    # The attributes read from an HTML element, by JSON name, without the missing ones.
+    def attrs_from_html(element)
+      attribute_names.each_value.with_object({}) do |names, attrs|
+        value = names[:parse_html] ? names[:parse_html].call(element) : element[names[:json]]
+        attrs[names[:json]] = value unless value.nil?
+      end
     end
 
     def attribute_names
@@ -52,6 +72,16 @@ module Prosemirror
 
         attrs[property.name] = default_attribute(property)
       end
+    end
+
+    # Whether an attribute has no default, so that a node of this type can't be created empty.
+    def required_attrs?
+      literal_properties.any? { |property| !optional_attribute?(property) }
+    end
+
+    # The attributes of a node of this type created empty: the defaults.
+    def default_attrs
+      build_attrs({}, report: ->(_) {})
     end
 
     # The JSON attributes this type doesn't declare, with String keys, so that `to_h` gives them back.

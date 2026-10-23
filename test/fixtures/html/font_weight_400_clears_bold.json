@@ -1,0 +1,26 @@
+{
+  "html": "<p><strong>bold <span style=\"font-weight:400\">normal</span></strong></p>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "bold"
+              }
+            ],
+            "text": "bold "
+          },
+          {
+            "type": "text",
+            "text": "normal"
+          }
+        ]
+      }
+    ]
+  }
+}

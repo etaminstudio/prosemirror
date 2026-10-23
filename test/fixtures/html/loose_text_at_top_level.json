@@ -1,0 +1,30 @@
+{
+  "html": "  text   at   <em>top</em>  level  ",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "text at "
+          },
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "italic"
+              }
+            ],
+            "text": "top"
+          },
+          {
+            "type": "text",
+            "text": " level"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "html": "<h1><strong>Bold heading</strong></h1>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 1
+        },
+        "content": [
+          {
+            "type": "text",
+            "marks": [
+              {
+                "type": "bold"
+              }
+            ],
+            "text": "Bold heading"
+          }
+        ]
+      }
+    ]
+  }
+}

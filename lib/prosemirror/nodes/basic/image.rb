@@ -11,6 +11,7 @@ module Prosemirror
         prop :src, _String(length: 1..)
         prop :alt, _String?
         prop :title, _String?
+        parse_html tag: "img[src]"
 
         def view_template
           src = safe_url(@src)

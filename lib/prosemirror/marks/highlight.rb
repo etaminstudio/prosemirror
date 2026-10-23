@@ -6,7 +6,9 @@ module Prosemirror
     class Highlight < MarkType
       COLOR = %r{\A(\#\h{3,8}|[a-z]+|(rgb|hsl)a?\([\d\s.,%/]+\))\z}i
 
-      prop :color, _String?(COLOR)
+      prop :color, _String?(COLOR), parse_html: ->(element) { element["data-color"] || element.style["background-color"] }
+
+      parse_html tag: "mark"
 
       def view_template(&)
         mark(data_color: @color, style: @color && "background-color: #{@color}; color: inherit", &)

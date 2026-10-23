@@ -1,0 +1,41 @@
+{
+  "html": "<hr><p>after</p><h7>no</h7><h3>three</h3>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "horizontalRule"
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "after"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "no"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 3
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "three"
+          }
+        ]
+      }
+    ]
+  }
+}
