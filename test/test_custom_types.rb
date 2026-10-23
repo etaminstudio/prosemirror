@@ -53,37 +53,37 @@ class TestCustomTypes < Minitest::Test
 
   def test_custom_node_type
     schema = Prosemirror::Schema.tiptap.with(ImageBlock)
-    json = doc({ "type" => "imageBlock", "attrs" => { "src" => "/a.png", "caption" => "A <b>caption</b>" } })
+    json = doc({"type" => "imageBlock", "attrs" => {"src" => "/a.png", "caption" => "A <b>caption</b>"}})
 
     assert_equal '<figure><img src="/a.png"><figcaption>A &lt;b&gt;caption&lt;/b&gt;</figcaption></figure>',
-                 render(json, schema: schema)
+      render(json, schema: schema)
   end
 
   def test_custom_attribute_names_are_kept
     schema = Prosemirror::Schema.tiptap(case: :camel).with(ImageBlock)
-    json = doc({ "type" => "imageBlock", "attrs" => { "src" => "/a.png", "file_data" => "{}" } })
+    json = doc({"type" => "imageBlock", "attrs" => {"src" => "/a.png", "file_data" => "{}"}})
 
-    assert_equal({ "src" => "/a.png", "caption" => nil, "file_data" => "{}" },
-                 Prosemirror.parse(json, schema: schema).to_h.dig("content", 0, "attrs"))
+    assert_equal({"src" => "/a.png", "caption" => nil, "file_data" => "{}"},
+      Prosemirror.parse(json, schema: schema).to_h.dig("content", 0, "attrs"))
   end
 
   def test_replacing_a_built_in_type
     schema = Prosemirror::Schema.tiptap.with(Heading)
-    json = doc({ "type" => "heading", "attrs" => { "level" => 2, "textAlign" => "center" },
-                 "content" => [text("Hello World")] })
+    json = doc({"type" => "heading", "attrs" => {"level" => 2, "textAlign" => "center"},
+                 "content" => [text("Hello World")]})
     document = Prosemirror.parse(json, schema: schema)
 
     assert_equal '<h2 id="hello-world" class="heading">Hello World</h2>', document.to_html
-    assert_equal({ "level" => 2, "textAlign" => "center" }, document.to_h.dig("content", 0, "attrs"))
-    assert_equal({ level: 2, text_align: "center" }, document.content.first.attrs)
+    assert_equal({"level" => 2, "textAlign" => "center"}, document.to_h.dig("content", 0, "attrs"))
+    assert_equal({level: 2, text_align: "center"}, document.content.first.attrs)
   end
 
   def test_rendering_parts_of_the_content
     schema = Prosemirror::Schema.tiptap.with(Blockquote)
-    json = doc({ "type" => "blockquote", "content" => [
-                 paragraph(text("To be ", [{ "type" => "bold" }]), text("or not"), { "type" => "hardBreak" },
-                           text("Shakespeare"))
-               ] })
+    json = doc({"type" => "blockquote", "content" => [
+      paragraph(text("To be ", [{"type" => "bold"}]), text("or not"), {"type" => "hardBreak"},
+        text("Shakespeare"))
+    ]})
 
     assert_equal "<figure><blockquote><strong>To be </strong>or not</blockquote>" \
                  "<figcaption>Shakespeare</figcaption></figure>", render(json, schema: schema)
@@ -91,7 +91,7 @@ class TestCustomTypes < Minitest::Test
 
   def test_leaf_text
     schema = Prosemirror::Schema.tiptap.with(Mention)
-    json = doc(paragraph(text("Hi "), { "type" => "mention", "attrs" => { "label" => "hans" } }))
+    json = doc(paragraph(text("Hi "), {"type" => "mention", "attrs" => {"label" => "hans"}}))
 
     assert_equal "Hi @hans", Prosemirror.parse(json, schema: schema).to_text
     assert_equal '<p>Hi <span class="mention">@hans</span></p>', render(json, schema: schema)
@@ -99,7 +99,7 @@ class TestCustomTypes < Minitest::Test
 
   def test_resolve_url
     schema = Prosemirror::Schema.tiptap(resolve_url: ->(url) { url.sub(%r{\Agid://app/Page/}, "/pages/") })
-    json = doc(paragraph(text("x", [{ "type" => "link", "attrs" => { "href" => "gid://app/Page/1" } }])))
+    json = doc(paragraph(text("x", [{"type" => "link", "attrs" => {"href" => "gid://app/Page/1"}}])))
 
     assert_equal '<p><a href="/pages/1">x</a></p>', render(json, schema: schema)
   end
@@ -119,7 +119,7 @@ class TestCustomTypes < Minitest::Test
     Prosemirror.schema = Prosemirror::Schema.tiptap.with(ImageBlock)
 
     assert_equal '<figure><img src="/a.png"></figure>',
-                 Prosemirror.parse(doc({ "type" => "image_block", "attrs" => { "src" => "/a.png" } })).to_html
+      Prosemirror.parse(doc({"type" => "image_block", "attrs" => {"src" => "/a.png"}})).to_html
   ensure
     Prosemirror.schema = original
   end

@@ -62,7 +62,7 @@ module Prosemirror
     def ==(other)
       other.is_a?(Document) && root == other.root
     end
-    alias eql? ==
+    alias_method :eql?, :==
 
     def hash
       root.hash

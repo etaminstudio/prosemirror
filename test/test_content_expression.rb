@@ -17,7 +17,7 @@ class TestContentExpression < Minitest::Test
     assert_equal [:repeat, %i[name cell], 1, 5], parse("cell{1, 5}").tree
     assert_equal [:repeat, %i[name cell], 2, nil], parse("cell{2,}").tree
     assert_equal [:sequence, [%i[name heading], [:repeat, %i[name paragraph], 1, nil]]],
-                 parse("heading paragraph+").tree
+      parse("heading paragraph+").tree
   end
 
   def test_invalid_expressions

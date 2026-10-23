@@ -5,54 +5,54 @@ require "test_helper"
 class TestSecurity < Minitest::Test
   include TestHelpers
 
-  def link(href) = doc(paragraph(text("L", [{ "type" => "link", "attrs" => { "href" => href } }])))
-  def image(src) = doc({ "type" => "image", "attrs" => { "src" => src } })
+  def link(href) = doc(paragraph(text("L", [{"type" => "link", "attrs" => {"href" => href}}])))
+  def image(src) = doc({"type" => "image", "attrs" => {"src" => src}})
 
   # CVE-2025-64501: attribute values were not escaped.
   def test_escapes_attribute_values
-    json = doc({ "type" => "image", "attrs" => { "src" => "a.png", "alt" => %("><script>alert(1)</script>) } })
+    json = doc({"type" => "image", "attrs" => {"src" => "a.png", "alt" => %("><script>alert(1)</script>)}})
 
     assert_equal %(<img src="a.png" alt="&quot;><script>alert(1)</script>">), render(json)
   end
 
   # GHSA-6gj3-5qf2-wwvv: attribute names came from the document.
   def test_ignores_attribute_names_from_the_document
-    json = doc({ "type" => "heading", "attrs" => { "level" => 1, "onmouseover" => "alert(1)" },
-                 "content" => [text("hi")] })
+    json = doc({"type" => "heading", "attrs" => {"level" => 1, "onmouseover" => "alert(1)"},
+                 "content" => [text("hi")]})
 
     assert_equal "<h1>hi</h1>", render(json)
   end
 
   def test_ignores_attribute_names_that_break_out_of_the_tag
-    json = doc({ "type" => "heading", "attrs" => { "level" => 1, "onerror=alert(1) x" => "y" },
-                 "content" => [text("hi")] })
+    json = doc({"type" => "heading", "attrs" => {"level" => 1, "onerror=alert(1) x" => "y"},
+                 "content" => [text("hi")]})
 
     assert_equal "<h1>hi</h1>", render(json)
   end
 
   def test_ignores_event_handlers_on_links
-    json = doc(paragraph(text("L", [{ "type" => "link",
-                                      "attrs" => { "href" => "https://example.com", "onmouseover" => "alert(1)" } }])))
+    json = doc(paragraph(text("L", [{"type" => "link",
+                                     "attrs" => {"href" => "https://example.com", "onmouseover" => "alert(1)"}}])))
 
     assert_equal %(<p><a href="https://example.com">L</a></p>), render(json)
   end
 
   def test_ignores_event_handlers_on_images
-    json = doc({ "type" => "image", "attrs" => { "src" => "a.png", "onerror" => "alert(1)" } })
+    json = doc({"type" => "image", "attrs" => {"src" => "a.png", "onerror" => "alert(1)"}})
 
     assert_equal %(<img src="a.png">), render(json)
   end
 
   # prosemirror_to_html 0.4.0: the heading level steered the tag name.
   def test_heading_level_cannot_change_the_tag
-    json = doc({ "type" => "heading", "attrs" => { "level" => "1><script>alert(1)</script" },
-                 "content" => [text("hi")] })
+    json = doc({"type" => "heading", "attrs" => {"level" => "1><script>alert(1)</script"},
+                 "content" => [text("hi")]})
 
     assert_equal "<h1>hi</h1>", render(json)
   end
 
   def test_heading_level_out_of_range_uses_the_default
-    json = doc({ "type" => "heading", "attrs" => { "level" => 7 }, "content" => [text("hi")] })
+    json = doc({"type" => "heading", "attrs" => {"level" => 7}, "content" => [text("hi")]})
 
     assert_equal "<h1>hi</h1>", render(json)
   end
@@ -117,21 +117,21 @@ class TestSecurity < Minitest::Test
   end
 
   def test_highlight_color_cannot_inject_styles
-    json = doc(paragraph(text("x", [{ "type" => "highlight",
-                                      "attrs" => { "color" => "red; background-image: url(https://evil.example)" } }])))
+    json = doc(paragraph(text("x", [{"type" => "highlight",
+                                     "attrs" => {"color" => "red; background-image: url(https://evil.example)"}}])))
 
     assert_equal "<p><mark>x</mark></p>", render(json)
   end
 
   def test_code_block_language_cannot_inject_classes
-    json = doc({ "type" => "codeBlock", "attrs" => { "language" => %(x" onclick="alert(1)) },
-                 "content" => [text("x")] })
+    json = doc({"type" => "codeBlock", "attrs" => {"language" => %(x" onclick="alert(1))},
+                 "content" => [text("x")]})
 
     assert_equal "<pre><code>x</code></pre>", render(json)
   end
 
   def test_unknown_nodes_render_their_content_only
-    json = doc({ "type" => "script", "attrs" => { "src" => "evil.js" }, "content" => [text("<b>x</b>")] })
+    json = doc({"type" => "script", "attrs" => {"src" => "evil.js"}, "content" => [text("<b>x</b>")]})
 
     assert_equal "&lt;b&gt;x&lt;/b&gt;", render(json)
   end
@@ -144,8 +144,8 @@ class TestSecurity < Minitest::Test
   end
 
   def test_cuts_deeply_nested_hashes
-    json = { "type" => "paragraph" }
-    200.times { json = { "type" => "blockquote", "content" => [json] } }
+    json = {"type" => "paragraph"}
+    200.times { json = {"type" => "blockquote", "content" => [json]} }
     reported = problems(json)
 
     assert(reported.any? { |message| message.include?("nested more than") })

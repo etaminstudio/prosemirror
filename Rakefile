@@ -11,8 +11,6 @@ Rake::TestTask.new(:test) do |t|
   t.warning = false
 end
 
-require "rubocop/rake_task"
+require "standard/rake"
 
-RuboCop::RakeTask.new
-
-task default: %i[test rubocop]
+task default: %i[test standard]

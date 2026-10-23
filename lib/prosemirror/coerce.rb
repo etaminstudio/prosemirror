@@ -6,7 +6,7 @@ module Prosemirror
   #   prop :level, _Integer(1..6), default: 1, &Coerce::INTEGER
   module Coerce
     # "2" becomes 2.
-    INTEGER = proc { |value| value.is_a?(String) && value.match?(/\A\s*-?\d+\s*\z/) ? value.to_i : value }
+    INTEGER = proc { |value| (value.is_a?(String) && value.match?(/\A\s*-?\d+\s*\z/)) ? value.to_i : value }
 
     # "bullet_list" becomes :bullet_list.
     SYMBOL = proc { |value| value.is_a?(String) ? value.to_sym : value }

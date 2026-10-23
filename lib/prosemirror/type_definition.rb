@@ -22,7 +22,7 @@ module Prosemirror
     # - `json:` the attribute name in JSON, when it differs from the property name (`"textAlign"`);
     # - `aliases:` other JSON names accepted on input (`["order"]`).
     def prop(name, type, kind = :keyword, json: nil, aliases: [], **, &)
-      attribute_names[name] = { json: (json || name).to_s, aliases: aliases.map(&:to_s) }.freeze
+      attribute_names[name] = {json: (json || name).to_s, aliases: aliases.map(&:to_s)}.freeze
       super(name, type, kind, **, &)
     end
 
@@ -93,12 +93,13 @@ module Prosemirror
 
     def coerce_attribute(property, value)
       property.coercion ? property.coerce(value, context: self) : value
-    rescue StandardError
+    rescue
       value
     end
 
     def optional_attribute?(property)
-      property.default? || property.type === nil # rubocop:disable Style/NilComparison -- whether the type accepts nil
+      # Checks whether the Literal type accepts nil, so `.nil?` would be wrong here.
+      property.default? || property.type === nil # standard:disable Style/NilComparison
     end
 
     def default_attribute(property)

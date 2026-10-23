@@ -41,7 +41,7 @@ module Prosemirror
         @tokens.shift
         branches << parse_sequence
       end
-      branches.size == 1 ? branches.first : [:choice, branches]
+      (branches.size == 1) ? branches.first : [:choice, branches]
     end
 
     def parse_sequence
@@ -49,7 +49,7 @@ module Prosemirror
       terms << parse_repeat while @tokens.any? && !["|", ")"].include?(@tokens.first)
       raise ArgumentError, "empty content expression in #{@source.inspect}" if terms.empty?
 
-      terms.size == 1 ? terms.first : [:sequence, terms]
+      (terms.size == 1) ? terms.first : [:sequence, terms]
     end
 
     def parse_repeat

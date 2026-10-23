@@ -8,9 +8,9 @@ require "minitest/autorun"
 module TestHelpers
   FIXTURES = File.expand_path("fixtures", __dir__)
 
-  def doc(*content) = { "type" => "doc", "content" => content }
-  def paragraph(*content) = { "type" => "paragraph", "content" => content }
-  def text(value, marks = nil) = { "type" => "text", "text" => value, "marks" => marks }.compact
+  def doc(*content) = {"type" => "doc", "content" => content}
+  def paragraph(*content) = {"type" => "paragraph", "content" => content}
+  def text(value, marks = nil) = {"type" => "text", "text" => value, "marks" => marks}.compact
 
   def render(json, schema: Prosemirror::Schema.tiptap)
     Prosemirror.parse(json, schema: schema).to_html

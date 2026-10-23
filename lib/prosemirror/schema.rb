@@ -90,7 +90,7 @@ module Prosemirror
 
     # The type name as written in JSON.
     def json_type_name(name)
-      @case == :camel ? Naming.camel(name) : name.to_s
+      (@case == :camel) ? Naming.camel(name) : name.to_s
     end
 
     # The order of marks in a node. Marks of unknown types come last.
@@ -124,7 +124,7 @@ module Prosemirror
 
     # The document as JSON, as a Hash.
     def serialize(node)
-      hash = { "type" => json_type_name(node.type) }
+      hash = {"type" => json_type_name(node.type)}
       hash["text"] = node.text if node.text?
       attrs = serialize_node_attrs(node)
       hash["attrs"] = attrs unless attrs.empty?
@@ -176,7 +176,7 @@ module Prosemirror
     end
 
     def serialize_mark(mark)
-      hash = { "type" => json_type_name(mark.type) }
+      hash = {"type" => json_type_name(mark.type)}
       type = mark_type(mark.type)
       attrs = type ? type.serialize_attrs(mark.attrs) : mark.attrs.transform_keys(&:to_s)
       hash["attrs"] = attrs unless attrs.empty?

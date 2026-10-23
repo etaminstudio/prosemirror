@@ -6,9 +6,9 @@ class TestDocument < Minitest::Test
   include TestHelpers
 
   def document
-    Prosemirror.parse(doc({ "type" => "heading", "attrs" => { "level" => 1 }, "content" => [text("Title")] },
-                          paragraph(text("Hello "), text("World", [{ "type" => "bold" }])),
-                          { "type" => "image", "attrs" => { "src" => "/a.png" } }))
+    Prosemirror.parse(doc({"type" => "heading", "attrs" => {"level" => 1}, "content" => [text("Title")]},
+      paragraph(text("Hello "), text("World", [{"type" => "bold"}])),
+      {"type" => "image", "attrs" => {"src" => "/a.png"}}))
   end
 
   def test_enumerates_all_nodes
@@ -16,13 +16,13 @@ class TestDocument < Minitest::Test
   end
 
   def test_pattern_matching
-    headings = document.select { |node| node in { type: :heading, attrs: { level: 1 } } }
+    headings = document.select { |node| node in {type: :heading, attrs: {level: 1}} }
 
     assert_equal ["Title"], headings.map(&:text_content)
   end
 
   def test_marks_support_pattern_matching
-    bold = document.find { |node| node.marks.any? { |mark| mark in { type: :bold } } }
+    bold = document.find { |node| node.marks.any? { |mark| mark in {type: :bold} } }
 
     assert_equal "World", bold.text
   end

@@ -41,7 +41,7 @@ module Prosemirror
       return invalid("removed #{name} node", path) unless attrs
 
       Node.new(type: node_type.type_name, attrs: attrs, content: build_content(hash, path, depth),
-               marks: build_marks(fetch(hash, "marks"), path))
+        marks: build_marks(fetch(hash, "marks"), path))
     end
 
     def build_text(hash, path)
@@ -56,7 +56,7 @@ module Prosemirror
       invalid("unknown node type #{name}", path)
       attrs = fetch(hash, "attrs")
       Node.new(type: Naming.snake(name), attrs: attrs.is_a?(Hash) ? attrs.transform_keys(&:to_sym) : {},
-               content: build_content(hash, path, depth), marks: build_marks(fetch(hash, "marks"), path))
+        content: build_content(hash, path, depth), marks: build_marks(fetch(hash, "marks"), path))
     end
 
     def build_content(hash, path, depth)

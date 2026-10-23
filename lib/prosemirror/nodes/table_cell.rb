@@ -16,7 +16,7 @@ module Prosemirror
       private
 
       def cell_attributes
-        { colspan: (@colspan unless @colspan == 1), rowspan: (@rowspan unless @rowspan == 1) }
+        {colspan: (@colspan unless @colspan == 1), rowspan: (@rowspan unless @rowspan == 1)}
       end
     end
   end
