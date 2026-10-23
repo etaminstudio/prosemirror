@@ -1,0 +1,25 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Line 1"
+          },
+          {
+            "type": "hardBreak"
+          },
+          {
+            "type": "text",
+            "text": "Line 2"
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p>Line 1<br>Line 2</p>",
+  "text": "Line 1\nLine 2"
+}

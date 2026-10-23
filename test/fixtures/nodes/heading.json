@@ -1,0 +1,21 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 3
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Title"
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<h3>Title</h3>",
+  "text": "Title"
+}

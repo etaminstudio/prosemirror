@@ -1,0 +1,18 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "<script>alert(1)</script> & \"quotes\""
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p>&lt;script&gt;alert(1)&lt;/script&gt; &amp; &quot;quotes&quot;</p>",
+  "text": "<script>alert(1)</script> & \"quotes\""
+}

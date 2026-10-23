@@ -1,0 +1,12 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph"
+      }
+    ]
+  },
+  "html": "<p></p>",
+  "text": ""
+}

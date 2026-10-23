@@ -1,0 +1,26 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Both",
+            "marks": [
+              {
+                "type": "italic"
+              },
+              {
+                "type": "bold"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p><strong><em>Both</em></strong></p>",
+  "text": "Both"
+}
