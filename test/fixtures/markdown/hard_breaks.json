@@ -1,0 +1,31 @@
+{
+  "markdown": "Line one  \nLine two\\\nLine three\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Line one"
+          },
+          {
+            "type": "hardBreak"
+          },
+          {
+            "type": "text",
+            "text": "Line two"
+          },
+          {
+            "type": "hardBreak"
+          },
+          {
+            "type": "text",
+            "text": "Line three"
+          }
+        ]
+      }
+    ]
+  }
+}

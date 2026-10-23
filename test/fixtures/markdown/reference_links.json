@@ -1,0 +1,49 @@
+{
+  "markdown": "[ref][1] and [collapsed][]\n\n[1]: https://example.com\n[collapsed]: /c \"C\"\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "ref",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "https://example.com",
+                  "target": null,
+                  "rel": null,
+                  "class": null,
+                  "title": null
+                }
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": " and "
+          },
+          {
+            "type": "text",
+            "text": "collapsed",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "/c",
+                  "target": null,
+                  "rel": null,
+                  "class": null,
+                  "title": "C"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "markdown": "<div>\n<p>Block <em>html</em></p>\n</div>\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Block "
+          },
+          {
+            "type": "text",
+            "text": "html",
+            "marks": [
+              {
+                "type": "italic"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

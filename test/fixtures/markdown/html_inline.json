@@ -1,0 +1,30 @@
+{
+  "markdown": "Some <b>bold</b> and <span>span</span> text\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Some "
+          },
+          {
+            "type": "text",
+            "text": "bold",
+            "marks": [
+              {
+                "type": "bold"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": " and span text"
+          }
+        ]
+      }
+    ]
+  }
+}

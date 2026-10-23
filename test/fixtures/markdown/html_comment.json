@@ -1,0 +1,17 @@
+{
+  "markdown": "Text <!-- comment --> after\n\n<!-- block comment -->\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Text after"
+          }
+        ]
+      }
+    ]
+  }
+}

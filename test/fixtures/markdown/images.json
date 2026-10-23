@@ -1,0 +1,21 @@
+{
+  "markdown": "![Alt text](/image.png \"Title\")\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph"
+      },
+      {
+        "type": "image",
+        "attrs": {
+          "src": "/image.png",
+          "alt": "Alt text",
+          "title": "Title",
+          "width": null,
+          "height": null
+        }
+      }
+    ]
+  }
+}

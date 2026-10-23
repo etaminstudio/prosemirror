@@ -1,0 +1,17 @@
+{
+  "markdown": "a    b\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "a b"
+          }
+        ]
+      }
+    ]
+  }
+}

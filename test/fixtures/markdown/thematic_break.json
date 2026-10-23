@@ -1,0 +1,29 @@
+{
+  "markdown": "Above\n\n---\n\nBelow\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Above"
+          }
+        ]
+      },
+      {
+        "type": "horizontalRule"
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Below"
+          }
+        ]
+      }
+    ]
+  }
+}

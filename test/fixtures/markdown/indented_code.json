@@ -1,0 +1,20 @@
+{
+  "markdown": "    indented\n    code\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "codeBlock",
+        "attrs": {
+          "language": null
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "indented\ncode"
+          }
+        ]
+      }
+    ]
+  }
+}

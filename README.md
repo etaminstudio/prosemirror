@@ -1,13 +1,13 @@
 # ProseMirror
 
-Render [ProseMirror](https://prosemirror.net) and [Tiptap](https://tiptap.dev) documents to HTML and text, and import HTML into them, in Ruby.
+Render [ProseMirror](https://prosemirror.net) and [Tiptap](https://tiptap.dev) documents to HTML and text, and import HTML, Markdown and text into them, in Ruby.
 
 - HTML is built with [Phlex](https://www.phlex.fun) and escaped as it is written.
 - Attributes are typed with [Literal](https://literal.fun).
 - Link and image URLs must use an allowed scheme.
 - No Rails dependency.
 
-This gem replaces [prosemirror_to_html](https://github.com/etaminstudio/prosemirror_to_html) and [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror). Markdown import is planned: see the [roadmap](ROADMAP.md).
+This gem replaces [prosemirror_to_html](https://github.com/etaminstudio/prosemirror_to_html) and [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror). See the [roadmap](ROADMAP.md) for what comes next.
 
 ## Installation
 
@@ -69,6 +69,33 @@ It works like ProseMirror's `DOMParser`, and for the built-in types gives the sa
 - elements without a rule are unwrapped, and `script`, `style` and similar are ignored;
 - entities are decoded, and ERB tags (`<%= … %>`) are kept as text;
 - invalid attributes are fixed and reported, as in [Invalid documents](#invalid-documents).
+
+## Markdown import
+
+Markdown import uses [commonmarker](https://github.com/gjtorikian/commonmarker)'s parser, written in Rust. Add it to your Gemfile:
+
+```sh
+bundle add commonmarker
+```
+
+```ruby
+doc = Prosemirror.from_markdown("## Hello\n\nSome **bold** text.")
+```
+
+It reads GitHub Flavored Markdown: tables, strikethrough and autolinks. Each Markdown node becomes the element commonmarker renders for it, and the schema's parse rules apply as in HTML import, so custom types can match Markdown too: a type that matches `img` also gets Markdown images. For the built-in types, it gives the same JSON as rendering the Markdown to HTML and importing it in Tiptap, except that:
+
+- code blocks lose their final newline, as in prosemirror-markdown;
+- task list items (`- [ ] todo`) stay as list items starting with `[ ] ` or `[x] `.
+
+Raw HTML in Markdown goes through HTML import when the herb gem is installed, and stays as text otherwise.
+
+## Text import
+
+```ruby
+doc = Prosemirror.from_text("First line\nsecond line\n\nNew paragraph")
+```
+
+Blank lines separate paragraphs, and other line breaks become hard breaks. Spaces are kept.
 
 ## Schemas
 

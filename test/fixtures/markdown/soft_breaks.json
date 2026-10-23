@@ -1,0 +1,17 @@
+{
+  "markdown": "One line\nnext line\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "One line next line"
+          }
+        ]
+      }
+    ]
+  }
+}

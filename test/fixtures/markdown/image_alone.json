@@ -1,0 +1,21 @@
+{
+  "markdown": "![only](/only.png)\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph"
+      },
+      {
+        "type": "image",
+        "attrs": {
+          "src": "/only.png",
+          "alt": "only",
+          "title": null,
+          "width": null,
+          "height": null
+        }
+      }
+    ]
+  }
+}

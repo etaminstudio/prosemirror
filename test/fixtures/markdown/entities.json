@@ -1,0 +1,17 @@
+{
+  "markdown": "&amp; &copy; &#233; &lt;tag&gt;\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "& © é <tag>"
+          }
+        ]
+      }
+    ]
+  }
+}

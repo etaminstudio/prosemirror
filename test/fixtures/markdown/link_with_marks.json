@@ -1,0 +1,48 @@
+{
+  "markdown": "[**bold** link](/x)\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "bold",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "/x",
+                  "target": null,
+                  "rel": null,
+                  "class": null,
+                  "title": null
+                }
+              },
+              {
+                "type": "bold"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": " link",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "/x",
+                  "target": null,
+                  "rel": null,
+                  "class": null,
+                  "title": null
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

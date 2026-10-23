@@ -41,8 +41,13 @@ module Prosemirror
 
     # The document parsed from the HTML, as its top node.
     def parse(html)
+      parse_element(HTML::Builder.new.call(html))
+    end
+
+    # The document for an Element's content, like the one HTML::Builder gives.
+    def parse_element(root)
       context = Context.new(self)
-      context.add_all(HTML::Builder.new.call(html), [])
+      context.add_all(root, [])
       context.finish
     end
 

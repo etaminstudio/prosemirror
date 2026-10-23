@@ -1,0 +1,69 @@
+{
+  "markdown": "<https://example.com> and https://www.example.org and contact@example.com\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "https://example.com",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "https://example.com",
+                  "target": null,
+                  "rel": null,
+                  "class": null,
+                  "title": null
+                }
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": " and "
+          },
+          {
+            "type": "text",
+            "text": "https://www.example.org",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "https://www.example.org",
+                  "target": null,
+                  "rel": null,
+                  "class": null,
+                  "title": null
+                }
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": " and "
+          },
+          {
+            "type": "text",
+            "text": "contact@example.com",
+            "marks": [
+              {
+                "type": "link",
+                "attrs": {
+                  "href": "mailto:contact@example.com",
+                  "target": null,
+                  "rel": null,
+                  "class": null,
+                  "title": null
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
