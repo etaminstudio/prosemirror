@@ -11,6 +11,9 @@ module Prosemirror
   # in JSON (for example from a Tiptap extension the schema doesn't know): they are never rendered,
   # and `to_h` gives them back unchanged.
   class Node < Literal::Data
+    # Whitespace, including non-breaking spaces.
+    BLANK = /\A[[:space:]]*\z/
+
     prop :type, Symbol, &Coerce::SYMBOL
     prop :attrs, _Hash(Symbol, _Any?), default: {}.freeze, &Coerce::FROZEN
     prop :unknown_attrs, _Hash(String, _Any?), default: {}.freeze, &Coerce::FROZEN
@@ -67,6 +70,18 @@ module Prosemirror
         node = stack.pop
         yield node
         stack.concat(node.content.reverse)
+      end
+    end
+
+    # Whether the node shows nothing: no text but whitespace, and no leaf nodes but line breaks, like an
+    # empty paragraph, or a list item holding one. The schema says which nodes are leaves: an image isn't
+    # blank, and neither is a node of a type it doesn't know.
+    def blank?(schema = Prosemirror.schema)
+      [self, *descendants].none? do |node|
+        next !BLANK.match?(node.text) if node.text?
+
+        type = schema.node_type(node.type)
+        type.nil? || (type.leaf? && !type.linebreak_replacement?)
       end
     end
 

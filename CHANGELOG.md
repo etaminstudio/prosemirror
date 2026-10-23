@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+- `Document#transform` builds a new document from a block called with each node, children first, which keeps, replaces, removes or splices nodes. Required content that goes missing is added back and reported.
+- `Document#check` raises `InvalidDocument` for the first problem with the schema, with its path, and `Document#valid?` returns true or false.
+- `Node#blank?` is true for nodes that show nothing, like empty paragraphs.
+
 ## [0.3.0] - 2026-10-24
 
 - Import Markdown with `Prosemirror.from_markdown` (or `schema.parse_markdown`). Needs the [`commonmarker`](https://github.com/gjtorikian/commonmarker) gem, which isn't installed with this gem. GitHub Flavored Markdown tables, strikethrough and autolinks are supported, and the schema's parse rules apply, so custom types can match Markdown too. Raw HTML goes through HTML import when the herb gem is installed. YAML front matter is dropped.

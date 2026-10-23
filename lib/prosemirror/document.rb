@@ -64,6 +64,38 @@ module Prosemirror
       root.text_content
     end
 
+    # A new document built from a block called with each node, children first. The block returns the node
+    # to keep, another node, an array of nodes to put in its place, or nil to remove it:
+    #
+    #   doc.transform do |node|
+    #     case node
+    #     in { type: :paragraph } if node.blank? then nil
+    #     in { type: :heading, attrs: { level: 1 } } then node.with(attrs: { level: 2 })
+    #     else node
+    #     end
+    #   end
+    #
+    # Adjacent text nodes with the same marks are joined. When a node's content changed and lacks what its
+    # content expression requires, the required nodes are added and reported with `on_invalid`.
+    def transform(&)
+      Document.new(Transformer.new(schema, &).call(root), schema: schema)
+    end
+
+    # Raises InvalidDocument for the first problem with the schema: an unknown node or mark type, invalid
+    # attributes, content that doesn't match a content expression, or marks a node doesn't allow. Returns
+    # the document.
+    def check
+      Checker.new(schema).call(root)
+      self
+    end
+
+    def valid?
+      check
+      true
+    rescue InvalidDocument
+      false
+    end
+
     def ==(other)
       other.is_a?(Document) && root == other.root
     end

@@ -18,23 +18,35 @@ class Paragraph < Prosemirror::Nodes::Paragraph
 end
 ```
 
-A paragraph that only holds spaces or line breaks is not empty. To skip those too, check the text instead, keeping paragraphs with an inline image or another leaf node:
+A paragraph that only holds spaces or line breaks is not empty. To skip those too, use `blank?`, which keeps paragraphs with an inline image or another leaf node:
 
 ```ruby
 class Paragraph < Prosemirror::Nodes::Paragraph
   def view_template(&)
-    p(&) unless blank?
-  end
-
-  private
-
-  def blank?
-    node.text_content.strip.empty? && node.content.all? { |child| child.text? || child.type == :hard_break }
+    p(&) unless node.blank?(prosemirror_schema)
   end
 end
 ```
 
-`to_text` still separates empty paragraphs with a blank line, as ProseMirror does. `to_h` keeps them, so the editor gets the document back unchanged.
+`to_text` still separates empty paragraphs with a blank line, as ProseMirror does. `to_h` keeps them, so the editor gets the document back unchanged. To remove them from the document itself, see the next recipe.
+
+## Remove empty paragraphs before saving
+
+To clean a document before saving it, remove blank paragraphs with `transform`, along with the list items and lists they leave empty:
+
+```ruby
+schema = Prosemirror::Schema.tiptap(case: :camel)  # saves `bulletList`, as Tiptap expects
+document = Prosemirror.parse(params[:content], schema:).transform do |node|
+  case node
+  in { type: :paragraph | :list_item } if node.blank?(schema) then nil
+  in { type: :bullet_list | :ordered_list } if node.content.empty? then nil
+  else node
+  end
+end
+record.update!(content: document.to_h)
+```
+
+Without `case: :camel`, `to_h` writes snake_case type names like `bullet_list`, which Tiptap doesn't read. `blank?` gets the schema so that it knows your custom types: an image block isn't blank. Children are transformed first, so the list sees its remaining items. Attributes the schema doesn't declare are kept. When something the schema requires is gone, like the only paragraph of a list item kept by another rule, `transform` adds it back and reports it with `on_invalid`.
 
 ## Heading anchors
 
