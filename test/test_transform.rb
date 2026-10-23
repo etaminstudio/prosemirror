@@ -151,4 +151,12 @@ class TestTransform < Minitest::Test
     refute blank.call({"type" => "image", "attrs" => {"src" => "/a.png"}})
     refute blank.call({"type" => "horizontal_rule"})
   end
+
+  # A node the schema doesn't know, like a custom block, may show something.
+  def test_unknown_nodes_are_not_blank
+    item = Prosemirror::Schema.tiptap(on_invalid: ->(_) {}).parse(doc(bullet_list(list_item({"type" => "image_block", "attrs" => {"src" => "/a.png"}}))))
+      .content.first.content.first
+
+    refute item.blank?(Prosemirror::Schema.tiptap)
+  end
 end

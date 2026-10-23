@@ -95,17 +95,21 @@ class TestCookbook < Minitest::Test
     item = ->(*content) { {"type" => "listItem", "content" => content} }
     json = doc({"type" => "paragraph", "attrs" => {"textAlign" => "center"}, "content" => [text("Hi")]}, {"type" => "paragraph"},
       {"type" => "bulletList", "content" => [item.call(paragraph(text(" "))), item.call(paragraph(text("a")))]},
-      {"type" => "orderedList", "content" => [item.call({"type" => "paragraph"})]})
+      {"type" => "orderedList", "content" => [item.call({"type" => "paragraph"})]},
+      {"type" => "bulletList", "content" => [item.call(paragraph, {"type" => "imageBlock", "attrs" => {"src" => "/a.png"}})]})
 
-    document = Prosemirror.parse(json, schema: Prosemirror::Schema.tiptap(case: :camel)).transform do |node|
+    schema = Prosemirror::Schema.tiptap(case: :camel, on_invalid: ->(_) {}).with(ImageBlock)
+    document = Prosemirror.parse(json, schema:).transform do |node|
       case node
-      in {type: :paragraph | :list_item} if node.blank? then nil
+      in {type: :paragraph | :list_item} if node.blank?(schema) then nil
       in {type: :bullet_list | :ordered_list} if node.content.empty? then nil
       else node
       end
     end
 
-    assert_equal doc({"type" => "paragraph", "attrs" => {"textAlign" => "center"}, "content" => [text("Hi")]},
-      {"type" => "bulletList", "content" => [item.call(paragraph(text("a")))]}), document.to_h
+    assert_equal ["paragraph", "bulletList", "bulletList"], document.to_h["content"].map { |node| node["type"] }
+    assert_equal({"type" => "paragraph", "attrs" => {"textAlign" => "center"}, "content" => [text("Hi")]}, document.to_h.dig("content", 0))
+    assert_equal [item.call(paragraph(text("a")))], document.to_h.dig("content", 1, "content")
+    assert_equal "imageBlock", document.to_h.dig("content", 2, "content", 0, "content", -1, "type")
   end
 end

@@ -35,9 +35,10 @@ end
 To clean a document before saving it, remove blank paragraphs with `transform`, along with the list items and lists they leave empty:
 
 ```ruby
-document = Prosemirror.parse(params[:content]).transform do |node|
+schema = Prosemirror::Schema.tiptap(case: :camel)  # saves `bulletList`, as Tiptap expects
+document = Prosemirror.parse(params[:content], schema:).transform do |node|
   case node
-  in { type: :paragraph | :list_item } if node.blank? then nil
+  in { type: :paragraph | :list_item } if node.blank?(schema) then nil
   in { type: :bullet_list | :ordered_list } if node.content.empty? then nil
   else node
   end
@@ -45,7 +46,7 @@ end
 record.update!(content: document.to_h)
 ```
 
-Children are transformed first, so the list sees its remaining items. Attributes the schema doesn't declare are kept. When something the schema requires is gone, like the only paragraph of a list item kept by another rule, `transform` adds it back and reports it with `on_invalid`.
+Without `case: :camel`, `to_h` writes snake_case type names like `bullet_list`, which Tiptap doesn't read. `blank?` gets the schema so that it knows your custom types: an image block isn't blank. Children are transformed first, so the list sees its remaining items. Attributes the schema doesn't declare are kept. When something the schema requires is gone, like the only paragraph of a list item kept by another rule, `transform` adds it back and reports it with `on_invalid`.
 
 ## Heading anchors
 

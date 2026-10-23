@@ -75,13 +75,13 @@ module Prosemirror
 
     # Whether the node shows nothing: no text but whitespace, and no leaf nodes but line breaks, like an
     # empty paragraph, or a list item holding one. The schema says which nodes are leaves: an image isn't
-    # blank.
+    # blank, and neither is a node of a type it doesn't know.
     def blank?(schema = Prosemirror.schema)
       [self, *descendants].none? do |node|
         next !BLANK.match?(node.text) if node.text?
 
         type = schema.node_type(node.type)
-        type&.leaf? && !type.linebreak_replacement?
+        type.nil? || (type.leaf? && !type.linebreak_replacement?)
       end
     end
 
