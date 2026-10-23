@@ -1,0 +1,26 @@
+{
+  "markdown": "First paragraph.\n\nSecond paragraph.\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "First paragraph."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Second paragraph."
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "markdown": "## A *b* `c`\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "A "
+          },
+          {
+            "type": "text",
+            "text": "b",
+            "marks": [
+              {
+                "type": "italic"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": " "
+          },
+          {
+            "type": "text",
+            "text": "c",
+            "marks": [
+              {
+                "type": "code"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

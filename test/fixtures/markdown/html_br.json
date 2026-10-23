@@ -1,0 +1,24 @@
+{
+  "markdown": "Line<br>break\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Line"
+          },
+          {
+            "type": "hardBreak"
+          },
+          {
+            "type": "text",
+            "text": "break"
+          }
+        ]
+      }
+    ]
+  }
+}

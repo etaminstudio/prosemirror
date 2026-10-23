@@ -22,6 +22,14 @@ module Prosemirror
         raise Error, 'HTML import needs the herb gem: add `gem "herb"` to your Gemfile'
       end
 
+      # Whether the herb gem is installed.
+      def self.herb?
+        load_herb
+        true
+      rescue Error
+        false
+      end
+
       # A root Element holding the parsed content.
       def call(html)
         self.class.load_herb

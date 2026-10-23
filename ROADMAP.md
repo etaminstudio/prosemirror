@@ -171,9 +171,9 @@ They differ in more than names:
 
 ### 0.3: Markdown and text import
 
-- `Prosemirror.from_markdown`, built from [`commonmarker`](https://github.com/gjtorikian/commonmarker)'s syntax tree, without going through HTML (like `prosemirror-markdown`). commonmarker's parser is written in Rust.
-- GitHub Flavored Markdown: tables, strikethrough, autolinks, task lists.
-- Custom node types can define their Markdown mapping.
+- `Prosemirror.from_markdown`, built from [`commonmarker`](https://github.com/gjtorikian/commonmarker)'s syntax tree. commonmarker's parser is written in Rust. Each Markdown node becomes the element commonmarker renders for it, without going through an HTML string, and HTML import's parse rules build the document.
+- GitHub Flavored Markdown: tables, strikethrough, autolinks. Task list items stay as text until task list nodes (0.6).
+- Custom node types match Markdown with their parse rules.
 - Raw HTML in Markdown goes through the HTML importer if Herb is installed.
 - `Prosemirror.from_text`: blank lines make paragraphs, line breaks make hard breaks.
 

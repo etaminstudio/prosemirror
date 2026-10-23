@@ -1,0 +1,36 @@
+{
+  "markdown": "Before ![a](/a.png) after\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Before"
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "attrs": {
+          "src": "/a.png",
+          "alt": "a",
+          "title": null,
+          "width": null,
+          "height": null
+        }
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": " after"
+          }
+        ]
+      }
+    ]
+  }
+}

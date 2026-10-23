@@ -1,0 +1,20 @@
+{
+  "markdown": "```ruby\nputs 1\n\nputs 2\n```\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "codeBlock",
+        "attrs": {
+          "language": "ruby"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "puts 1\n\nputs 2"
+          }
+        ]
+      }
+    ]
+  }
+}

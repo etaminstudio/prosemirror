@@ -117,6 +117,27 @@ module Prosemirror
       Document.new(HTMLParser.new(self).parse(html), schema: self)
     end
 
+    # Build a document from Markdown, with the parse rules of the schema's types. Needs the `commonmarker` gem.
+    def parse_markdown(markdown)
+      Document.new(HTMLParser.new(self).parse_element(Markdown::Builder.new.call(markdown)), schema: self)
+    end
+
+    # Build a document from plain text: blank lines separate paragraphs, and other line breaks become the
+    # schema's line break node, like `hard_break`, or spaces without one. Spaces are kept.
+    def parse_text(text)
+      paragraph = node_type(:paragraph) || @nodes.find { |type| textblock?(type) }
+      linebreak = @nodes.find(&:linebreak_replacement?)
+      separator = linebreak ? {"type" => linebreak.type_name.to_s} : {"type" => "text", "text" => " "}
+      blocks = text.to_s.gsub(/\r\n?/, "\n").split(/\n[ \t]*\n/).map { |block| block.gsub(/\A\n+|\n+\z/, "") }
+      content = blocks.reject { |block| block.strip.empty? }.map do |block|
+        inline = block.split("\n").each_with_index.flat_map do |line, index|
+          [(separator if index.positive?), ({"type" => "text", "text" => line} unless line.empty?)].compact
+        end
+        {"type" => paragraph.type_name.to_s, "content" => inline}
+      end
+      parse({"type" => @top_node.to_s, "content" => content.empty? ? [{"type" => paragraph.type_name.to_s}] : content})
+    end
+
     # The type name as written in JSON.
     def json_type_name(name)
       (@case == :camel) ? Naming.camel(name) : name.to_s

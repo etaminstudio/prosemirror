@@ -1,0 +1,20 @@
+{
+  "markdown": "```html\n<b>not bold</b>\n```\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "codeBlock",
+        "attrs": {
+          "language": "html"
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "<b>not bold</b>"
+          }
+        ]
+      }
+    ]
+  }
+}

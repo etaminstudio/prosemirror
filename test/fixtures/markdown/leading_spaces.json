@@ -1,0 +1,17 @@
+{
+  "markdown": "   indented paragraph\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "indented paragraph"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "markdown": "~~gone~~ and ~single~\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "gone",
+            "marks": [
+              {
+                "type": "strike"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": " and "
+          },
+          {
+            "type": "text",
+            "text": "single",
+            "marks": [
+              {
+                "type": "strike"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

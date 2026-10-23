@@ -1,0 +1,17 @@
+{
+  "markdown": "Café — naïve 日本語 🎉\n",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Café — naïve 日本語 🎉"
+          }
+        ]
+      }
+    ]
+  }
+}

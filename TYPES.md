@@ -26,6 +26,7 @@ A type is a [Phlex](https://www.phlex.fun) component, and its attributes are [Li
 - [Attributes](#attributes)
 - [Rendering](#rendering)
 - [Parse rules](#parse-rules)
+- [Markdown](#markdown)
 - [Subclassing built-in types](#subclassing-built-in-types)
 
 ## Names
@@ -185,6 +186,22 @@ The element passed to rules is a `Prosemirror::HTML::Element`, with lowercase na
 | `query("img")` | The first descendant matching a selector, or nil. |
 | `matches?("p.lead")` | Whether the element matches a selector. |
 | `parent` | The parent element. |
+
+## Markdown
+
+Markdown import builds the elements commonmarker renders for each Markdown node, and applies the same parse rules. To match Markdown, a type matches these elements:
+
+| Markdown | Element |
+|---|---|
+| Paragraph, heading, blockquote, thematic break | `p`, `h1`…`h6`, `blockquote`, `hr` |
+| Bullet list, ordered list, list item | `ul`, `ol` (with `start` when it isn't 1), `li` |
+| Code block | `pre` holding a `code` with a `language-…` class from the info string |
+| Table | `table`, `tr`, `th` for the first row, `td`, with a `text-align` style for aligned columns |
+| Emphasis, strong, strikethrough, inline code | `em`, `strong`, `s`, `code` |
+| Link, image | `a` with `href` and `title`, `img` with `src`, `alt` and `title` |
+| Hard line break | `br` |
+
+Raw HTML in Markdown goes through HTML import when the herb gem is installed, and stays as text otherwise.
 
 ## Subclassing built-in types
 
