@@ -1,0 +1,23 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Emphasis",
+            "marks": [
+              {
+                "type": "em"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p><em>Emphasis</em></p>",
+  "text": "Emphasis"
+}

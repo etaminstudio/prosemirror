@@ -1,0 +1,23 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "blockquote",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Quote"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<blockquote><p>Quote</p></blockquote>",
+  "text": "Quote"
+}

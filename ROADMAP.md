@@ -134,17 +134,21 @@ They differ in more than names:
 
 ## Milestones
 
-### 0.1: Rendering
+### 0.1: Rendering (released)
 
 - `Node`, `Mark` and `Document` values, built from a Hash or a JSON string, with a nesting limit.
 - Normalization as in ProseMirror: marks sorted by schema order, adjacent text with the same marks joined, empty text removed.
-- `Schema`, `NodeType` and `MarkType`, with the options of ProseMirror's `NodeSpec` and `MarkSpec`: `content`, `group`, `inline`, `marks`, `whitespace`, `leaf_text`, `excludes`, `spanning`.
+- Attributes a type doesn't declare kept in `unknown_attrs`: never rendered, and given back by `to_h`.
+- `Schema`, `NodeType` and `MarkType`, with the options of ProseMirror's `NodeSpec` and `MarkSpec`: `content`, `group`, `inline`, `marks`, `whitespace`, `leaf_text`, `excludes`, `spanning`. `marks`, `whitespace` and `excludes` are declared, but only take effect with HTML import (0.2) and validation (0.4), as ProseMirror's `fromJSON` doesn't enforce them either.
 - `Schema.tiptap`: `doc`, `paragraph`, `text`, `heading`, `blockquote`, `bullet_list`, `ordered_list`, `list_item`, `code_block`, `hard_break`, `horizontal_rule`, `image`, `table`, `table_row`, `table_header`, `table_cell`. Marks: `link`, `bold`, `italic`, `underline`, `strike`, `code`, `subscript`, `superscript`, `highlight`.
 - `Schema.prosemirror`: exactly the nodes and marks of `prosemirror-schema-basic` and `prosemirror-schema-list`.
 - `to_html`, with one tag for a mark shared by adjacent text (one `<a>` for a link with mixed formatting).
+- `to_phlex` to render in Phlex components, and `render doc` in ERB templates and ViewComponents.
+- `node` and `render_content` in node types, to render parts of a node's content.
 - `to_text`, like Tiptap's `getText`.
-- `case: :camel`, name aliases, allowed URL schemes, `resolve_url`.
-- One JSON test fixture per node and mark.
+- `case: :camel`, name aliases, allowed URL schemes, `resolve_url` (a URL it can't resolve is removed and reported).
+- One JSON test fixture per node and mark, for both schemas.
+- A [cookbook](COOKBOOK.md).
 - Security tests, starting with every issue fixed in `prosemirror_to_html`:
   - unescaped attribute values ([CVE-2025-64501](https://github.com/etaminstudio/prosemirror_to_html/security/advisories/GHSA-52c5-vh7f-26fx));
   - attribute names from the document, like `onmouseover`, and `javascript:` URLs ([GHSA-6gj3-5qf2-wwvv](https://github.com/etaminstudio/prosemirror_to_html/security/advisories/GHSA-6gj3-5qf2-wwvv));

@@ -1,0 +1,26 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "An inline "
+          },
+          {
+            "type": "image",
+            "attrs": {
+              "src": "https://example.com/a.png",
+              "alt": "image",
+              "title": "Title"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p>An inline <img src=\"https://example.com/a.png\" alt=\"image\" title=\"Title\"></p>",
+  "text": "An inline "
+}
