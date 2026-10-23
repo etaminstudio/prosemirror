@@ -78,9 +78,9 @@ class ImageBlock < Prosemirror::NodeType
 end
 ```
 
-In Rails, components that use Rails helpers (`image_tag`, `url_for`…) need a view context. They get one when the document is rendered from a Phlex view, with `render doc.to_component`, and the app uses [`phlex-rails`](https://github.com/yippee-fun/phlex-rails). The same applies to a ViewComponent: `render FigureComponent.new(…)` works from a node in that case.
+In Rails, components that use Rails helpers (`image_tag`, `url_for`…) need a view context. With [`phlex-rails`](https://github.com/yippee-fun/phlex-rails), they get one when the document is rendered with `render doc.to_phlex`, from a Phlex view or an ERB template. The same applies to a ViewComponent: `render FigureComponent.new(…)` works from a node in that case.
 
-When the document is rendered with `to_html`, outside a view, render the component with a controller instead, and output its HTML as is:
+`<%= render doc %>` and `to_html` render the document on its own, without a view context, for example in a mailer or a JSON response. To support them, render the component with a controller instead, and output its HTML as is:
 
 ```ruby
 def view_template
