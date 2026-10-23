@@ -155,7 +155,7 @@ They differ in more than names:
   - a heading `level` like `1><script>`;
   - other URL schemes, hidden schemes (`java\tscript:`), `style` injection, deep nesting.
 
-### 0.2: HTML import
+### 0.2: HTML import (released)
 
 - `Prosemirror.from_html`, built on [Herb](https://herb-tools.dev), which doesn't raise on bad HTML.
 - The importer also needs to:

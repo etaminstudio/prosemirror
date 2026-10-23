@@ -1,10 +1,14 @@
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-23
+
 - Import HTML with `Prosemirror.from_html` (or `schema.parse_html`), as ProseMirror's `DOMParser` does. Needs the [`herb`](https://herb-tools.dev) gem, which isn't installed with this gem.
 - Node and mark types declare how to recognize them in HTML with `parse_html`, like ProseMirror's parse rules, and attributes with `prop …, parse_html:`. The built-in types have Tiptap's rules.
 - Table cells have an `align` attribute (`left`, `right` or `center`), rendered as a `text-align` style.
 - `Schema.tiptap` sorts marks in Tiptap's order: `code` now comes before `italic`, and `strike` before `underline`.
 - Tiptap's `code` mark can't be combined with other marks, as in Tiptap. `Schema.prosemirror` uses a new `Marks::Basic::Code`, which can.
+- `TYPES.md` documents node and mark types: options, attributes, rendering helpers and parse rules.
+- Custom types can pass Array, Hash or Date attribute values to Phlex outside Rails. Phlex 2.4.1 raised a `NameError` without the `date` library.
 
 ## [0.1.0] - 2026-10-23
 
