@@ -169,7 +169,7 @@ They differ in more than names:
 - Old HTML mapped to the schema: `<b>` and `<i>` to `bold` and `italic`, `<strike>` to `strike`, `<tt>` to `code`. `<font>` and `<center>` are unwrapped.
 - Tests: HTML from Tiptap gives the same JSON as Tiptap.
 
-### 0.3: Markdown and text import
+### 0.3: Markdown and text import (released)
 
 - `Prosemirror.from_markdown`, built from [`commonmarker`](https://github.com/gjtorikian/commonmarker)'s syntax tree. commonmarker's parser is written in Rust. Each Markdown node becomes the element commonmarker renders for it, without going through an HTML string, and HTML import's parse rules build the document.
 - GitHub Flavored Markdown: tables, strikethrough, autolinks. Task list items stay as text until task list nodes (0.6).
