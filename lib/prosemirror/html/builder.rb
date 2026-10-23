@@ -34,7 +34,7 @@ module Prosemirror
       def call(html)
         self.class.load_herb
         root = Element.new("#document")
-        Splitter.new(PIECE_SIZE).call(html.to_s).each do |piece|
+        Splitter.new(PIECE_SIZE).call(UTF8.string(html)).each do |piece|
           # Without `timeout: 0`, Herb stops after a second and returns what it parsed so far.
           build(Herb.parse(piece, track_locations: false, strict: false, timeout: 0).value.children, root)
         end

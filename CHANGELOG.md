@@ -1,7 +1,8 @@
 ## [Unreleased]
 
-- Import Markdown with `Prosemirror.from_markdown` (or `schema.parse_markdown`). Needs the [`commonmarker`](https://github.com/gjtorikian/commonmarker) gem, which isn't installed with this gem. GitHub Flavored Markdown tables, strikethrough and autolinks are supported, and the schema's parse rules apply, so custom types can match Markdown too. Raw HTML goes through HTML import when the herb gem is installed.
+- Import Markdown with `Prosemirror.from_markdown` (or `schema.parse_markdown`). Needs the [`commonmarker`](https://github.com/gjtorikian/commonmarker) gem, which isn't installed with this gem. GitHub Flavored Markdown tables, strikethrough and autolinks are supported, and the schema's parse rules apply, so custom types can match Markdown too. Raw HTML goes through HTML import when the herb gem is installed. YAML front matter is dropped.
 - Import plain text with `Prosemirror.from_text` (or `schema.parse_text`): blank lines separate paragraphs, and other line breaks become hard breaks.
+- HTML, Markdown and text import accept nil and binary strings, and replace invalid UTF-8 with U+FFFD, as browsers do. HTML import raised on invalid UTF-8.
 
 ## [0.2.0] - 2026-10-23
 

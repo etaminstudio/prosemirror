@@ -128,7 +128,7 @@ module Prosemirror
       paragraph = node_type(:paragraph) || @nodes.find { |type| textblock?(type) }
       linebreak = @nodes.find(&:linebreak_replacement?)
       separator = linebreak ? {"type" => linebreak.type_name.to_s} : {"type" => "text", "text" => " "}
-      blocks = text.to_s.gsub(/\r\n?/, "\n").split(/\n[ \t]*\n/).map { |block| block.gsub(/\A\n+|\n+\z/, "") }
+      blocks = UTF8.string(text).gsub(/\r\n?/, "\n").split(/\n[ \t]*\n/).map { |block| block.gsub(/\A\n+|\n+\z/, "") }
       content = blocks.reject { |block| block.strip.empty? }.map do |block|
         inline = block.split("\n").each_with_index.flat_map do |line, index|
           [(separator if index.positive?), ({"type" => "text", "text" => line} unless line.empty?)].compact

@@ -10,7 +10,8 @@ require "zeitwerk"
 
 loader = Zeitwerk::Loader.for_gem
 loader.inflector.inflect(
-  "html" => "HTML", "html_parser" => "HTMLParser", "html_renderer" => "HTMLRenderer", "json_parser" => "JSONParser"
+  "html" => "HTML", "html_parser" => "HTMLParser", "html_renderer" => "HTMLRenderer", "json_parser" => "JSONParser",
+  "utf8" => "UTF8"
 )
 loader.setup
 

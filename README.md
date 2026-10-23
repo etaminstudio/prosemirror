@@ -89,6 +89,8 @@ It reads GitHub Flavored Markdown: tables, strikethrough and autolinks. Each Mar
 
 Raw HTML in Markdown goes through HTML import when the herb gem is installed, and stays as text otherwise.
 
+YAML front matter, between `---` lines at the start, is dropped. Footnotes aren't supported yet: `[^1]: Note` reads as a link definition, as in CommonMark. Markdown nested more than 1,000 levels deep raises `Prosemirror::Error`.
+
 ## Text import
 
 ```ruby

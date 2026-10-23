@@ -11,9 +11,13 @@ module Prosemirror
     #   document holding raw HTML is rendered to HTML by commonmarker and imported. Without it, raw HTML
     #   stays as text.
     # - Code blocks lose their final newline, as in prosemirror-markdown.
+    # - YAML front matter, between `---` lines at the start, is dropped.
     class Builder
       MAX_DEPTH = HTML::Builder::MAX_DEPTH
-      EXTENSIONS = {strikethrough: true, table: true, autolink: true, tasklist: false, shortcodes: false, header_ids: nil}.freeze
+      EXTENSIONS = {
+        strikethrough: true, table: true, autolink: true, tasklist: false, shortcodes: false, header_ids: nil,
+        front_matter_delimiter: "---"
+      }.freeze
       RENDER_OPTIONS = {extension: EXTENSIONS, render: {unsafe: true, hardbreaks: false, github_pre_lang: false}}.freeze
       TAGS = {
         paragraph: "p", block_quote: "blockquote", item: "li", thematic_break: "hr", table_row: "tr",
@@ -36,8 +40,8 @@ module Prosemirror
       # A root Element holding the content.
       def call(markdown)
         self.class.load_commonmarker
-        markdown = markdown.to_s
-        document = Commonmarker.parse(markdown, options: {extension: EXTENSIONS})
+        markdown = UTF8.string(markdown)
+        document = parse(markdown)
         return from_html(document) if raw_html?(document) && HTML::Builder.herb?
 
         @lines = markdown.lines
@@ -47,6 +51,12 @@ module Prosemirror
       end
 
       private
+
+      def parse(markdown)
+        Commonmarker.parse(markdown, options: {extension: EXTENSIONS})
+      rescue Commonmarker::NestingDepthExceededError => error
+        raise Error, "Markdown nested too deeply: #{error.message}"
+      end
 
       # Walks the tree without recursion. Each item of the stack is a node, the element to add it to, and
       # the depth of that element. Elements nested deeper than MAX_DEPTH are flattened.
@@ -82,6 +92,7 @@ module Prosemirror
         when :softbreak then text(target, "\n")
         when :html_block then text(target.append(HTML::Element.new("p")), node.literal.chomp)
         when :html_inline then text(target, node.literal)
+        when :frontmatter then nil
         else HTML::Element.new("span") # Unwrapped by HTML import, like escaped characters (`\*`).
         end
       end

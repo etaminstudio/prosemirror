@@ -39,6 +39,11 @@ class TestHTMLImport < Minitest::Test
       import(%(<font color="red">font</font><center>center</center><tt>tt</tt>))
   end
 
+  def test_binary_and_invalid_utf8
+    assert_equal "café", Prosemirror.from_html("<p>café</p>".b).text_content
+    assert_equal "caf\uFFFD", Prosemirror.from_html("<p>caf\xE9</p>".dup.force_encoding("UTF-8")).text_content
+  end
+
   def test_erb_is_kept_as_text
     assert_equal "Price <%= price %>", Prosemirror.from_html("<p>Price <%= price %></p>").text_content
   end
