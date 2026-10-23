@@ -133,6 +133,31 @@ class TestParsing < Minitest::Test
     assert_equal "<p>x</p>", render(json)
   end
 
+  def test_keeps_attributes_the_schema_does_not_declare
+    link = {"type" => "link", "attrs" => {"href" => "https://example.com", "data-tracking" => "cta"}}
+    json = doc({"type" => "paragraph", "attrs" => {"textAlign" => "center"}, "content" => [text("x", [link])]})
+    document = Prosemirror.parse(json)
+
+    assert_equal({"textAlign" => "center"}, document.content.first.unknown_attrs)
+    assert_equal({"textAlign" => "center"}, document.to_h.dig("content", 0, "attrs"))
+    assert_equal({"href" => "https://example.com", "target" => nil, "rel" => nil, "class" => nil, "title" => nil,
+                  "data-tracking" => "cta"}, document.to_h.dig("content", 0, "content", 0, "marks", 0, "attrs"))
+  end
+
+  def test_never_renders_attributes_the_schema_does_not_declare
+    json = doc({"type" => "paragraph", "attrs" => {"textAlign" => "center", "onclick" => "alert(1)"},
+                "content" => [text("x")]})
+
+    assert_equal "<p>x</p>", render(json)
+  end
+
+  def test_unknown_attributes_do_not_include_aliases
+    json = doc({"type" => "ordered_list", "attrs" => {"order" => 3},
+                "content" => [{"type" => "list_item", "content" => [paragraph(text("x"))]}]})
+
+    assert_equal({"start" => 3, "type" => nil}, Prosemirror.parse(json).to_h.dig("content", 0, "attrs"))
+  end
+
   def test_keeps_unknown_nodes_and_marks
     json = doc({"type" => "callout", "attrs" => {"tone" => "info"},
                  "content" => [paragraph(text("x", [{"type" => "glow"}]))]})

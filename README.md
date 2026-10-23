@@ -27,6 +27,8 @@ doc.to_text  # => "Hello\n\nWorld"
 doc.to_h     # => { "type" => "doc", "content" => [...] }
 ```
 
+`to_h` gives the document back as JSON, with invalid parts fixed (see [Invalid documents](#invalid-documents)). Attributes the schema doesn't declare, for example from a Tiptap extension it doesn't know, are kept as they are in `unknown_attrs`, and never rendered.
+
 In Rails, `to_html` returns an `html_safe` string, and documents can be rendered like other objects in ERB templates and ViewComponents:
 
 ```erb

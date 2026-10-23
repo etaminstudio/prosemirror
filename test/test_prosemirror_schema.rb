@@ -35,7 +35,7 @@ class TestProsemirrorSchema < Minitest::Test
     document = Prosemirror.parse(json, schema: schema)
 
     assert_equal "<pre><code>x</code></pre>", document.to_html
-    assert_nil document.to_h.dig("content", 0, "attrs")
+    assert_equal({"params" => "ruby"}, document.to_h.dig("content", 0, "attrs"), "kept, but not rendered")
   end
 
   def test_link_with_title
