@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-24
+
 - Tiptap's YouTube and Twitch embeds, in `Schema.tiptap`: `youtube` and `twitch`, with the video's URL in `src`, rendered as an iframe of its embed URL, built from the video's id. They are imported from Tiptap's markup, and from iframes of embed URLs without it. Subclasses set Twitch's `parent` domain and YouTube's nocookie host. Markdown export writes a link to the video, or the iframe with `html: true`.
 - Tiptap's details, in `Schema.tiptap`: `details`, `details_summary` and `details_content`, rendered and imported as Tiptap does, including `<details>` without Tiptap's content wrapper. `open`, which Tiptap keeps with `persist: true`, is rendered and imported. Markdown export writes them as `<details>` HTML around Markdown content, as GitHub reads it.
 - `Schema.tiptap(text_align: true)` adds Tiptap's TextAlign extension to headings and paragraphs: a `textAlign` attribute, rendered as a `text-align` style, and imported from it or from the old `align` attribute. Other types get it by including `Prosemirror::TextAlign`.
