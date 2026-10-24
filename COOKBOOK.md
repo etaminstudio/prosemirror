@@ -117,4 +117,21 @@ Prosemirror::Schema.tiptap(
 )
 ```
 
-`resolve_url` runs before the allowed URL schemes are checked, so `gid://` doesn't need to be allowed. When the record doesn't exist, the link is removed, its text is kept, and the problem goes to `on_invalid`. Each link runs one query.
+`resolve_url` runs before the allowed URL schemes are checked, so `gid://` doesn't need to be allowed. When the record doesn't exist, the link is removed, its text is kept, and the problem goes to `on_invalid`.
+
+Each link runs one query. To load all the records of a document at once, use `resolve_urls`, which gets all its URLs before rendering:
+
+```ruby
+Prosemirror::Schema.tiptap(
+  resolve_urls: lambda do |urls|
+    gids = urls.select { |url| url.start_with?("gid://") }
+    records = GlobalID::Locator.locate_many(gids, ignore_missing: true).index_by { |record| record.to_global_id.to_s }
+
+    urls.to_h do |url|
+      next [url, url] unless url.start_with?("gid://")
+
+      [url, records[url]&.then { |record| Rails.application.routes.url_helpers.polymorphic_path(record) }]
+    end
+  end
+)
+```

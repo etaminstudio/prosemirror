@@ -5,7 +5,7 @@ module Prosemirror
     module Basic
       # ProseMirror's link. Without an allowed `href`, its text is rendered without a link.
       class Link < MarkType
-        prop :href, _String(length: 1..)
+        prop :href, _String(length: 1..), url: true
         prop :title, _String?
         parse_html(tag: "a[href]") { |element, schema| schema.allowed_url?(element["href"]) && {} }
 

@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- `resolve_urls:` resolves all the URLs of a document at once, before rendering it, to look up records in one query, where `resolve_url:` is called once per URL. Attributes holding URLs are declared with `prop … url: true`, like links' `href` and images' `src`, and `Document#urls` lists them.
+
 ## [0.6.0] - 2026-10-24
 
 - Tiptap's YouTube and Twitch embeds, in `Schema.tiptap`: `youtube` and `twitch`, with the video's URL in `src`, rendered as an iframe of its embed URL, built from the video's id. They are imported from Tiptap's markup, and from iframes of embed URLs without it. Subclasses set Twitch's `parent` domain and YouTube's nocookie host. Markdown export writes a link to the video, or the iframe with `html: true`.

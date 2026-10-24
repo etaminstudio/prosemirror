@@ -19,6 +19,9 @@ module Prosemirror
     end
     # Called with each URL before it is checked, to rewrite it.
     prop :resolve_url, _Callable?, reader: false
+    # Called with all the URLs of a document at once, before rendering it: returns a Hash from each URL to
+    # its rewritten URL, or nil. Instead of `resolve_url`, to look up records in one query.
+    prop :resolve_urls, _Callable?, reader: false, predicate: :public
     # Raise `InvalidDocument` instead of fixing invalid documents.
     prop :strict, _Boolean, default: false, reader: false, predicate: :public
     # Called with an `InvalidDocument` error for each problem fixed.
@@ -66,6 +69,7 @@ module Prosemirror
       @textblocks = @nodes.to_h { |type| [type, textblock_type?(type)] }
       @content_matches = @nodes.to_h { |type| [type, ContentMatch.compile(type.content, self)] }
       raise ArgumentError, "the schema has no #{@top_node} node type" unless node_type(@top_node)
+      raise ArgumentError, "resolve_url and resolve_urls can't be used together" if @resolve_url && @resolve_urls
     end
 
     # The start state of a node type's content expression.
@@ -174,6 +178,14 @@ module Prosemirror
 
     # Whether a URL's scheme is allowed, or the URL is relative. Browsers ignore leading control characters
     # and spaces, and tabs and newlines anywhere in a URL.
+    # The URLs resolved with `resolve_urls`, as a Hash, or nil without it.
+    def resolve_urls(urls)
+      return unless @resolve_urls
+      return {} if urls.empty?
+
+      @resolve_urls.call(urls).to_h
+    end
+
     def allowed_url?(url)
       return false unless url.is_a?(String)
 
@@ -194,11 +206,13 @@ module Prosemirror
       @textblocks.fetch(type, false)
     end
 
-    # The URL after `resolve_url`, when its scheme is allowed. Otherwise nil, and the problem is reported.
-    def safe_url(url)
+    # The URL after `resolve_url` or `resolve_urls`, when its scheme is allowed. Otherwise nil, and the
+    # problem is reported. `resolved_urls` holds URLs already resolved with `resolve_urls`: others are
+    # resolved one at a time.
+    def safe_url(url, resolved_urls = nil)
       return nil unless url.is_a?(String)
 
-      resolved = @resolve_url ? @resolve_url.call(url) : url
+      resolved = resolve(url, resolved_urls)
       return report("URL could not be resolved: #{url.inspect}") unless resolved.is_a?(String)
       return report("URL scheme not allowed: #{resolved.inspect}") unless allowed_url?(resolved)
 
@@ -226,6 +240,14 @@ module Prosemirror
     end
 
     private
+
+    def resolve(url, resolved_urls)
+      return @resolve_url.call(url) if @resolve_url
+      return url unless @resolve_urls
+
+      resolved_urls = resolve_urls([url]) unless resolved_urls&.key?(url)
+      resolved_urls[url]
+    end
 
     def lookup(types)
       types.each_with_object({}) do |type, table|

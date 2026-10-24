@@ -24,6 +24,15 @@ module Prosemirror
       root.descendants(&)
     end
 
+    # The URLs in the attributes of its nodes and marks declared with `url: true`, like links' `href` and
+    # images' `src`, without duplicates.
+    def urls
+      each_with_object(Set.new) do |node, urls|
+        add_urls(urls, schema.node_type(node.type), node.attrs)
+        node.marks.each { |mark| add_urls(urls, schema.mark_type(mark.type), mark.attrs) }
+      end.to_a
+    end
+
     # The document as HTML. The string is `html_safe` when ActiveSupport is loaded.
     def to_html
       html = to_phlex.call
@@ -109,6 +118,15 @@ module Prosemirror
 
     def hash
       root.hash
+    end
+
+    private
+
+    def add_urls(urls, type, attrs)
+      type&.url_attributes&.each do |name|
+        value = attrs[name]
+        urls << value if value.is_a?(String)
+      end
     end
   end
 end
