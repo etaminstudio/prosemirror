@@ -162,6 +162,12 @@ Type names are written in snake_case (`bullet_list`). Use `case: :camel` to writ
 Prosemirror.schema = Prosemirror::Schema.tiptap(case: :camel)
 ```
 
+`text_align: true` adds Tiptap's TextAlign extension, configured for headings and paragraphs: a `textAlign` attribute, `left`, `center`, `right` or `justify`, rendered as a `text-align` style. HTML import also reads the old `align` attribute. Markdown has no syntax for it: Markdown export leaves it out. Without the option, `textAlign` is kept in `to_h`, but not rendered.
+
+```ruby
+Prosemirror::Schema.tiptap(text_align: true)
+```
+
 ## Custom nodes and marks
 
 A node type is a Phlex component, and its attributes are Literal properties. The type name comes from the class name (`ImageBlock` → `image_block`).
