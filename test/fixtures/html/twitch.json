@@ -1,0 +1,19 @@
+{
+  "html": "<div data-twitch-video=\"\"><iframe src=\"https://player.twitch.tv/?video=123456&amp;parent=example.com&amp;autoplay=true&amp;time=1h2m3s\" width=\"400\" height=\"300\"></iframe></div>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "twitch",
+        "attrs": {
+          "src": "https://www.twitch.tv/videos/123456",
+          "width": 400,
+          "height": 300,
+          "autoplay": true,
+          "muted": false,
+          "time": "1h2m3s"
+        }
+      }
+    ]
+  }
+}
