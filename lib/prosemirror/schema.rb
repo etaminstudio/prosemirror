@@ -24,11 +24,13 @@ module Prosemirror
     # Called with an `InvalidDocument` error for each problem fixed.
     prop :on_invalid, _Callable?, reader: false
 
-    # Tiptap's StarterKit and common extensions.
-    def self.tiptap(**)
+    # Tiptap's StarterKit and common extensions. `text_align: true` adds the TextAlign extension, configured
+    # for headings and paragraphs.
+    def self.tiptap(text_align: false, **)
       new(
         nodes: [
-          Nodes::Doc, Nodes::Paragraph, Nodes::Text, Nodes::Heading, Nodes::Blockquote, Nodes::BulletList,
+          Nodes::Doc, text_align ? TextAlign::Paragraph : Nodes::Paragraph, Nodes::Text,
+          text_align ? TextAlign::Heading : Nodes::Heading, Nodes::Blockquote, Nodes::BulletList,
           Nodes::OrderedList, Nodes::ListItem, Nodes::CodeBlock, Nodes::HardBreak, Nodes::HorizontalRule,
           Nodes::Image, Nodes::Table, Nodes::TableRow, Nodes::TableHeader, Nodes::TableCell, Nodes::TaskList,
           Nodes::TaskItem, Nodes::Mention
