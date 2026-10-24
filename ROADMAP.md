@@ -192,7 +192,7 @@ They differ in more than names:
   ```
 - Validation against the schema (`check`).
 
-### 0.5: Markdown export
+### 0.5: Markdown export (released)
 
 - `doc.to_markdown`, ported from [`prosemirror-markdown`](https://github.com/ProseMirror/prosemirror-markdown)'s serializer. Useful to send content to LLMs.
 - GitHub Flavored Markdown tables and strikethrough. Formatting without Markdown syntax, like underline, keeps its text, or is written as HTML with `html: true`.

@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-24
+
 - `Document#to_markdown` writes Markdown, with GitHub Flavored Markdown tables and strikethrough, like prosemirror-markdown. Node types write themselves in `to_markdown`, and mark types declare their syntax with `markdown`. `html: true` writes underline, highlight, subscript, superscript and image sizes as HTML.
 - `Document#check` accepts attributes whose JSON name differs from their property name, like a link's `class`. It reported them as invalid.
 - Faster: parsing JSON takes less than half the time, rendering and `to_h` about a third less, and HTML and Markdown import about a quarter less, with the same results. Strings in documents parsed from a JSON string are frozen, including the values of unknown attributes.
