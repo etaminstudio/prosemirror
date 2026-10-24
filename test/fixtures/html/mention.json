@@ -1,0 +1,49 @@
+{
+  "html": "<p>Thanks <span data-type=\"mention\" data-id=\"1\" data-label=\"Ada\">@Ada</span>, <span data-type=\"mention\" data-id=\"2\">ignored</span> and <span data-type=\"mention\" data-id=\"release\" data-mention-suggestion-char=\"#\">#release</span></p>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Thanks "
+          },
+          {
+            "type": "mention",
+            "attrs": {
+              "id": "1",
+              "label": "Ada",
+              "mentionSuggestionChar": "@"
+            }
+          },
+          {
+            "type": "text",
+            "text": ", "
+          },
+          {
+            "type": "mention",
+            "attrs": {
+              "id": "2",
+              "label": null,
+              "mentionSuggestionChar": "@"
+            }
+          },
+          {
+            "type": "text",
+            "text": " and "
+          },
+          {
+            "type": "mention",
+            "attrs": {
+              "id": "release",
+              "label": null,
+              "mentionSuggestionChar": "#"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
