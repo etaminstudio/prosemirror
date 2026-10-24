@@ -24,6 +24,7 @@ doc = Prosemirror.parse(record.content)  # a Hash or a JSON string
 
 doc.to_html  # => "<h2>Hello</h2><p>World</p>"
 doc.to_text  # => "Hello\n\nWorld"
+doc.to_markdown  # => "## Hello\n\nWorld\n"
 doc.to_h     # => { "type" => "doc", "content" => [...] }
 ```
 
@@ -116,6 +117,23 @@ It reads GitHub Flavored Markdown: tables, strikethrough and autolinks. Each Mar
 Raw HTML in Markdown goes through HTML import when the herb gem is installed, and stays as text otherwise.
 
 YAML front matter, between `---` lines at the start, is dropped. Footnotes aren't supported yet: `[^1]: Note` reads as a link definition, as in CommonMark. Markdown nested more than 1,000 levels deep raises `Prosemirror::Error`.
+
+## Markdown export
+
+`to_markdown` writes the document as Markdown, with GitHub Flavored Markdown for tables and strikethrough, like [prosemirror-markdown](https://github.com/ProseMirror/prosemirror-markdown). It needs no gem.
+
+```ruby
+doc.to_markdown              # => "## Hello\n\n**World**\n"
+doc.to_markdown(html: true)  # underline, highlight, subscript and superscript as HTML
+```
+
+- Text is escaped, so that it reads back as text: `*`, `_`, `[`, a `#` or `-` that would start a block, HTML-like `<b>`, and URLs that GitHub would turn into links.
+- Markdown has no syntax for underline, highlight, subscript, superscript or image sizes: by default, only their text or image is written. With `html: true`, they are written as HTML.
+- Emphasis that CommonMark can't write where it is, like bold on a comma between two letters, is dropped and its text kept.
+- Tables are written as GFM tables. A cell's paragraphs and line breaks are joined with `<br>`, and its other blocks, like lists, are written as HTML.
+- Empty paragraphs are left out.
+
+Importing the Markdown gives the document back, as far as Markdown can hold it. Custom types write their own Markdown: see [Node and mark types](TYPES.md#markdown-export).
 
 ## Text import
 

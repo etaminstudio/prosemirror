@@ -10,6 +10,11 @@ module Prosemirror
       parse_html tag: "br"
 
       def view_template = br
+
+      # A backslash before the newline, unless only line breaks follow.
+      def to_markdown(markdown, parent, index)
+        markdown.write("\\\n") if parent.content[(index + 1)..].any? { |sibling| sibling.type != node.type }
+      end
     end
   end
 end

@@ -10,6 +10,12 @@ module Prosemirror
       (1..6).each { |level| parse_html tag: "h#{level}", attrs: {level:} }
 
       def view_template(&) = tag(:"h#{@level}", &)
+
+      def to_markdown(markdown, _parent, _index)
+        markdown.write("#{"#" * @level} ")
+        markdown.render_inline(node, from_block_start: false)
+        markdown.close_block(node)
+      end
     end
   end
 end

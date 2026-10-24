@@ -44,6 +44,21 @@ module Prosemirror
         inherited_setting(:@group, [])
       end
 
+      # The mark's Markdown syntax, as prosemirror-markdown's MarkSerializerSpec:
+      # - `open` and `close`: strings, or blocks called with the MarkdownSerializer, the mark, the parent node
+      #   and the index of the marked node;
+      # - `mixable`: the mark can open and close in any order with other mixable marks, like `*` and `**`;
+      # - `expel_enclosing_whitespace`: spaces at the edges move outside the mark, as emphasis requires;
+      # - `escape: false`: the content isn't escaped, as in inline code. The mark must come last.
+      # Without it, the mark keeps only its text, or its HTML with `to_markdown(html: true)`.
+      def markdown(open:, close:, mixable: false, expel_enclosing_whitespace: false, escape: true)
+        @markdown_spec = {open:, close:, mixable:, expel_enclosing_whitespace:, escape:}.freeze
+      end
+
+      def markdown_spec
+        inherited_setting(:@markdown_spec, nil)
+      end
+
       # Whether one element can wrap several adjacent nodes with this mark. Defaults to true.
       def spanning(value = nil)
         return @spanning = value unless value.nil?

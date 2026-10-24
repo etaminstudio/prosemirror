@@ -17,6 +17,10 @@ module Prosemirror
           src = safe_url(@src)
           img(src: src, alt: @alt, title: @title) if src
         end
+
+        def to_markdown(markdown, _parent, _index)
+          markdown.write(Nodes::Image.markdown_image(markdown, @src, @alt, @title))
+        end
       end
     end
   end

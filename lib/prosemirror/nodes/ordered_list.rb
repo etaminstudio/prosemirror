@@ -31,6 +31,17 @@ module Prosemirror
       def view_template(&)
         ol(start: (@start unless @start == 1), type: @type, &)
       end
+
+      def to_markdown(markdown, parent, index)
+        self.class.numbered(markdown, node, @start, markdown.list_after_list?(parent, index) ? ")" : ".")
+      end
+
+      # Items numbered from `start`, with the numbers aligned. `)` instead of `.` keeps a list right after
+      # another ordered list apart from it.
+      def self.numbered(markdown, node, start, delimiter = ".")
+        width = (start + node.content.size - 1).to_s.length
+        markdown.render_list(node, " " * (width + 2)) { |index| "#{(start + index).to_s.rjust(width)}#{delimiter} " }
+      end
     end
   end
 end

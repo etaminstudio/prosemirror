@@ -16,6 +16,10 @@ module Prosemirror
         def view_template(&)
           ol(start: (@order unless @order == 1), &)
         end
+
+        def to_markdown(markdown, parent, index)
+          Nodes::OrderedList.numbered(markdown, node, @order, markdown.list_after_list?(parent, index) ? ")" : ".")
+        end
       end
     end
   end

@@ -9,6 +9,8 @@ module Prosemirror
       parse_html style: "font-style=normal", clear_mark: true
       parse_html style: "font-style=italic"
 
+      markdown open: "*", close: "*", mixable: true, expel_enclosing_whitespace: true
+
       def view_template(&) = em(&)
     end
   end

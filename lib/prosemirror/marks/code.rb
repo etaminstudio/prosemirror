@@ -10,6 +10,8 @@ module Prosemirror
       parse_html tag: "code"
       parse_html tag: "tt"
 
+      markdown(**MarkdownSerializer::CODE)
+
       def view_template(&) = code(&)
     end
   end

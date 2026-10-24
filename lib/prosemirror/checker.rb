@@ -63,10 +63,10 @@ module Prosemirror
       invalid("invalid marks: #{node.marks.map { |mark| @schema.json_type_name(mark.type) }.join(" ")}", path) unless sorted == node.marks
     end
 
-    # Attributes are valid when building them from themselves reports nothing and changes nothing.
+    # Attributes are valid when building them from their JSON reports nothing and changes nothing.
     def check_attrs(type, attrs, path)
       problems = []
-      built = type.build_attrs(attrs, report: ->(message) { problems << message })
+      built = type.build_attrs(type.serialize_attrs(attrs), report: ->(message) { problems << message })
       invalid(problems.first, path) unless problems.empty?
       invalid("invalid attributes: #{attrs.inspect}", path) unless built == attrs
     end

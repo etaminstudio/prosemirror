@@ -50,6 +50,14 @@ module Prosemirror
         root
       end
 
+      # The URL as commonmarker renders it, with the characters URLs can't hold percent-encoded. Markdown export
+      # writes URLs this way too, so that importing its output changes nothing.
+      def self.escape_url(url)
+        host = url[IPV6_HOST].to_s
+        rest = url.delete_prefix(host).b.gsub(URL_UNSAFE) { |byte| byte.ord.zero? ? "%EF%BF%BD" : format("%%%02X", byte.ord) }
+        host + rest.force_encoding(Encoding::UTF_8)
+      end
+
       private
 
       def parse(markdown)
@@ -188,12 +196,7 @@ module Prosemirror
         end
       end
 
-      # The URL as commonmarker renders it, with the characters URLs can't hold percent-encoded.
-      def escape_url(url)
-        host = url[IPV6_HOST].to_s
-        rest = url.delete_prefix(host).b.gsub(URL_UNSAFE) { |byte| byte.ord.zero? ? "%EF%BF%BD" : format("%%%02X", byte.ord) }
-        host + rest.force_encoding(Encoding::UTF_8)
-      end
+      def escape_url(url) = self.class.escape_url(url)
 
       def plain_text(node)
         node.to_a.map { |child| %i[text code].include?(child.type) ? child.string_content : plain_text(child) }.join

@@ -65,6 +65,13 @@ class TestCheck < Minitest::Test
     assert_equal "doc.content[1]: horizontal_rule has no content, but has 1 nodes", problem(with_content)
   end
 
+  # A link's `class` is the `css_class` property: its JSON name differs from its property name.
+  def test_attributes_with_a_json_name
+    document = parse(doc(paragraph(text("a", [{"type" => "link", "attrs" => {"href" => "/a", "class" => "external"}}]))))
+
+    assert document.valid?, problem(document)
+  end
+
   def test_camel_case_names
     schema = Prosemirror::Schema.tiptap(case: :camel, on_invalid: ->(_) {})
 
