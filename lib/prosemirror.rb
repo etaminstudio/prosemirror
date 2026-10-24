@@ -29,6 +29,17 @@ module Prosemirror
     end
   end
 
+  # A URL that `resolve_url` or `resolve_urls` resolved to nil, like a link to a deleted record. Its own
+  # class, so that error trackers group these problems apart from others.
+  class UnresolvedURL < InvalidDocument
+    attr_reader :url
+
+    def initialize(message, url:, path: nil)
+      @url = url
+      super(message, path:)
+    end
+  end
+
   class << self
     attr_writer :schema
 
