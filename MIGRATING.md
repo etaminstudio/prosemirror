@@ -79,7 +79,7 @@ prosemirror_to_html built HTML strings, then cleaned them up with Loofah. `prose
 
 ```ruby
 # Before
-HtmlToProsemirror::Renderer.new.render(html)                         # snake_case
+HtmlToProsemirror::Renderer.new.render(html)                          # snake_case
 HtmlToProsemirror::Renderer.new(case_type: :lower_camel).render(html) # camelCase
 
 # After
