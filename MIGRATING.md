@@ -116,3 +116,16 @@ end
 schema = Prosemirror::Schema.tiptap.with(User)
 Prosemirror.from_html(html, schema:).to_h # {"type" => "user", "attrs" => {"id" => "7"}}
 ```
+
+## Going further
+
+Beyond what the legacy gems did, `prosemirror` can:
+
+- write a document as [Markdown](README.md#markdown-export), useful for LLMs, or as [plain text](README.md#usage);
+- import [Markdown](README.md#markdown-import) and [plain text](README.md#text-import), with the same schema as HTML import;
+- [query and transform documents](README.md#transforming-documents): nodes are immutable values with pattern matching, and `transform` builds a new document, for example to [remove empty paragraphs before saving](COOKBOOK.md#remove-empty-paragraphs-before-saving);
+- [check documents](README.md#transforming-documents) against the schema, and fix and report [invalid documents](README.md#invalid-documents);
+- render inside Rails views and [Phlex components](README.md#usage), and [your own components](COOKBOOK.md#render-your-own-components) for custom nodes;
+- resolve link URLs, for example [links to records with GlobalID](COOKBOOK.md#links-to-records-with-globalid), with [allowed URL schemes](README.md#urls);
+- use Tiptap's [task lists, details, mentions, YouTube and Twitch embeds, and text alignment](README.md#schemas), or ProseMirror's own schema;
+- declare custom types with [content expressions, attributes and parse rules](TYPES.md).
