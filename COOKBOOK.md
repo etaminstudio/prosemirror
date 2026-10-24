@@ -104,22 +104,7 @@ end
 
 ## Links to records with GlobalID
 
-Store links to records as GlobalIDs (`gid://app/Page/1`), so they keep working when a record's URL changes, and turn them into URLs when rendering:
-
-```ruby
-Prosemirror::Schema.tiptap(
-  resolve_url: lambda do |url|
-    next url unless url.start_with?("gid://")
-
-    record = GlobalID::Locator.locate(url)
-    Rails.application.routes.url_helpers.polymorphic_path(record) if record
-  end
-)
-```
-
-`resolve_url` runs before the allowed URL schemes are checked, so `gid://` doesn't need to be allowed. When the record doesn't exist, the link is removed, its text is kept, and the problem goes to `on_invalid`.
-
-Each link runs one query. To load all the records of a document at once, use `resolve_urls`, which gets all its URLs before rendering:
+Store links to records as GlobalIDs (`gid://app/Page/1`), so they keep working when a record's URL changes, and turn them into URLs when rendering. `resolve_urls` gets all the URLs of a document before rendering it, so its records load in one query:
 
 ```ruby
 Prosemirror::Schema.tiptap(
@@ -132,6 +117,21 @@ Prosemirror::Schema.tiptap(
 
       [url, records[url]&.then { |record| Rails.application.routes.url_helpers.polymorphic_path(record) }]
     end
+  end
+)
+```
+
+URLs are resolved before the allowed URL schemes are checked, so `gid://` doesn't need to be allowed. When a record doesn't exist, its link is removed, its text is kept, and the problem goes to `on_invalid`.
+
+`resolve_url` is simpler, but runs one query per link:
+
+```ruby
+Prosemirror::Schema.tiptap(
+  resolve_url: lambda do |url|
+    next url unless url.start_with?("gid://")
+
+    record = GlobalID::Locator.locate(url)
+    Rails.application.routes.url_helpers.polymorphic_path(record) if record
   end
 )
 ```
