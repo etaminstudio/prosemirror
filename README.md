@@ -109,10 +109,10 @@ bundle add commonmarker
 doc = Prosemirror.from_markdown("## Hello\n\nSome **bold** text.")
 ```
 
-It reads GitHub Flavored Markdown: tables, strikethrough and autolinks. Each Markdown node becomes the element commonmarker renders for it, and the schema's parse rules apply as in HTML import, so custom types can match Markdown too: a type that matches `img` also gets Markdown images. For the built-in types, it gives the same JSON as rendering the Markdown to HTML and importing it in Tiptap, except that:
+It reads GitHub Flavored Markdown: tables, strikethrough, autolinks and task lists. Each Markdown node becomes the element commonmarker renders for it, and the schema's parse rules apply as in HTML import, so custom types can match Markdown too: a type that matches `img` also gets Markdown images. For the built-in types, it gives the same JSON as rendering the Markdown to HTML and importing it in Tiptap, except that:
 
 - code blocks lose their final newline, as in prosemirror-markdown;
-- task list items (`- [ ] todo`) stay as list items starting with `[ ] ` or `[x] `.
+- a bullet list whose items all have a checkbox (`- [ ] todo`) is a task list. In other lists, which Tiptap's task lists can't hold, checkboxes stay as text at the start of their item: `[ ] ` or `[x] `.
 
 Raw HTML in Markdown goes through HTML import when the herb gem is installed, and stays as text otherwise.
 
@@ -120,7 +120,7 @@ YAML front matter, between `---` lines at the start, is dropped. Footnotes aren'
 
 ## Markdown export
 
-`to_markdown` writes the document as Markdown, with GitHub Flavored Markdown for tables and strikethrough, like [prosemirror-markdown](https://github.com/ProseMirror/prosemirror-markdown). It needs no gem.
+`to_markdown` writes the document as Markdown, with GitHub Flavored Markdown for tables, strikethrough and task lists, like [prosemirror-markdown](https://github.com/ProseMirror/prosemirror-markdown). It needs no gem.
 
 ```ruby
 doc.to_markdown              # => "## Hello\n\n**World**\n"
@@ -147,10 +147,8 @@ Blank lines separate paragraphs, and other line breaks become hard breaks. Space
 
 Two schemas are included:
 
-```ruby
-Prosemirror::Schema.tiptap       # Tiptap's StarterKit, tables, images, mentions, underline, subscript, superscript, highlight (default)
-Prosemirror::Schema.prosemirror  # prosemirror-schema-basic and prosemirror-schema-list
-```
+- `Prosemirror::Schema.tiptap`, the default: Tiptap's StarterKit, with tables, images, task lists, mentions, underline, subscript, superscript and highlight.
+- `Prosemirror::Schema.prosemirror`: prosemirror-schema-basic and prosemirror-schema-list.
 
 Type names are written in snake_case (`bullet_list`). Use `case: :camel` to write camelCase (`bulletList`), as Tiptap does. Both cases are always accepted on input.
 

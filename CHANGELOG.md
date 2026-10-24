@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Tiptap's task lists, in `Schema.tiptap`: `task_list` and `task_item`, with a `checked` attribute. They render Tiptap's HTML, and are imported from it and from GitHub's. Markdown import reads GitHub Flavored Markdown task lists: a bullet list whose items all have a checkbox is a task list, and other checkboxes stay as text. Markdown export writes `- [x]` items.
+
 - Tiptap's mention node, in `Schema.tiptap`: rendered as `<span data-type="mention">@label</span>`, with its `id`, `label` and `mentionSuggestionChar` in `data-` attributes, and imported from that HTML. Its text is `@label`, or `@id` without a label. In Markdown, it's written as text, or as HTML with `html: true`.
 
 ## [0.5.0] - 2026-10-24

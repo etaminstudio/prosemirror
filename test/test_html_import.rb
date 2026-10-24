@@ -10,7 +10,8 @@ class TestHTMLImport < Minitest::Test
   def import(html, schema: self.schema) = Prosemirror.from_html(html, schema:).to_h
 
   # Each fixture holds HTML, and the JSON Tiptap's `generateJSON` gives for it, with StarterKit, Image,
-  # TableKit, Subscript, Superscript and Highlight (with colors), and links without default attributes.
+  # TableKit, Subscript, Superscript, Highlight (with colors), Mention, TaskList and TaskItem (nested), and
+  # links without default attributes.
   Dir[File.join(TestHelpers::FIXTURES, "html/*.json")].each do |path|
     fixture = JSON.parse(File.read(path))
 
@@ -32,6 +33,16 @@ class TestHTMLImport < Minitest::Test
       .dig("content", 0, "attrs")
 
     assert_equal({"src" => "/a.png", "alt" => nil, "title" => nil, "width" => 100, "height" => nil}, attrs)
+  end
+
+  # GitHub's task lists, which Tiptap reads as bullet lists. A list with items without a checkbox stays a
+  # bullet list.
+  def test_github_task_lists
+    item = ->(checked, label) { %(<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox"#{" checked" if checked} disabled> #{label}</li>) }
+    html = %(<ul class="contains-task-list">#{item.call(true, "Done")}#{item.call(false, "To do")}</ul><ul class="contains-task-list"><li>Plain</li>#{item.call(true, "Checked")}</ul>)
+
+    assert_equal [["taskList", [true, false], ["Done", "To do"]], ["bulletList", [nil, nil], ["Plain", "Checked"]]],
+      import(html)["content"].map { |list| [list["type"], list["content"].map { |item| item.dig("attrs", "checked") }, list["content"].map { |item| item.dig("content", 0, "content", 0, "text") }] }
   end
 
   def test_old_html

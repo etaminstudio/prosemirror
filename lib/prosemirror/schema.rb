@@ -30,7 +30,8 @@ module Prosemirror
         nodes: [
           Nodes::Doc, Nodes::Paragraph, Nodes::Text, Nodes::Heading, Nodes::Blockquote, Nodes::BulletList,
           Nodes::OrderedList, Nodes::ListItem, Nodes::CodeBlock, Nodes::HardBreak, Nodes::HorizontalRule,
-          Nodes::Image, Nodes::Table, Nodes::TableRow, Nodes::TableHeader, Nodes::TableCell, Nodes::Mention
+          Nodes::Image, Nodes::Table, Nodes::TableRow, Nodes::TableHeader, Nodes::TableCell, Nodes::TaskList,
+          Nodes::TaskItem, Nodes::Mention
         ],
         # In Tiptap's order, which sorts and nests marks.
         marks: [
