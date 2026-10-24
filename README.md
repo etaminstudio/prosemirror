@@ -124,11 +124,11 @@ YAML front matter, between `---` lines at the start, is dropped. Footnotes aren'
 
 ```ruby
 doc.to_markdown              # => "## Hello\n\n**World**\n"
-doc.to_markdown(html: true)  # underline, highlight, subscript and superscript as HTML
+doc.to_markdown(html: true)  # underline, highlight, subscript, superscript and mentions as HTML
 ```
 
 - Text is escaped, so that it reads back as text: `*`, `_`, `[`, a `#` or `-` that would start a block, HTML-like `<b>`, and URLs that GitHub would turn into links.
-- Markdown has no syntax for underline, highlight, subscript, superscript or image sizes: by default, only their text or image is written. With `html: true`, they are written as HTML.
+- Markdown has no syntax for underline, highlight, subscript, superscript, image sizes or mentions: by default, only their text or image is written, like `@Ada` for a mention. With `html: true`, they are written as HTML.
 - Emphasis that CommonMark can't write where it is, like bold on a comma between two letters, is dropped and its text kept.
 - Tables are written as GFM tables. A cell's paragraphs and line breaks are joined with `<br>`, and its other blocks, like lists, are written as HTML.
 - Empty paragraphs are left out.
@@ -148,7 +148,7 @@ Blank lines separate paragraphs, and other line breaks become hard breaks. Space
 Two schemas are included:
 
 ```ruby
-Prosemirror::Schema.tiptap       # Tiptap's StarterKit, tables, images, underline, subscript, superscript, highlight (default)
+Prosemirror::Schema.tiptap       # Tiptap's StarterKit, tables, images, mentions, underline, subscript, superscript, highlight (default)
 Prosemirror::Schema.prosemirror  # prosemirror-schema-basic and prosemirror-schema-list
 ```
 

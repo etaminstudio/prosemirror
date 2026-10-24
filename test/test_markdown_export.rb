@@ -138,6 +138,16 @@ class TestMarkdownExport < Minitest::Test
     assert_equal "<u>u</u><mark>x</mark><sup>2</sup>\n\n<img src=\"/a.png\" width=\"10\">\n", markdown(*content, html: true)
   end
 
+  # A mention is its text, or with `html: true`, HTML that Markdown import reads back.
+  def test_mentions
+    schema = Prosemirror::Schema.tiptap(case: :camel)
+    document = schema.parse(doc(paragraph(text("Hi "), {"type" => "mention", "attrs" => {"id" => "1", "label" => "Ada *", "mentionSuggestionChar" => "@"}},
+      {"type" => "mention", "attrs" => {"id" => "release", "label" => nil, "mentionSuggestionChar" => "#"}, "marks" => [bold]})))
+
+    assert_equal "Hi @Ada \\***#release**\n", document.to_markdown
+    assert_equal document.to_h, schema.parse_markdown(document.to_markdown(html: true)).to_h
+  end
+
   def test_prosemirror_schema
     schema = Prosemirror::Schema.prosemirror
 

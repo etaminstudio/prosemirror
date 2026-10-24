@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Tiptap's mention node, in `Schema.tiptap`: rendered as `<span data-type="mention">@label</span>`, with its `id`, `label` and `mentionSuggestionChar` in `data-` attributes, and imported from that HTML. Its text is `@label`, or `@id` without a label. In Markdown, it's written as text, or as HTML with `html: true`.
+
 ## [0.5.0] - 2026-10-24
 
 - `Document#to_markdown` writes Markdown, with GitHub Flavored Markdown tables and strikethrough, like prosemirror-markdown. Node types write themselves in `to_markdown`, and mark types declare their syntax with `markdown`. `html: true` writes underline, highlight, subscript, superscript and image sizes as HTML.

@@ -1,0 +1,55 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Thanks "
+          },
+          {
+            "type": "mention",
+            "attrs": {
+              "id": "1",
+              "label": "Ada",
+              "mentionSuggestionChar": "@"
+            }
+          },
+          {
+            "type": "text",
+            "text": " and "
+          },
+          {
+            "type": "mention",
+            "attrs": {
+              "id": 42,
+              "label": null,
+              "mentionSuggestionChar": "@"
+            }
+          },
+          {
+            "type": "text",
+            "text": ", see "
+          },
+          {
+            "type": "mention",
+            "attrs": {
+              "id": "release",
+              "label": "release",
+              "mentionSuggestionChar": "#"
+            },
+            "marks": [
+              {
+                "type": "bold"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<p>Thanks <span data-type=\"mention\" data-id=\"1\" data-label=\"Ada\" data-mention-suggestion-char=\"@\">@Ada</span> and <span data-type=\"mention\" data-id=\"42\" data-mention-suggestion-char=\"@\">@42</span>, see <strong><span data-type=\"mention\" data-id=\"release\" data-label=\"release\" data-mention-suggestion-char=\"#\">#release</span></strong></p>",
+  "text": "Thanks @Ada and @42, see #release"
+}
