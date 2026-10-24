@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-24
+
 - `resolve_urls:` resolves all the URLs of a document at once, before rendering it, to look up records in one query, where `resolve_url:` is called once per URL. Attributes holding URLs are declared with `prop … url: true`, like links' `href` and images' `src`, and `Document#urls` lists them.
 
 ## [0.6.0] - 2026-10-24
