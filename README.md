@@ -132,6 +132,7 @@ doc.to_markdown(html: true)  # underline, highlight, subscript, superscript and 
 - Emphasis that CommonMark can't write where it is, like bold on a comma between two letters, is dropped and its text kept.
 - Tables are written as GFM tables. A cell's paragraphs and line breaks are joined with `<br>`, and its other blocks, like lists, are written as HTML.
 - Details are written as `<details>` HTML, as on GitHub, with their content in Markdown.
+- YouTube and Twitch embeds are written as links to the video. With `html: true`, they are written as their iframe.
 - Empty paragraphs are left out.
 
 Importing the Markdown gives the document back, as far as Markdown can hold it. Custom types write their own Markdown: see [Node and mark types](TYPES.md#markdown-export).
@@ -150,7 +151,8 @@ Two schemas are included:
 
 ```ruby
 # The default: Tiptap's StarterKit, with tables, images, task lists,
-# details, mentions, underline, subscript, superscript and highlight
+# details, YouTube and Twitch embeds, mentions, underline, subscript,
+# superscript and highlight
 Prosemirror::Schema.tiptap
 
 # prosemirror-schema-basic and prosemirror-schema-list
@@ -167,6 +169,20 @@ Prosemirror.schema = Prosemirror::Schema.tiptap(case: :camel)
 
 ```ruby
 Prosemirror::Schema.tiptap(text_align: true)
+```
+
+YouTube and Twitch embeds store the video's URL in `src`, and render an iframe of its embed URL, built from the video's id: other URLs render nothing. HTML import reads Tiptap's markup, and also iframes of embed URLs without it. Twitch only plays embeds on the domain they name, so set it in a subclass, as Tiptap's `parent` option. YouTube's `nocookie` option is a subclass too:
+
+```ruby
+class Twitch < Prosemirror::Nodes::Twitch
+  def parent = "example.com"
+end
+
+class Youtube < Prosemirror::Nodes::Youtube
+  def embed_host = "https://www.youtube-nocookie.com"
+end
+
+Prosemirror.schema = Prosemirror::Schema.tiptap.with(Twitch, Youtube)
 ```
 
 ## Custom nodes and marks

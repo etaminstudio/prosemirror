@@ -1,0 +1,17 @@
+{
+  "html": "<div data-youtube-video=\"\"><iframe src=\"https://www.youtube.com/embed/dQw4w9WgXcQ?start=30&amp;rel=1\" width=\"560\" height=\"315\"></iframe></div>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "youtube",
+        "attrs": {
+          "src": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          "start": 30,
+          "width": 560,
+          "height": 315
+        }
+      }
+    ]
+  }
+}

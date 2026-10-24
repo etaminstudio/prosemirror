@@ -1,0 +1,27 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Watch:"
+          }
+        ]
+      },
+      {
+        "type": "youtube",
+        "attrs": {
+          "src": "https://youtu.be/dQw4w9WgXcQ",
+          "start": 30,
+          "width": 560,
+          "height": 315
+        }
+      }
+    ]
+  },
+  "html": "<p>Watch:</p><div data-youtube-video=\"\"><iframe src=\"https://www.youtube.com/embed/dQw4w9WgXcQ?start=30\" width=\"560\" height=\"315\" allowfullscreen></iframe></div>",
+  "text": "Watch:"
+}

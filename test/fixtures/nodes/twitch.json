@@ -1,0 +1,29 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Watch:"
+          }
+        ]
+      },
+      {
+        "type": "twitch",
+        "attrs": {
+          "src": "https://clips.twitch.tv/FunnyClip-abc",
+          "width": 640,
+          "height": 480,
+          "autoplay": false,
+          "muted": true,
+          "time": null
+        }
+      }
+    ]
+  },
+  "html": "<p>Watch:</p><div data-twitch-video=\"\"><iframe src=\"https://clips.twitch.tv/embed?clip=FunnyClip-abc&amp;parent=localhost&amp;muted=true\" width=\"640\" height=\"480\" allowfullscreen></iframe></div>",
+  "text": "Watch:"
+}

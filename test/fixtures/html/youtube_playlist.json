@@ -1,0 +1,17 @@
+{
+  "html": "<div data-youtube-video=\"\"><iframe src=\"https://www.youtube-nocookie.com/embed/videoseries?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG\"></iframe></div>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "youtube",
+        "attrs": {
+          "src": "https://www.youtube.com/playlist?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG",
+          "start": 0,
+          "width": 640,
+          "height": 480
+        }
+      }
+    ]
+  }
+}
