@@ -199,9 +199,11 @@ They differ in more than names:
 - Custom node types write themselves in `to_markdown`, and mark types declare their syntax with `markdown`.
 - Importing the Markdown gives the document back, as far as Markdown can hold it, tested on real-world Markdown and HTML.
 
-### 0.6: More Tiptap node types
+### 0.6: More Tiptap node types (released)
 
-- Task lists, text alignment, mentions, details, embeds.
+- Mentions, task lists, details, and YouTube and Twitch embeds, in `Schema.tiptap`, with HTML that gives the same JSON as Tiptap's `generateJSON`.
+- Text alignment, as an option: `Schema.tiptap(text_align: true)`.
+- GitHub Flavored Markdown task lists in Markdown import and export. Details are written as GitHub's `<details>` HTML.
 
 ### 1.0
 
