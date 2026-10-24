@@ -1,0 +1,59 @@
+{
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "details",
+        "attrs": {
+          "open": false
+        },
+        "content": [
+          {
+            "type": "detailsSummary",
+            "content": [
+              {
+                "type": "text",
+                "text": "Summary"
+              }
+            ]
+          },
+          {
+            "type": "detailsContent",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Content"
+                  }
+                ]
+              },
+              {
+                "type": "bulletList",
+                "content": [
+                  {
+                    "type": "listItem",
+                    "content": [
+                      {
+                        "type": "paragraph",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Item"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "html": "<details><summary>Summary</summary><div data-type=\"detailsContent\"><p>Content</p><ul><li><p>Item</p></li></ul></div></details>",
+  "text": "Summary\n\nContent\n\nItem"
+}

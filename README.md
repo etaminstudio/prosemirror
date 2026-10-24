@@ -131,6 +131,7 @@ doc.to_markdown(html: true)  # underline, highlight, subscript, superscript and 
 - Markdown has no syntax for underline, highlight, subscript, superscript, image sizes or mentions: by default, only their text or image is written, like `@Ada` for a mention. With `html: true`, they are written as HTML.
 - Emphasis that CommonMark can't write where it is, like bold on a comma between two letters, is dropped and its text kept.
 - Tables are written as GFM tables. A cell's paragraphs and line breaks are joined with `<br>`, and its other blocks, like lists, are written as HTML.
+- Details are written as `<details>` HTML, as on GitHub, with their content in Markdown.
 - Empty paragraphs are left out.
 
 Importing the Markdown gives the document back, as far as Markdown can hold it. Custom types write their own Markdown: see [Node and mark types](TYPES.md#markdown-export).
@@ -149,7 +150,7 @@ Two schemas are included:
 
 ```ruby
 # The default: Tiptap's StarterKit, with tables, images, task lists,
-# mentions, underline, subscript, superscript and highlight
+# details, mentions, underline, subscript, superscript and highlight
 Prosemirror::Schema.tiptap
 
 # prosemirror-schema-basic and prosemirror-schema-list
