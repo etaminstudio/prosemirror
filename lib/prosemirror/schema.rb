@@ -33,7 +33,7 @@ module Prosemirror
           text_align ? TextAlign::Heading : Nodes::Heading, Nodes::Blockquote, Nodes::BulletList,
           Nodes::OrderedList, Nodes::ListItem, Nodes::CodeBlock, Nodes::HardBreak, Nodes::HorizontalRule,
           Nodes::Image, Nodes::Table, Nodes::TableRow, Nodes::TableHeader, Nodes::TableCell, Nodes::TaskList,
-          Nodes::TaskItem, Nodes::Mention
+          Nodes::TaskItem, Nodes::Details, Nodes::DetailsSummary, Nodes::DetailsContent, Nodes::Mention
         ],
         # In Tiptap's order, which sorts and nests marks.
         marks: [

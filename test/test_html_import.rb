@@ -10,8 +10,8 @@ class TestHTMLImport < Minitest::Test
   def import(html, schema: self.schema) = Prosemirror.from_html(html, schema:).to_h
 
   # Each fixture holds HTML, and the JSON Tiptap's `generateJSON` gives for it, with StarterKit, Image,
-  # TableKit, Subscript, Superscript, Highlight (with colors), Mention, TaskList and TaskItem (nested), and
-  # links without default attributes.
+  # TableKit, Subscript, Superscript, Highlight (with colors), Mention, TaskList and TaskItem (nested),
+  # Details (with `persist: true`), and links without default attributes.
   Dir[File.join(TestHelpers::FIXTURES, "html/*.json")].each do |path|
     fixture = JSON.parse(File.read(path))
 
@@ -43,6 +43,14 @@ class TestHTMLImport < Minitest::Test
 
     assert_equal [["taskList", [true, false], ["Done", "To do"]], ["bulletList", [nil, nil], ["Plain", "Checked"]]],
       import(html)["content"].map { |list| [list["type"], list["content"].map { |item| item.dig("attrs", "checked") }, list["content"].map { |item| item.dig("content", 0, "content", 0, "text") }] }
+  end
+
+  def test_open_details
+    document = Prosemirror.from_html(%(<details open><summary>a</summary><p>b</p></details><details><summary>c</summary><p>d</p></details>), schema:)
+
+    assert_equal [{"open" => true}, {"open" => false}], document.to_h["content"].map { |details| details["attrs"] }
+    assert_equal %(<details open><summary>a</summary><div data-type="detailsContent"><p>b</p></div></details><details><summary>c</summary><div data-type="detailsContent"><p>d</p></div></details>),
+      document.to_html
   end
 
   def test_old_html

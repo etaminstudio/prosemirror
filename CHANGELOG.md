@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- Tiptap's details, in `Schema.tiptap`: `details`, `details_summary` and `details_content`, rendered and imported as Tiptap does, including `<details>` without Tiptap's content wrapper. `open`, which Tiptap keeps with `persist: true`, is rendered and imported. Markdown export writes them as `<details>` HTML around Markdown content, as GitHub reads it.
 - `Schema.tiptap(text_align: true)` adds Tiptap's TextAlign extension to headings and paragraphs: a `textAlign` attribute, rendered as a `text-align` style, and imported from it or from the old `align` attribute. Other types get it by including `Prosemirror::TextAlign`.
 - Tiptap's task lists, in `Schema.tiptap`: `task_list` and `task_item`, with a `checked` attribute. They render Tiptap's HTML, and are imported from it and from GitHub's. Markdown import reads GitHub Flavored Markdown task lists: a bullet list whose items all have a checkbox is a task list, and other checkboxes stay as text. Markdown export writes `- [x]` items.
 - Tiptap's mention node, in `Schema.tiptap`: rendered as `<span data-type="mention">@label</span>`, with its `id`, `label` and `mentionSuggestionChar` in `data-` attributes, and imported from that HTML. Its text is `@label`, or `@id` without a label. In Markdown, it's written as text, or as HTML with `html: true`.

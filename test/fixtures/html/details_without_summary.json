@@ -1,0 +1,36 @@
+{
+  "html": "<details><p>Content</p></details>",
+  "doc": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "details",
+        "attrs": {
+          "open": false
+        },
+        "content": [
+          {
+            "type": "detailsSummary"
+          },
+          {
+            "type": "detailsContent",
+            "content": [
+              {
+                "type": "paragraph"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Content"
+          }
+        ]
+      }
+    ]
+  }
+}

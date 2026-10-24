@@ -149,6 +149,17 @@ class TestMarkdownExport < Minitest::Test
     assert_equal "- \\[x\\] text\n", markdown(list("bullet_list", paragraph(text("[x] text"))))
   end
 
+  # As HTML, which GitHub reads, with Markdown content. Markdown import reads it back with the herb gem.
+  def test_details
+    schema = Prosemirror::Schema.tiptap(case: :camel)
+    details = {"type" => "details", "content" => [{"type" => "detailsSummary", "content" => [text("a < "), text("b", [bold])]},
+      {"type" => "detailsContent", "content" => [paragraph(text("c", [italic])), list("bulletList", paragraph(text("d")))]}]}
+    document = schema.parse(doc({"type" => "blockquote", "content" => [details]}))
+
+    assert_equal "> <details>\n> <summary>a &lt; <strong>b</strong></summary>\n>\n> *c*\n>\n> - d\n>\n> </details>\n", document.to_markdown
+    assert_equal document.to_h, schema.parse_markdown(document.to_markdown).to_h
+  end
+
   # A mention is its text, or with `html: true`, HTML that Markdown import reads back.
   def test_mentions
     schema = Prosemirror::Schema.tiptap(case: :camel)
