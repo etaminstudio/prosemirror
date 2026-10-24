@@ -205,6 +205,11 @@ They differ in more than names:
 - Text alignment, as an option: `Schema.tiptap(text_align: true)`.
 - GitHub Flavored Markdown task lists in Markdown import and export. Details are written as GitHub's `<details>` HTML.
 
+### 0.7: Resolving URLs at once (released)
+
+- `resolve_urls:` resolves all the URLs of a document before rendering it, to look up records in one query. Types declare their URL attributes with `prop … url: true`, and `Document#urls` lists them.
+- A [migration guide](MIGRATING.md) from `prosemirror_to_html` and `html_to_prosemirror`.
+
 ### 1.0
 
 - Stable API, documentation site, benchmarks.
