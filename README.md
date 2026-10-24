@@ -145,16 +145,19 @@ Blank lines separate paragraphs, and other line breaks become hard breaks. Space
 
 ## Schemas
 
-Two schemas are included:
-
-- `Prosemirror::Schema.tiptap`, the default: Tiptap's StarterKit, with tables, images, task lists, mentions, underline, subscript, superscript and highlight.
-- `Prosemirror::Schema.prosemirror`: prosemirror-schema-basic and prosemirror-schema-list.
-
-Type names are written in snake_case (`bullet_list`). Use `case: :camel` to write camelCase (`bulletList`), as Tiptap does. Both cases are always accepted on input.
+Two schemas are included. Type names are written in snake_case (`bullet_list`). Use `case: :camel` to write camelCase (`bulletList`), as Tiptap does. Both cases are always accepted on input.
 
 ```ruby
 Prosemirror.schema = Prosemirror::Schema.tiptap(case: :camel)
 ```
+
+### `Prosemirror::Schema.tiptap`
+
+The default. Tiptap's StarterKit, with tables, images, task lists, mentions, underline, subscript, superscript and highlight.
+
+### `Prosemirror::Schema.prosemirror`
+
+ProseMirror's own schema, from prosemirror-schema-basic and prosemirror-schema-list.
 
 ## Custom nodes and marks
 
