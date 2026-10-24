@@ -8,7 +8,7 @@ module Prosemirror
         group :inline
         inline
 
-        prop :src, _String(length: 1..)
+        prop :src, _String(length: 1..), url: true
         prop :alt, _String?
         prop :title, _String?
         parse_html tag: "img[src]"

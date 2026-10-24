@@ -259,6 +259,8 @@ Prosemirror::Schema.tiptap(
 )
 ```
 
+`resolve_urls:` gets all the URLs of a document at once, before rendering it, and returns a Hash from each URL to its rewritten URL, to look up records in one query (see the [cookbook](COOKBOOK.md#links-to-records-with-globalid)). A URL missing from the Hash, or mapped to nil, is removed and reported, as with `resolve_url`. The URLs are those of the attributes declared with `url: true`, like links' `href` and images' `src`, which `doc.urls` lists. URLs that types build while rendering, like YouTube's embed URLs, are resolved one at a time.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests, and `rake` to also run [Standard](https://github.com/standardrb/standard). You can also run `bin/console` for an interactive prompt that will allow you to experiment.

@@ -95,12 +95,13 @@ prop :alt, _String?
 - **Default:** used when the attribute is missing or invalid. Literal needs a frozen value or a Proc: `default: "left".freeze`, or a file with `# frozen_string_literal: true`. An attribute that accepts nil defaults to nil. An attribute without a default is required: without a valid value, the node or mark is removed.
 - **Coercion:** the block converts values before they are checked. `Prosemirror::Coerce::INTEGER` turns `"2"` into `2`.
 
-`prop` takes three more options:
+`prop` takes four more options:
 
 | Option | Meaning |
 |---|---|
 | `json: "textAlign"` | The name in JSON, when it differs from the property name. |
 | `aliases: ["order"]` | Other JSON names accepted on input. |
+| `url: true` | The attribute holds a URL: `doc.urls` lists it, and the schema's `resolve_urls` resolves it with the document's other URLs before rendering. Render it with `safe_url`. |
 | `parse_html: ->(element) { … }` | How to read the attribute from an HTML element, when importing HTML. By default, the HTML attribute with the JSON name is read. |
 
 Attributes that a type doesn't declare are kept in `unknown_attrs`. They are never rendered, and `to_h` gives them back.

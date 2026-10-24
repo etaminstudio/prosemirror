@@ -6,7 +6,7 @@ module Prosemirror
     class Image < NodeType
       group :block
 
-      prop :src, _String(length: 1..)
+      prop :src, _String(length: 1..), url: true
       prop :alt, _String?
       prop :title, _String?
       prop :width, _Integer?(1..), &Coerce::INTEGER

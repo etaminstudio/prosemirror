@@ -14,9 +14,9 @@ module Prosemirror
       @_prosemirror_schema
     end
 
-    # The URL, when its scheme is allowed, after the schema's `resolve_url`. Otherwise nil.
+    # The URL, when its scheme is allowed, after the schema's `resolve_url` or `resolve_urls`. Otherwise nil.
     def safe_url(url)
-      prosemirror_schema.safe_url(url)
+      prosemirror_schema.safe_url(url, @_prosemirror_urls)
     end
 
     private
@@ -64,6 +64,7 @@ module Prosemirror
 
     def prepare(component)
       component.instance_variable_set(:@_prosemirror_schema, prosemirror_schema)
+      component.instance_variable_set(:@_prosemirror_urls, @_prosemirror_urls)
       component
     end
   end

@@ -23,14 +23,16 @@ module Prosemirror
     # - `json:` the attribute name in JSON, when it differs from the property name (`"textAlign"`);
     # - `aliases:` other JSON names accepted on input (`["order"]`);
     # - `parse_html:` a block reading the attribute from an HTML element, when importing HTML. By default,
-    #   the HTML attribute with the JSON name is read.
-    def prop(name, type, kind = :keyword, json: nil, aliases: [], parse_html: nil, **, &)
+    #   the HTML attribute with the JSON name is read;
+    # - `url: true` for an attribute holding a URL, which `Document#urls` lists and `resolve_urls` resolves
+    #   before rendering.
+    def prop(name, type, kind = :keyword, json: nil, aliases: [], parse_html: nil, url: false, **, &)
       json = (json || name).to_s
       aliases = aliases.map(&:to_s)
       # The keys accepted in JSON: each name as written, in snake_case and in camelCase.
       keys = [json, *aliases].flat_map { |key| [key, Naming.snake(key), Naming.camel(key)] }.uniq.map(&:freeze).freeze
-      attribute_names[name] = {json:, aliases:, parse_html:, keys:}.freeze
-      @known_keys = nil
+      attribute_names[name] = {json:, aliases:, parse_html:, keys:, url:}.freeze
+      @known_keys = @url_attributes = nil
       super(name, type, kind, **, &)
     end
 
@@ -106,6 +108,11 @@ module Prosemirror
     # The JSON keys of the declared attributes, in all their spellings.
     def known_keys
       @known_keys ||= attribute_names.each_value.flat_map { |names| names[:keys] }.to_set.freeze
+    end
+
+    # The names of the attributes declared with `url: true`.
+    def url_attributes
+      @url_attributes ||= attribute_names.filter_map { |name, names| name if names[:url] }.freeze
     end
 
     # Attributes as JSON, with their JSON names.
