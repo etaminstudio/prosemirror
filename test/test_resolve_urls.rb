@@ -73,6 +73,21 @@ class TestResolveUrls < Minitest::Test
     assert_equal [["gid://app/Page/1"]], calls
   end
 
+  # Their own class, so that error trackers group them apart, with the URL.
+  def test_unresolved_urls_are_reported_as_unresolved_url
+    reported = []
+    [{resolve_urls: ->(urls) { {} }}, {resolve_url: ->(url) {}}].each do |options|
+      Prosemirror::Schema.tiptap(**options, on_invalid: ->(error) { reported << error }).parse(doc(paragraph(link("a", "gid://app/Page/2")))).to_html
+    end
+
+    assert_equal [Prosemirror::UnresolvedURL] * 2, reported.map(&:class)
+    assert_equal ["gid://app/Page/2"] * 2, reported.map(&:url)
+    assert_kind_of Prosemirror::InvalidDocument, reported.first
+    assert_raises(Prosemirror::UnresolvedURL) do
+      Prosemirror::Schema.tiptap(resolve_urls: ->(urls) { {} }, strict: true).parse(doc(paragraph(link("a", "gid://app/Page/2")))).to_html
+    end
+  end
+
   def test_resolve_url_and_resolve_urls_cant_be_used_together
     assert_raises(ArgumentError) { Prosemirror::Schema.tiptap(resolve_url: ->(url) { url }, resolve_urls: ->(urls) { {} }) }
   end

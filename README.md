@@ -248,6 +248,8 @@ Prosemirror::Schema.tiptap(on_invalid: ->(error) { Rails.error.report(error) })
 Prosemirror::Schema.tiptap(strict: true)  # raises Prosemirror::InvalidDocument
 ```
 
+A URL that `resolve_url` or `resolve_urls` resolves to nil, like a link to a deleted record, is reported as `Prosemirror::UnresolvedURL`, a subclass of `InvalidDocument` with the `url`, so that error trackers group dead links apart from other problems.
+
 ## URLs
 
 Links and images allow `http`, `https`, `mailto`, `tel` and relative URLs. Change the list with `url_schemes:`, or rewrite URLs before they are checked with `resolve_url:`:

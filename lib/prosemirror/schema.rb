@@ -213,15 +213,17 @@ module Prosemirror
       return nil unless url.is_a?(String)
 
       resolved = resolve(url, resolved_urls)
-      return report("URL could not be resolved: #{url.inspect}") unless resolved.is_a?(String)
+      unless resolved.is_a?(String)
+        return report("URL could not be resolved: #{url.inspect}", error_class: UnresolvedURL, url:)
+      end
       return report("URL scheme not allowed: #{resolved.inspect}") unless allowed_url?(resolved)
 
       resolved.gsub("&", "&amp;")
     end
 
     # Raise in strict mode, otherwise call `on_invalid`.
-    def report(message, path: nil)
-      error = InvalidDocument.new(message, path: path)
+    def report(message, path: nil, error_class: InvalidDocument, **details)
+      error = error_class.new(message, path:, **details)
       raise error if @strict
 
       @on_invalid&.call(error)
