@@ -9,6 +9,8 @@ module Prosemirror
 
         parse_html tag: "code"
 
+        markdown(**MarkdownSerializer::CODE)
+
         def view_template(&) = code(&)
       end
     end

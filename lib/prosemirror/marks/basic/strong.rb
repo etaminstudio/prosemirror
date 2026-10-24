@@ -10,6 +10,8 @@ module Prosemirror
         parse_html style: "font-weight=400", clear_mark: true
         parse_html(style: "font-weight") { |value| value.match?(Bold::BOLD) && {} }
 
+        markdown open: "**", close: "**", mixable: true, expel_enclosing_whitespace: true
+
         def view_template(&) = strong(&)
       end
     end

@@ -47,6 +47,12 @@ module Prosemirror
       TextSerializer.new(schema, block_separator: block_separator).call(root)
     end
 
+    # The document as Markdown (GitHub Flavored Markdown for tables and strikethrough). Formatting Markdown
+    # has no syntax for, like underline, keeps only its text, or is written as HTML with `html: true`.
+    def to_markdown(html: false)
+      MarkdownSerializer.new(schema, html: html).call(root)
+    end
+
     # The document as JSON, as a Hash.
     def to_h
       schema.serialize(root)

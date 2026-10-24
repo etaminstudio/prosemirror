@@ -11,6 +11,8 @@ module Prosemirror
       prop :title, _String?
       parse_html(tag: "a[href]") { |element, schema| schema.allowed_url?(element["href"]) && {} }
 
+      markdown(**MarkdownSerializer::LINK)
+
       def view_template(&)
         href = safe_url(@href)
         return yield unless href

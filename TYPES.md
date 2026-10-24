@@ -27,6 +27,7 @@ A type is a [Phlex](https://www.phlex.fun) component, and its attributes are [Li
 - [Rendering](#rendering)
 - [Parse rules](#parse-rules)
 - [Markdown](#markdown)
+- [Markdown export](#markdown-export)
 - [Subclassing built-in types](#subclassing-built-in-types)
 
 ## Names
@@ -202,6 +203,48 @@ Markdown import builds the elements commonmarker renders for each Markdown node,
 | Hard line break | `br` |
 
 Raw HTML in Markdown goes through HTML import when the herb gem is installed, and stays as text otherwise.
+
+## Markdown export
+
+A node type writes itself in `to_markdown`, with the methods of `Prosemirror::MarkdownSerializer`, ported from prosemirror-markdown's `MarkdownSerializerState`. As in `view_template`, attributes are instance variables, and `node` is the node:
+
+```ruby
+class Callout < Prosemirror::NodeType
+  def to_markdown(markdown, parent, index)
+    markdown.wrap_block("> ", "> **Note:** ", node) { markdown.render_content(node) }
+  end
+end
+```
+
+| Method | Does |
+|---|---|
+| `write(text)` | Writes text as it is, after closing the previous block. |
+| `text(text, escape: true)` | Writes text, escaped. |
+| `render_inline(node)` | Writes the node's inline content, with its marks. |
+| `render_content(node)` | Writes the node's blocks. |
+| `wrap_block(delim, first_delim, node) { … }` | Writes a block with each line prefixed, like `> `. |
+| `render_list(node, delim) { \|index\| marker }` | Writes a list. |
+| `close_block(node)` | Ends the block: the next one starts after a blank line. |
+| `esc(text)`, `url(href)`, `node_html(node)`, `html?` | Escaping, a link destination, a node's HTML, and whether `html: true` was given. |
+
+Without `to_markdown`, a type writes its content.
+
+A mark type declares its syntax with `markdown`, as prosemirror-markdown's mark specs:
+
+```ruby
+class Keyboard < Prosemirror::MarkType
+  markdown open: "<kbd>", close: "</kbd>", escape: false
+end
+```
+
+| Option | Meaning |
+|---|---|
+| `open`, `close` | Strings, or blocks called with the serializer, the mark, the parent node and the index of the marked node. |
+| `mixable: true` | The mark can open and close in any order with other mixable marks, like `*` and `**`. |
+| `expel_enclosing_whitespace: true` | Spaces at the edges move outside the mark, as emphasis requires. |
+| `escape: false` | The content isn't escaped, as in inline code. The mark must come last. |
+
+Without `markdown`, a mark writes its text, or its HTML with `to_markdown(html: true)`.
 
 ## Subclassing built-in types
 

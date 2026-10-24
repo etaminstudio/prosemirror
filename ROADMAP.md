@@ -194,8 +194,10 @@ They differ in more than names:
 
 ### 0.5: Markdown export
 
-- `doc.to_markdown`, like [`prosemirror-markdown`](https://github.com/ProseMirror/prosemirror-markdown). Useful to send content to LLMs.
-- Help wanted: it is self-contained and a good first contribution.
+- `doc.to_markdown`, ported from [`prosemirror-markdown`](https://github.com/ProseMirror/prosemirror-markdown)'s serializer. Useful to send content to LLMs.
+- GitHub Flavored Markdown tables and strikethrough. Formatting without Markdown syntax, like underline, keeps its text, or is written as HTML with `html: true`.
+- Custom node types write themselves in `to_markdown`, and mark types declare their syntax with `markdown`.
+- Importing the Markdown gives the document back, as far as Markdown can hold it, tested on real-world Markdown and HTML.
 
 ### 0.6: More Tiptap node types
 

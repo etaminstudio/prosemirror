@@ -14,6 +14,10 @@ module Prosemirror
         def view_template(&)
           pre { code(&) }
         end
+
+        def to_markdown(markdown, _parent, _index)
+          Nodes::CodeBlock.fenced(markdown, node, nil)
+        end
       end
     end
   end

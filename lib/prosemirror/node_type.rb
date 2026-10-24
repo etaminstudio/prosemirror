@@ -119,5 +119,18 @@ module Prosemirror
     def view_template
       yield if block_given?
     end
+
+    # Write the node as Markdown, with the MarkdownSerializer's methods. `parent` and `index` locate the node.
+    # By default, the content is written, as a block for block nodes.
+    def to_markdown(markdown, _parent, _index)
+      return if self.class.leaf?
+
+      if markdown.schema.textblock?(self.class)
+        markdown.render_inline(node)
+      else
+        markdown.render_content(node)
+      end
+      markdown.close_block(node) if self.class.block?
+    end
   end
 end
