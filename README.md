@@ -7,7 +7,7 @@ Render [ProseMirror](https://prosemirror.net) and [Tiptap](https://tiptap.dev) d
 - Link and image URLs must use an allowed scheme.
 - No Rails dependency.
 
-This gem replaces [prosemirror_to_html](https://github.com/etaminstudio/prosemirror_to_html) and [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror). See the [roadmap](ROADMAP.md) for what comes next.
+This gem replaces [prosemirror_to_html](https://github.com/etaminstudio/prosemirror_to_html) and [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror): see [Migrating](MIGRATING.md). See the [roadmap](ROADMAP.md) for what comes next.
 
 ## Installation
 
