@@ -213,10 +213,12 @@ module Prosemirror
     end
 
     # Whether the list follows a list of the same type, which it would continue in Markdown with the same
-    # marker. Alternating lists in a row switch markers.
-    def list_after_list?(parent, index)
+    # marker. Alternating lists in a row switch markers. The block, called with the siblings before, tells
+    # which lists share markers, when other types than the list's do.
+    def list_after_list?(parent, index, &same)
+      same ||= ->(sibling) { sibling.type == parent.content[index].type }
       run = 0
-      run += 1 while index - run - 1 >= 0 && parent.content[index - run - 1].type == parent.content[index].type
+      run += 1 while index - run - 1 >= 0 && same.call(parent.content[index - run - 1])
       run.odd?
     end
 

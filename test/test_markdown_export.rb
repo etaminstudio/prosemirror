@@ -138,6 +138,17 @@ class TestMarkdownExport < Minitest::Test
     assert_equal "<u>u</u><mark>x</mark><sup>2</sup>\n\n<img src=\"/a.png\" width=\"10\">\n", markdown(*content, html: true)
   end
 
+  # Task lists and bullet lists in a row alternate markers, or Markdown would join them.
+  def test_task_lists
+    task = ->(checked, *content) { {"type" => "task_item", "attrs" => {"checked" => checked}, "content" => content} }
+
+    assert_equal "- [x] done\n- [ ] todo\n  - [ ]\n\n* a\n\n- [ ] b\n",
+      markdown({"type" => "task_list", "content" => [task.call(true, paragraph(text("done"))), task.call(false, paragraph(text("todo")),
+        {"type" => "task_list", "content" => [task.call(false, paragraph)]})]}, list("bullet_list", paragraph(text("a"))),
+        {"type" => "task_list", "content" => [task.call(false, paragraph(text("b")))]})
+    assert_equal "- \\[x\\] text\n", markdown(list("bullet_list", paragraph(text("[x] text"))))
+  end
+
   # A mention is its text, or with `html: true`, HTML that Markdown import reads back.
   def test_mentions
     schema = Prosemirror::Schema.tiptap(case: :camel)

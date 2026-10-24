@@ -20,10 +20,38 @@ class TestMarkdownImport < Minitest::Test
     end
   end
 
-  def test_task_list_items_stay_as_text
-    items = content("- [ ] todo\n- [x] done\n").dig(0, "content")
+  def task_item(checked, *content) = {"type" => "taskItem", "attrs" => {"checked" => checked}, "content" => content}
 
-    assert_equal ["[ ] todo", "[x] done"], items.map { |item| item.dig("content", 0, "content", 0, "text") }
+  def paragraph(*texts) = {"type" => "paragraph", "content" => texts.map { |text| text.is_a?(String) ? {"type" => "text", "text" => text} : text }}.reject { |_, value| value == [] }
+
+  # commonmarker doesn't say whether an item is checked: it's read from the Markdown, in any container.
+  def test_task_lists
+    assert_equal [{"type" => "taskList", "content" => [task_item(false, paragraph("todo")),
+      task_item(true, paragraph("done"), {"type" => "taskList", "content" => [task_item(true, paragraph("nested"), paragraph("more"))]}),
+      task_item(false, paragraph)]}], content("- [ ] todo\n- [X] done\n  - [x] nested\n\n    more\n- [ ]\n")
+    assert_equal [{"type" => "blockquote", "content" => [{"type" => "taskList", "content" => [task_item(true, paragraph("quoted"))]}]}],
+      content("> * [x] quoted\n")
+  end
+
+  # In a bullet list with other items, and in ordered lists, which Tiptap's task lists aren't, checkboxes stay
+  # as text.
+  def test_checkboxes_outside_task_lists
+    list = ->(type, *items) { {"type" => type, "content" => items.map { |item| {"type" => "listItem", "content" => [item]} }} }
+
+    assert_equal [list.call("bulletList", paragraph("plain"), paragraph("[x] ", {"type" => "text", "text" => "done", "marks" => [{"type" => "italic"}]}), paragraph("[ ]")),
+      list.call("orderedList", paragraph("[ ] ordered")).merge("attrs" => {"start" => 1, "type" => nil})],
+      content("- plain\n- [x] *done*\n- [ ]\n\n1. [ ] ordered\n")
+  end
+
+  # Neither GitHub nor Tiptap has other states, like `[~]`.
+  def test_other_checkboxes_are_text
+    assert_equal "[~] dropped", content("- [~] dropped\n").dig(0, "content", 0, "content", 0, "content", 0, "text")
+  end
+
+  # With raw HTML, the document goes through HTML import, which reads GitHub's task lists.
+  def test_task_lists_with_raw_html
+    assert_equal [{"type" => "taskList", "content" => [task_item(false, paragraph("a ", {"type" => "text", "text" => "b", "marks" => [{"type" => "bold"}]})),
+      task_item(true, paragraph("c"))]}], content("- [ ] a <b>b</b>\n- [x] c\n")
   end
 
   def test_raw_html_stays_as_text_without_herb

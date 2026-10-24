@@ -6,7 +6,8 @@ module Prosemirror
     # (https://github.com/gjtorikian/commonmarker), so that the schema's parse rules apply to Markdown too.
     # Each Markdown node becomes the element commonmarker renders for it, without going through HTML.
     #
-    # - GitHub Flavored Markdown: tables, strikethrough and autolinks. Task list items stay as text (`[ ] `).
+    # - GitHub Flavored Markdown: tables, strikethrough, autolinks and task lists. A bullet list whose items
+    #   all have a checkbox is a task list. In other lists, the checkboxes stay as text (`[ ] `).
     # - Raw HTML can span several Markdown blocks, like `<del>` around a paragraph: with the herb gem, a
     #   document holding raw HTML is rendered to HTML by commonmarker and imported. Without it, raw HTML
     #   stays as text.
@@ -15,16 +16,21 @@ module Prosemirror
     class Builder
       MAX_DEPTH = HTML::Builder::MAX_DEPTH
       EXTENSIONS = {
-        strikethrough: true, table: true, autolink: true, tasklist: false, shortcodes: false, header_ids: nil,
+        strikethrough: true, table: true, autolink: true, tasklist: true, shortcodes: false, header_ids: nil,
         front_matter_delimiter: "---"
       }.freeze
-      RENDER_OPTIONS = {extension: EXTENSIONS, render: {unsafe: true, hardbreaks: false, github_pre_lang: false}}.freeze
+      # `tasklist_classes` gives task lists the classes of GitHub's HTML, which the task list type reads.
+      RENDER_OPTIONS = {
+        extension: EXTENSIONS, render: {unsafe: true, hardbreaks: false, github_pre_lang: false, tasklist_classes: true}
+      }.freeze
       TAGS = {
         paragraph: "p", block_quote: "blockquote", item: "li", thematic_break: "hr", table_row: "tr",
         emph: "em", strong: "strong", strikethrough: "s", linebreak: "br"
       }.freeze
       # A table's delimiter row, like `| :-- | --: |`, at the end of its line.
       DELIMITER_ROW = /\|?(?:\s*:?-+:?\s*\|)*\s*:?-+:?\s*\|?\s*\z/
+      # A task item's marker and checkbox, at its first line.
+      TASK_MARKER = /\A(?:[-+*]|\d+[.)])[ \t]+(\[[ xX]\])/
       # The bytes commonmarker escapes in URLs, as comrak's `escape_href`: all but these, and `%` when it
       # doesn't start an escape. `&` and `'` are kept: comrak writes them as HTML references.
       URL_UNSAFE = %r{%(?!\h\h)|[^-_.+!*(),#@?=;:/$~A-Za-z0-9&'%]}n
@@ -87,6 +93,8 @@ module Prosemirror
       # Adds a node to the target. Returns the element to add its children to, when they need adding.
       def add(node, target)
         type = node.type # commonmarker allocates for each call
+        return checkbox_text(node, type, target) if @checkbox
+
         if (tag = TAGS[type])
           return HTML::Element.new(tag)
         end
@@ -94,6 +102,7 @@ module Prosemirror
         case type
         when :heading then HTML::Element.new("h#{node.header_level}")
         when :list then list(node)
+        when :taskitem then task_item(node, target)
         when :code_block then code_block(node, target)
         when :table then table(node)
         when :table_cell then table_cell(node)
@@ -110,9 +119,42 @@ module Prosemirror
       end
 
       def list(node)
-        return HTML::Element.new("ul") unless node.list_type == :ordered
+        if node.list_type != :ordered
+          return HTML::Element.new("ul", (node.all? { |item| item.type == :taskitem }) ? {"data-type" => "taskList"} : {})
+        end
 
         HTML::Element.new("ol", (node.list_start == 1) ? {} : {"start" => node.list_start.to_s})
+      end
+
+      # commonmarker doesn't say whether a task item is checked: its checkbox is read from its first line.
+      # Outside a task list, the checkbox is written as text, at the start of the item's first paragraph.
+      def task_item(node, target)
+        position = node.source_position
+        checkbox = @lines[position[:start_line] - 1].to_s.byteslice((position[:start_column] - 1)..).to_s[TASK_MARKER, 1] || "[ ]"
+        if target["data-type"] == "taskList"
+          return HTML::Element.new("li", {"data-type" => "taskItem", "data-checked" => checkbox.match?(/x/i).to_s})
+        end
+
+        item = HTML::Element.new("li")
+        if node.first_child
+          @checkbox = checkbox
+        else
+          text(item.append(HTML::Element.new("p")), "#{checkbox} ")
+        end
+        item
+      end
+
+      # The first child of a task item outside a task list: its paragraph starts with the checkbox, or a
+      # paragraph holding it goes before.
+      def checkbox_text(node, type, target)
+        checkbox = "#{@checkbox} "
+        @checkbox = nil
+        paragraph = HTML::Element.new("p")
+        text(paragraph, checkbox)
+        return paragraph if type == :paragraph
+
+        target.append(paragraph)
+        add(node, target)
       end
 
       def code_block(node, target)
