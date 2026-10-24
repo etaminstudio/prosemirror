@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.7.1] - 2026-10-24
+
 - A URL that `resolve_url` or `resolve_urls` resolves to nil, like a link to a deleted record, is reported as `Prosemirror::UnresolvedURL`, a subclass of `InvalidDocument` with the `url`, so that error trackers group dead links apart from other problems.
 
 ## [0.7.0] - 2026-10-24
