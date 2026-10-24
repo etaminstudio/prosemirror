@@ -5,7 +5,7 @@
 ```ruby
 # Gemfile
 gem "prosemirror"
-gem "herb" # for HTML import
+gem "herb" # optional, only if you need HTML import
 ```
 
 ## Rendering, from prosemirror_to_html
