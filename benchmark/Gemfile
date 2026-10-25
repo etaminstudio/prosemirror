@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gem "prosemirror", path: ".."
+gem "herb", "~> 0.11"
+gem "commonmarker", "~> 2.10"
+gem "benchmark-ips", "~> 2.15"
+
+# The gems prosemirror replaces, to compare with.
+gem "prosemirror_to_html", "~> 0.4"
+gem "html_to_prosemirror", "~> 0.3"
