@@ -48,6 +48,23 @@ record.update!(content: document.to_h)
 
 Without `case: :camel`, `to_h` writes snake_case type names like `bullet_list`, which Tiptap doesn't read. `blank?` gets the schema so that it knows your custom types: an image block isn't blank. Children are transformed first, so the list sees its remaining items. Attributes the schema doesn't declare are kept. When something the schema requires is gone, like the only paragraph of a list item kept by another rule, `transform` adds it back and reports it with `on_invalid`.
 
+## Tight lists
+
+Editors wrap each list item's text in a paragraph, so lists render as `<li><p>text</p></li>`, with the paragraphs' margins. To render an item of a single paragraph as `<li>text</li>`, as Markdown does for tight lists:
+
+```ruby
+class ListItem < Prosemirror::Nodes::ListItem
+  def view_template(&)
+    paragraph = node.content.first if node.content.size == 1
+    return super unless paragraph&.type == :paragraph && paragraph.content.any?
+
+    li { render_content(paragraph.content) }
+  end
+end
+```
+
+Items with several paragraphs or a nested list, and items left empty, render as before.
+
 ## Heading anchors
 
 To link to a section, give each heading an `id` made from its text, unless the document already has one:

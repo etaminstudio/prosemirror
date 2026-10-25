@@ -18,6 +18,15 @@ class TestCookbook < Minitest::Test
     end
   end
 
+  class ListItem < Prosemirror::Nodes::ListItem
+    def view_template(&)
+      paragraph = node.content.first if node.content.size == 1
+      return super unless paragraph&.type == :paragraph && paragraph.content.any?
+
+      li { render_content(paragraph.content) }
+    end
+  end
+
   class Heading < Prosemirror::Nodes::Heading
     prop :id, _String?
 
@@ -57,6 +66,18 @@ class TestCookbook < Minitest::Test
     def view_template
       render Figure.new(src: safe_url(@src), caption: @caption)
     end
+  end
+
+  def test_tight_lists
+    item = ->(*content) { {"type" => "listItem", "content" => content} }
+    list = ->(*items) { {"type" => "bulletList", "content" => items} }
+    json = doc(list.call(item.call(paragraph(text("a", [{"type" => "bold"}]), text(" b"))),
+      item.call(paragraph(text("c")), paragraph(text("d"))),
+      item.call(paragraph(text("e")), list.call(item.call(paragraph(text("f"))))),
+      item.call(paragraph)))
+
+    assert_equal "<ul><li><strong>a</strong> b</li><li><p>c</p><p>d</p></li><li><p>e</p><ul><li>f</li></ul></li><li><p></p></li></ul>",
+      render(json, schema: Prosemirror::Schema.tiptap.with(ListItem))
   end
 
   def test_heading_anchors
