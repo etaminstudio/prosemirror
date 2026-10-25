@@ -28,8 +28,8 @@ module Prosemirror
     prop :on_invalid, _Callable?, reader: false
 
     # Tiptap's StarterKit and common extensions. `text_align: true` adds the TextAlign extension, configured
-    # for headings and paragraphs.
-    def self.tiptap(text_align: false, **)
+    # for headings and paragraphs, and `text_style: true` the TextStyle mark, with TextStyleKit's attributes.
+    def self.tiptap(text_align: false, text_style: false, **)
       new(
         nodes: [
           Nodes::Doc, text_align ? Extensions::TextAlign::Paragraph : Nodes::Paragraph, Nodes::Text,
@@ -41,8 +41,8 @@ module Prosemirror
         ],
         # In Tiptap's order, which sorts and nests marks.
         marks: [
-          Marks::Link, Marks::Bold, Marks::Code, Marks::Italic, Marks::Strike, Marks::Underline,
-          Marks::Subscript, Marks::Superscript, Marks::Highlight
+          Marks::Link, *(Marks::TextStyle if text_style), Marks::Bold, Marks::Code, Marks::Italic, Marks::Strike,
+          Marks::Underline, Marks::Subscript, Marks::Superscript, Marks::Highlight
         ],
         **
       )

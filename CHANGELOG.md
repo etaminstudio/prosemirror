@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- `Schema.tiptap(text_style: true)` adds Tiptap's TextStyle mark, with the attributes of its TextStyleKit (`color`, `backgroundColor`, `fontFamily`, `fontSize`, `lineHeight`), rendered as a span's `style` and imported from it. Unsafe CSS values, like `url()`, are invalid.
+
 ## [1.0.0] - 2026-10-25
 
 ### Public API
