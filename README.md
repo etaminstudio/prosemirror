@@ -7,7 +7,11 @@ Render [ProseMirror](https://prosemirror.net) and [Tiptap](https://tiptap.dev) d
 - Link and image URLs must use an allowed scheme.
 - No Rails dependency.
 
-This gem replaces [prosemirror_to_html](https://github.com/etaminstudio/prosemirror_to_html) and [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror): see [Migrating](MIGRATING.md). See the [roadmap](ROADMAP.md) for what comes next.
+This gem replaces [prosemirror_to_html](https://github.com/etaminstudio/prosemirror_to_html) and [html_to_prosemirror](https://github.com/etaminstudio/html_to_prosemirror), now deprecated: see [Migrating](MIGRATING.md).
+
+## Why
+
+ProseMirror editors store documents as JSON. Ruby apps need to render this JSON to HTML, extract its text, and import old HTML or Markdown content. This gem does all of it with one schema: a custom type is declared once, and renders, imports and exports the same way.
 
 ## Installation
 
@@ -165,6 +169,20 @@ Type names are written in snake_case (`bullet_list`). Use `case: :camel` to writ
 Prosemirror.schema = Prosemirror::Schema.tiptap(case: :camel)
 ```
 
+`case:` doesn't change attribute names: editors only read the exact names they declare, and Tiptap mixes styles (`textAlign`, `colwidth`). The built-in types use Tiptap's exact names, and input accepts both cases.
+
+The two schemas differ in more than names:
+
+| | `Schema.tiptap` | `Schema.prosemirror` |
+|---|---|---|
+| Marks | `bold`, `italic`, `code`, `link`, `strike`, `underline`… | `strong`, `em`, `code`, `link` |
+| Ordered list | `start` | `order` |
+| Code block | `language` | no attributes |
+| Image | block | inline |
+| Link | `href`, `target`, `rel`, `class`, `title` | `href`, `title` |
+
+Each accepts the other's names on input (`strong` for `bold`, `order` for `start`), and the types that are the same in both, like paragraphs, headings and lists, are the same classes.
+
 `text_align: true` adds Tiptap's TextAlign extension, configured for headings and paragraphs: a `textAlign` attribute, `left`, `center`, `right` or `justify`, rendered as a `text-align` style. HTML import also reads the old `align` attribute. Markdown has no syntax for it: Markdown export leaves it out. Without the option, `textAlign` is kept in `to_h`, but not rendered.
 
 ```ruby
@@ -262,6 +280,16 @@ Prosemirror::Schema.tiptap(
 ```
 
 `resolve_urls:` gets all the URLs of a document at once, before rendering it, and returns a Hash from each URL to its rewritten URL, to look up records in one query (see the [cookbook](COOKBOOK.md#links-to-records-with-globalid)). A URL missing from the Hash, or mapped to nil, is removed and reported, as with `resolve_url`. The URLs are those of the attributes declared with `url: true`, like links' `href` and images' `src`, which `doc.urls` lists. URLs that types build while rendering, like YouTube's embed URLs, are resolved one at a time.
+
+## Design
+
+- Nothing is cleaned up after rendering: Phlex escapes text and attribute values as it writes them, attributes are typed, attribute names never come from the document, and URLs must use an allowed scheme.
+- Output is HTML5 only: no `<strike>`, `<font>` or `align=`. Import still reads them.
+- Only `phlex` and `literal` are required. [`herb`](https://herb-tools.dev) and [`commonmarker`](https://github.com/gjtorikian/commonmarker) are loaded only by HTML and Markdown import.
+- Schemas, content expressions, marks and parse rules work as in [ProseMirror's guide](https://prosemirror.net/docs/guide/#schema), with the same JSON. Methods keep ProseMirror's names in Ruby style (`text_content`, `descendants`, `check`).
+- Nodes are immutable values with pattern matching, documents are `Enumerable`, and node types are classes. Each type declares its attributes, its content, its HTML and how to recognize it in HTML, so rendering and import use the same schema.
+
+Out of scope: CSS framework themes (subclass node types instead), a Rails or ViewComponent dependency, editing features (positions, steps, commands, collaboration), and the editor itself.
 
 ## Development
 

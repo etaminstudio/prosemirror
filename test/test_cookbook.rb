@@ -57,6 +57,18 @@ class TestCookbook < Minitest::Test
     end
   end
 
+  class Blockquote < Prosemirror::Nodes::Blockquote
+    def view_template
+      inline = node.content.flat_map(&:content)
+      split = inline.rindex { |child| child.type == :hard_break }
+
+      figure do
+        blockquote { render_content(split ? inline[...split] : inline) }
+        figcaption { render_content(inline[(split + 1)..]) } if split
+      end
+    end
+  end
+
   class ImageBlock < Prosemirror::NodeType
     group :block
 
@@ -87,6 +99,17 @@ class TestCookbook < Minitest::Test
       {"type" => "heading", "attrs" => {"level" => 3}, "content" => [text("?")]})
 
     assert_equal '<h2 id="cafe-co">Café &amp; co!</h2><h2 id="custom">Other</h2><h3>?</h3>', render(json, schema: schema)
+  end
+
+  def test_quotes_with_their_author
+    schema = Prosemirror::Schema.tiptap.with(Blockquote)
+    json = doc({"type" => "blockquote", "content" => [
+      paragraph(text("To be ", [{"type" => "bold"}]), text("or not"), {"type" => "hardBreak"},
+        text("Shakespeare"))
+    ]})
+
+    assert_equal "<figure><blockquote><strong>To be </strong>or not</blockquote>" \
+                 "<figcaption>Shakespeare</figcaption></figure>", render(json, schema: schema)
   end
 
   def test_render_your_own_components

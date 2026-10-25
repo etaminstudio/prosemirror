@@ -28,19 +28,6 @@ class TestCustomTypes < Minitest::Test
     end
   end
 
-  # A quote whose last line, after a hard break, is the author.
-  class Blockquote < Prosemirror::Nodes::Blockquote
-    def view_template
-      inline = node.content.flat_map(&:content)
-      split = inline.rindex { |child| child.type == :hard_break }
-
-      figure do
-        blockquote { render_content(split ? inline[...split] : inline) }
-        figcaption { render_content(inline[(split + 1)..]) } if split
-      end
-    end
-  end
-
   class Mention < Prosemirror::NodeType
     group :inline
     inline
@@ -76,17 +63,6 @@ class TestCustomTypes < Minitest::Test
     assert_equal '<h2 id="hello-world" class="heading">Hello World</h2>', document.to_html
     assert_equal({"level" => 2, "textAlign" => "center"}, document.to_h.dig("content", 0, "attrs"))
     assert_equal({level: 2, text_align: "center"}, document.content.first.attrs)
-  end
-
-  def test_rendering_parts_of_the_content
-    schema = Prosemirror::Schema.tiptap.with(Blockquote)
-    json = doc({"type" => "blockquote", "content" => [
-      paragraph(text("To be ", [{"type" => "bold"}]), text("or not"), {"type" => "hardBreak"},
-        text("Shakespeare"))
-    ]})
-
-    assert_equal "<figure><blockquote><strong>To be </strong>or not</blockquote>" \
-                 "<figcaption>Shakespeare</figcaption></figure>", render(json, schema: schema)
   end
 
   def test_leaf_text
