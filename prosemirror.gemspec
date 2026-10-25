@@ -8,15 +8,18 @@ Gem::Specification.new do |spec|
   spec.authors = ["Hans Lemuet"]
   spec.email = ["hans@etamin.studio"]
 
-  spec.summary = "Render ProseMirror and Tiptap documents to HTML and text."
-  spec.description = "Render ProseMirror and Tiptap JSON documents to safe HTML or plain text, " \
-                     "with typed attributes and custom node types."
+  spec.summary = "Convert ProseMirror and Tiptap documents to and from HTML, Markdown and plain text."
+  spec.description = "One schema renders, imports and exports ProseMirror and Tiptap JSON. HTML is built " \
+                     "with Phlex and escaped as it is written, and attributes are typed. Node and mark " \
+                     "types are Ruby classes. No Rails dependency."
   spec.homepage = "https://github.com/etaminstudio/prosemirror"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.3.0"
 
   spec.metadata["source_code_uri"] = "https://github.com/etaminstudio/prosemirror"
   spec.metadata["changelog_uri"] = "https://github.com/etaminstudio/prosemirror/blob/main/CHANGELOG.md"
+  spec.metadata["documentation_uri"] = "https://github.com/etaminstudio/prosemirror#readme"
+  spec.metadata["bug_tracker_uri"] = "https://github.com/etaminstudio/prosemirror/issues"
   spec.metadata["rubygems_mfa_required"] = "true"
 
   # Specify which files should be added to the gem when it is released.
