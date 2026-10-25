@@ -29,6 +29,10 @@ module Prosemirror
     end
   end
 
+  # Raised, in any mode, for a JSON string or Markdown nested too deeply to import. A Hash nested too deeply
+  # is cut and reported instead, as other invalid documents are.
+  class TooDeep < Error; end
+
   # A URL that `resolve_url` or `resolve_urls` resolved to nil, like a link to a deleted record. Its own
   # class, so that error trackers group these problems apart from others.
   class UnresolvedURL < InvalidDocument
@@ -55,17 +59,17 @@ module Prosemirror
 
     # Build a document from HTML, with the schema's parse rules. Needs the `herb` gem.
     def from_html(html, schema: self.schema)
-      schema.parse_html(html)
+      schema.from_html(html)
     end
 
     # Build a document from Markdown, with the schema's parse rules. Needs the `commonmarker` gem.
     def from_markdown(markdown, schema: self.schema)
-      schema.parse_markdown(markdown)
+      schema.from_markdown(markdown)
     end
 
     # Build a document from plain text: blank lines separate paragraphs, other line breaks become hard breaks.
     def from_text(text, schema: self.schema)
-      schema.parse_text(text)
+      schema.from_text(text)
     end
   end
 end

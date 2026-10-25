@@ -50,9 +50,9 @@ sizes = documents.map do |name, json|
     "to_text" => -> { document.to_text },
     "to_markdown" => -> { document.to_markdown },
     "to_h" => -> { document.to_h },
-    "from_html" => -> { schema.parse_html(html) },
-    "from_markdown" => -> { schema.parse_markdown(markdown) },
-    "from_text" => -> { schema.parse_text(text) },
+    "from_html" => -> { schema.from_html(html) },
+    "from_markdown" => -> { schema.from_markdown(markdown) },
+    "from_text" => -> { schema.from_text(text) },
     "transform" => -> { document.transform { |node| node } },
     "check" => -> { document.check }
   })
@@ -61,7 +61,7 @@ sizes = documents.map do |name, json|
     "JSON to HTML, prosemirror_to_html" => -> { legacy_renderer.render(string) }
   }, compare: true)
   measure.call(name, {
-    "HTML to JSON" => -> { schema.parse_html(html).to_h },
+    "HTML to JSON" => -> { schema.from_html(html).to_h },
     "HTML to JSON, html_to_prosemirror" => -> { legacy_importer.render(html.dup) }
   }, compare: true)
 

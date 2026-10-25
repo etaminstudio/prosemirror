@@ -19,6 +19,7 @@ module Prosemirror
   # - `get_content`: a block called with the element and the schema, returning the nodes to use as content;
   # - `preserve_whitespace`: true to keep spaces, `:full` to also keep newlines;
   # - `clear_mark`: for style rules, true to remove the type's marks, or a block called with each mark.
+  # @api private
   ParseRule = Data.define(
     :type, :tag, :style, :attrs, :get_attrs, :priority, :consuming, :context, :ignore, :skip,
     :close_parent, :content_element, :get_content, :preserve_whitespace, :clear_mark

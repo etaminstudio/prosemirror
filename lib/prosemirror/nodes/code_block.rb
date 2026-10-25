@@ -25,6 +25,7 @@ module Prosemirror
       end
 
       # A fenced code block, with a fence longer than any run of backticks in the code.
+      # @api private
       def self.fenced(markdown, node, language)
         code = node.text_content
         fence = "`" * [3, (code.scan(/`{3,}/).map(&:length).max || 0) + 1].max

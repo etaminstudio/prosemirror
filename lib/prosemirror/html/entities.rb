@@ -4,6 +4,7 @@ module Prosemirror
   module HTML
     # Decodes character references (`&amp;`, `&eacute;`, `&#233;`, `&#xE9;`) as HTML5 does, with the
     # WHATWG list of named references: https://html.spec.whatwg.org/multipage/named-characters.html
+    # @api private
     module Entities
       # Code points 0x80 to 0x9F, read as Windows-1252, as browsers do.
       WINDOWS_1252 = {

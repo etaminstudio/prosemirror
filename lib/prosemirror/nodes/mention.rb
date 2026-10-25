@@ -30,6 +30,7 @@ module Prosemirror
         end
       end
 
+      # @api private
       def self.display_text(attrs) = "#{attrs[:mention_suggestion_char] || "@"}#{attrs[:label] || attrs[:id]}"
     end
   end

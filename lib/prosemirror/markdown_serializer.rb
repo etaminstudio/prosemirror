@@ -51,6 +51,7 @@ module Prosemirror
     end
 
     # The document's content as Markdown, ending with a newline.
+    # @api private
     def call(root)
       render_content(root)
       @out.empty? ? @out : @out.sub(/\n*\z/, "\n")
@@ -72,6 +73,7 @@ module Prosemirror
       close_block(node)
     end
 
+    # @api private
     def ensure_new_line
       @out << "\n" unless at_blank?
     end
@@ -102,6 +104,7 @@ module Prosemirror
     end
 
     # Renders a node with its type's `to_markdown`.
+    # @api private
     def render(node, parent, index)
       type = @schema.node_type(node.type)
       if type
@@ -215,6 +218,7 @@ module Prosemirror
     # Whether the list follows a list of the same type, which it would continue in Markdown with the same
     # marker. Alternating lists in a row switch markers. The block, called with the siblings before, tells
     # which lists share markers, when other types than the list's do.
+    # @api private
     def list_after_list?(parent, index, &same)
       same ||= ->(sibling) { sibling.type == parent.content[index].type }
       run = 0
@@ -246,17 +250,20 @@ module Prosemirror
       string
     end
 
+    # @api private
     def repeat(string, count)
       string * count
     end
 
     # The opening or closing syntax of a mark.
+    # @api private
     def mark_string(mark, open, parent, index)
       value = mark_spec(mark)[open ? :open : :close]
       value.respond_to?(:call) ? value.call(self, mark, parent, index) : value
     end
 
     # The mark's syntax: its type's `markdown`, its HTML with `html: true`, or nothing.
+    # @api private
     def mark_spec(mark)
       type = @schema.mark_type(mark.type)
       type&.markdown_spec || ((@html && type) ? html_mark(mark, type) : BLANK_MARK)
@@ -264,6 +271,7 @@ module Prosemirror
 
     # The backticks that open (`side` -1) or close (1) inline code around this node's text: one more than
     # its longest run of backticks, with a space when it has some.
+    # @api private
     def backticks_for(node, side)
       length = node&.text? ? node.text.scan(/`+/).map(&:length).max.to_i : 0
       ticks = "`" * (length + 1)
@@ -273,6 +281,7 @@ module Prosemirror
     end
 
     # Whether a link can be written as an autolink, `<https://…>`: its text is its URL, without a title.
+    # @api private
     def plain_url?(link, parent, index)
       href = link.attrs[:href].to_s
       return false if link.attrs[:title] || !href.match?(/\A\w+:/)
@@ -289,6 +298,7 @@ module Prosemirror
     end
 
     # A link title, quoted.
+    # @api private
     def title(value)
       value ? %( "#{value.gsub('"', '\\"')}") : ""
     end

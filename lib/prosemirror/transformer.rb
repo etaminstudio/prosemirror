@@ -8,6 +8,7 @@ module Prosemirror
   # node's content changed and no longer has what its content expression requires, the required nodes
   # are added, as an empty paragraph in an empty list item, and reported. Other problems are left for
   # Document#check.
+  # @api private
   class Transformer
     def initialize(schema, &block)
       raise ArgumentError, "transform needs a block" unless block

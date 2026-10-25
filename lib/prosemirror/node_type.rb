@@ -19,6 +19,7 @@ module Prosemirror
     include Rendering
 
     class << self
+      # @api private
       def base_type?
         self == NodeType
       end
@@ -83,6 +84,7 @@ module Prosemirror
         inherited_setting(:@leaf_text, nil)
       end
 
+      # @api private
       def text_for(node)
         value = leaf_text
         value.respond_to?(:call) ? value.call(node).to_s : value.to_s
@@ -99,6 +101,7 @@ module Prosemirror
       end
 
       # Whether marks of this type can be applied inside this node, according to its `marks` option.
+      # @api private
       def allows_mark?(mark_type, schema)
         case marks
         when nil then schema.content_match(self).inline_content?

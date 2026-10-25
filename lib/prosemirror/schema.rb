@@ -32,8 +32,8 @@ module Prosemirror
     def self.tiptap(text_align: false, **)
       new(
         nodes: [
-          Nodes::Doc, text_align ? TextAlign::Paragraph : Nodes::Paragraph, Nodes::Text,
-          text_align ? TextAlign::Heading : Nodes::Heading, Nodes::Blockquote, Nodes::BulletList,
+          Nodes::Doc, text_align ? Extensions::TextAlign::Paragraph : Nodes::Paragraph, Nodes::Text,
+          text_align ? Extensions::TextAlign::Heading : Nodes::Heading, Nodes::Blockquote, Nodes::BulletList,
           Nodes::OrderedList, Nodes::ListItem, Nodes::CodeBlock, Nodes::HardBreak, Nodes::HorizontalRule,
           Nodes::Image, Nodes::Table, Nodes::TableRow, Nodes::TableHeader, Nodes::TableCell, Nodes::TaskList,
           Nodes::TaskItem, Nodes::Details, Nodes::DetailsSummary, Nodes::DetailsContent, Nodes::Youtube,
@@ -73,17 +73,20 @@ module Prosemirror
     end
 
     # The start state of a node type's content expression.
+    # @api private
     def content_match(type)
       @content_matches.fetch(type)
     end
 
     # The node types with this name or in this group, in schema order.
+    # @api private
     def node_types_named(name)
       @nodes.select { |type| type.type_name == name || type.group.include?(name) }
     end
 
     # A node of this type, created empty and filled with the content it requires, or nil when its
     # type, or one it requires, has required attributes.
+    # @api private
     def create_and_fill(type)
       return nil if type.required_attrs?
 
@@ -123,18 +126,18 @@ module Prosemirror
     end
 
     # Build a document from HTML, with the parse rules of the schema's types. Needs the `herb` gem.
-    def parse_html(html)
+    def from_html(html)
       Document.new(HTMLParser.new(self).parse(html), schema: self)
     end
 
     # Build a document from Markdown, with the parse rules of the schema's types. Needs the `commonmarker` gem.
-    def parse_markdown(markdown)
+    def from_markdown(markdown)
       Document.new(HTMLParser.new(self).parse_element(Markdown::Builder.new.call(markdown)), schema: self)
     end
 
     # Build a document from plain text: blank lines separate paragraphs, and other line breaks become the
     # schema's line break node, like `hard_break`, or spaces without one. Spaces are kept.
-    def parse_text(text)
+    def from_text(text)
       paragraph = node_type(:paragraph) || @nodes.find { |type| textblock?(type) }
       linebreak = @nodes.find(&:linebreak_replacement?)
       separator = linebreak ? {"type" => linebreak.type_name.to_s} : {"type" => "text", "text" => " "}
@@ -149,12 +152,14 @@ module Prosemirror
     end
 
     # The type name as written in JSON.
+    # @api private
     def json_type_name(name)
       (@case == :camel) ? Naming.camel(name) : name.to_s
     end
 
     # The set of marks with this mark added, in schema order, as ProseMirror's `Mark#addToSet`: a mark
     # replaces the marks it excludes, and isn't added when a mark of the set excludes it.
+    # @api private
     def add_mark(mark, set)
       type = mark_type(mark.type)
       result = []
@@ -179,6 +184,7 @@ module Prosemirror
     # Whether a URL's scheme is allowed, or the URL is relative. Browsers ignore leading control characters
     # and spaces, and tabs and newlines anywhere in a URL.
     # The URLs resolved with `resolve_urls`, as a Hash, or nil without it.
+    # @api private
     def resolve_urls(urls)
       return unless @resolve_urls
       return {} if urls.empty?
@@ -186,6 +192,7 @@ module Prosemirror
       @resolve_urls.call(urls).to_h
     end
 
+    # @api private
     def allowed_url?(url)
       return false unless url.is_a?(String)
 
@@ -197,11 +204,13 @@ module Prosemirror
     end
 
     # The order of marks in a node. Marks of unknown types come last.
+    # @api private
     def mark_rank(name)
       @marks.index(mark_type(name)) || @marks.size
     end
 
     # Whether nodes of this type contain inline content, like a paragraph.
+    # @api private
     def textblock?(type)
       @textblocks.fetch(type, false)
     end
@@ -209,6 +218,7 @@ module Prosemirror
     # The URL after `resolve_url` or `resolve_urls`, when its scheme is allowed. Otherwise nil, and the
     # problem is reported. `resolved_urls` holds URLs already resolved with `resolve_urls`: others are
     # resolved one at a time.
+    # @api private
     def safe_url(url, resolved_urls = nil)
       return nil unless url.is_a?(String)
 
@@ -222,6 +232,7 @@ module Prosemirror
     end
 
     # Raise in strict mode, otherwise call `on_invalid`.
+    # @api private
     def report(message, path: nil, error_class: InvalidDocument, **details)
       error = error_class.new(message, path:, **details)
       raise error if @strict
@@ -231,6 +242,7 @@ module Prosemirror
     end
 
     # The document as JSON, as a Hash.
+    # @api private
     def serialize(node)
       hash = {"type" => json_type_name(node.type)}
       hash["text"] = node.text if node.text?

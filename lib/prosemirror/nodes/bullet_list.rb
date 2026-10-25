@@ -16,6 +16,7 @@ module Prosemirror
       end
 
       # Bullet and task lists share markers.
+      # @api private
       def self.marker(markdown, parent, index)
         after_list = markdown.list_after_list?(parent, index) do |sibling|
           type = markdown.schema.node_type(sibling.type)

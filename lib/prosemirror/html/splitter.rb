@@ -11,6 +11,7 @@ module Prosemirror
     # It only cuts where it can follow the structure: when a closing tag doesn't match the last open
     # element, as with unclosed or implicitly closed elements, the rest stays in one piece. HTML with
     # ERB tags isn't split, since Herb groups ERB blocks with the HTML between them.
+    # @api private
     class Splitter
       # As Herb's lists.
       VOID_TAGS = %w[

@@ -131,7 +131,7 @@ class TestMarkdownImport < Minitest::Test
   end
 
   def test_too_deep_nesting_raises
-    error = assert_raises(Prosemirror::Error) { Prosemirror.from_markdown(("*a " * 2000) + "x" + (" a*" * 2000)) }
+    error = assert_raises(Prosemirror::TooDeep) { Prosemirror.from_markdown(("*a " * 2000) + "x" + (" a*" * 2000)) }
 
     assert_match(/nested too deeply/, error.message)
   end
