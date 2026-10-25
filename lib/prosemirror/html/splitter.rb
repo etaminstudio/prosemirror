@@ -41,14 +41,14 @@ module Prosemirror
           elsif scanner.skip(/[!?]/)
             break unless scanner.skip_until(/>/)
           elsif scanner.skip(%r{/(#{NAME})\s*>}o)
-            break unless open.pop == scanner[1].downcase
+            break unless open.pop == lowercase(scanner[1])
           elsif scanner.skip(/(#{NAME})/o)
-            name = scanner[1].downcase
-            break unless (rest = scanner.scan(TAG_REST))
+            name = lowercase(scanner[1])
+            break unless scanner.skip(TAG_REST)
 
             if RAW_TEXT_TAGS.include?(name)
               break unless scanner.skip_until(%r{</#{Regexp.escape(name)}\s*>}i)
-            elsif !VOID_TAGS.include?(name) && !rest.end_with?("/>")
+            elsif !VOID_TAGS.include?(name) && !self_closing?(html, scanner.pos)
               open << name
             end
           else
@@ -62,6 +62,18 @@ module Prosemirror
         end
         pieces << html.byteslice(start..) if start < html.bytesize
         pieces
+      end
+
+      private
+
+      # Tag names are lowercase in most HTML: only the others are copied.
+      def lowercase(name)
+        name.match?(/[A-Z]/) ? name.downcase : name
+      end
+
+      # Whether the tag that ends before this byte position ends with `/>`, without copying it.
+      def self_closing?(html, position)
+        html.getbyte(position - 2) == 47 # "/"
       end
     end
   end

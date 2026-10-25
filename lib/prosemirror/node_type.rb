@@ -34,15 +34,16 @@ module Prosemirror
       def group(*names)
         return @group = names.flat_map { |n| n.to_s.split }.map(&:to_sym) unless names.empty?
 
-        inherited_setting(:@group, [])
+        inherited_setting(:@group, Node::EMPTY_ARRAY)
       end
 
       def inline(value = true)
         @inline = value
       end
 
+      # Reads the group without calling `group`, whose splat allocates: this runs for each node.
       def inline?
-        inherited_setting(:@inline, false) || group.include?(:inline)
+        inherited_setting(:@inline, false) || inherited_setting(:@group, Node::EMPTY_ARRAY).include?(:inline)
       end
 
       def block?

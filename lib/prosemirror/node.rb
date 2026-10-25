@@ -33,10 +33,7 @@ module Prosemirror
 
     # The nodes with adjacent text nodes that have the same marks joined, as in ProseMirror.
     def self.join_text(nodes)
-      return nodes unless (1...nodes.size).any? do |index|
-        previous, node = nodes[index - 1], nodes[index]
-        previous.text? && node.text? && previous.marks == node.marks
-      end
+      return nodes unless joinable_text?(nodes)
 
       nodes.each_with_object([]) do |node, joined|
         previous = joined.last
@@ -47,6 +44,20 @@ module Prosemirror
         end
       end
     end
+
+    # Whether two adjacent text nodes have the same marks. A loop: this runs for each node with content.
+    def self.joinable_text?(nodes)
+      index = 1
+      while index < nodes.size
+        previous = nodes[index - 1]
+        node = nodes[index]
+        return true if previous.text? && node.text? && previous.marks == node.marks
+
+        index += 1
+      end
+      false
+    end
+    private_class_method :joinable_text?
 
     # A copy with some properties changed.
     def with(**changes)

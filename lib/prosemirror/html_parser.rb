@@ -23,6 +23,8 @@ module Prosemirror
 
     WHITESPACE = /[ \t\r\n\f]/
     WHITESPACE_RUN = /[ \t\r\n\f]+/
+    # Whitespace that collapsing changes: other than a single space.
+    COLLAPSIBLE = /[\t\r\n\f]|  /
 
     # A rule that matched an element: the rule, its index, the attributes it gives, and the schema's type.
     Match = Data.define(:rule, :index, :attrs, :type)
@@ -42,6 +44,7 @@ module Prosemirror
       @styles = rules.select(&:style)
       @matched_styles = @styles.map(&:style_property).uniq
       @normalize_lists = @tags.none? { |rule| lists_contain_themselves?(rule) }
+      @report = ->(message) { @schema.report(message, path: "html") }
     end
 
     # The document parsed from the HTML, as its top node.
@@ -110,9 +113,12 @@ module Prosemirror
 
     # The rule's attributes, with the ones read from the element, built with the type's properties.
     def build_attrs(type, given, element)
-      given = (given || {}).transform_keys(&:to_s)
-      given = given.merge(type.attrs_from_html(element)) if element
-      type.build_attrs(given, report: ->(message) { @schema.report(message, path: "html") })
+      given = given ? given.transform_keys(&:to_s) : TypeDefinition::EMPTY_HASH
+      if element
+        from_html = type.attrs_from_html(element)
+        given = given.empty? ? from_html : given.merge(from_html)
+      end
+      type.build_attrs(given, report: @report)
     end
 
     def call_get_attrs(get_attrs, element)
@@ -148,9 +154,10 @@ module Prosemirror
 
       def finish
         strip_trailing_whitespace unless @options.anybits?(PRESERVE_WS)
-        fill = @match&.fill_before([], @schema, to_end: true) || []
-        content = Node.join_text(@content + fill.filter_map { |type| @schema.create_and_fill(type) })
-        Node.new(type: @type.type_name, attrs: @attrs, content:, marks: @marks)
+        fill = @match&.fill_before(Node::EMPTY_ARRAY, @schema, to_end: true) || Node::EMPTY_ARRAY
+        content = fill.empty? ? @content : @content + fill.filter_map { |type| @schema.create_and_fill(type) }
+        # Frozen here, so that the node doesn't copy it: nothing else holds it.
+        Node.new(type: @type.type_name, attrs: @attrs, content: Node.join_text(content).freeze, marks: @marks)
       end
 
       def inline_context?
@@ -243,7 +250,7 @@ module Prosemirror
         return unless preserve == :full || top.inline_context? || value.match?(/[^ \t\r\n\f]/)
 
         if !preserve
-          value = value.gsub(WHITESPACE_RUN, " ")
+          value = value.gsub(WHITESPACE_RUN, " ") if value.match?(COLLAPSIBLE)
           value = value[1..] if value.start_with?(" ") && @open == @nodes.size - 1 && strip_leading_space?(dom, top)
         elsif preserve == :full
           value = value.gsub(/\r\n?/, "\n")
@@ -388,8 +395,11 @@ module Prosemirror
         route = nil
         sync_to = nil
         penalty = 0
-        @open.downto(0) do |depth|
+        depth = @open
+        # A loop rather than `downto`: breaking out of its block allocates.
+        while depth >= 0
           context = @nodes[depth]
+          depth -= 1
           found = context.find_wrapping(type)
           if found && (route.nil? || route.size > found.size + penalty)
             route = found
@@ -416,12 +426,19 @@ module Prosemirror
         close_extra
         top = self.top
         top.match &&= top.match.match_type(type)
-        node_marks = (inner_marks + node.marks).each_with_object([]) do |mark, set|
-          mark_type = @schema.mark_type(mark.type)
-          set.replace(@schema.add_mark(mark, set)) if mark_type && top.type.allows_mark?(mark_type, @schema)
-        end
-        top.content << node.with(marks: node_marks)
+        top.content << with_marks(node, inner_marks, top)
         true
+      end
+
+      # The node with the marks its parent allows, from the open marks and its own.
+      def with_marks(node, marks, parent)
+        return node if marks.empty? && node.marks.empty?
+
+        node_marks = (marks + node.marks).each_with_object([]) do |mark, set|
+          mark_type = @schema.mark_type(mark.type)
+          set.replace(@schema.add_mark(mark, set)) if mark_type && parent.type.allows_mark?(mark_type, @schema)
+        end
+        (node_marks == node.marks) ? node : node.with(marks: node_marks.freeze)
       end
 
       def enter(type, attrs, marks, preserve_ws)
@@ -458,18 +475,23 @@ module Prosemirror
 
       # Finishes the nodes above the open one, and adds them to their parents.
       def close_extra
+        return if @nodes.size <= @open + 1
+
         (@nodes.size - 1).downto(@open + 1) { |index| @nodes[index - 1].content << @nodes[index].finish }
         @nodes.slice!((@open + 1)..)
       end
 
+      # A loop rather than `downto`: returning from its block allocates, and this runs for each element.
       def sync(to)
-        @open.downto(0) do |index|
+        index = @open
+        while index >= 0
           if @nodes[index].equal?(to)
             @open = index
             return true
           elsif @local_preserve_ws
             @nodes[index].options |= PRESERVE_WS
           end
+          index -= 1
         end
         false
       end
@@ -494,8 +516,10 @@ module Prosemirror
         dom.children.replace(kept)
       end
 
+      # The value is frozen in place, so that the node doesn't copy it: the parser made it, or the element
+      # tree it parses holds it, unchanged.
       def text_node(value)
-        Node.new(type: :text, text: value)
+        Node.new(type: :text, text: value.freeze)
       end
 
       def node_type(node)
