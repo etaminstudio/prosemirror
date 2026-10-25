@@ -291,9 +291,33 @@ Prosemirror::Schema.tiptap(
 
 Out of scope: CSS framework themes (subclass node types instead), a Rails or ViewComponent dependency, editing features (positions, steps, commands, collaboration), and the editor itself.
 
+## Performance
+
+On a page of 151 nodes (8 KB of JSON: headings, paragraphs with marks and links, lists, an image, a table…) and a long document of 50 such pages, with Ruby 4.0 and YJIT on an Apple M2:
+
+| | Page | Long document |
+|---|--:|--:|
+| `parse` (JSON) | 0.3 ms | 15 ms |
+| `to_html` | 0.2 ms | 8 ms |
+| `to_text` | 0.06 ms | 3 ms |
+| `to_markdown` | 0.6 ms | 29 ms |
+| `to_h` | 0.2 ms | 10 ms |
+| `from_html` | 2 ms | 98 ms |
+| `from_markdown` | 1.5 ms | 65 ms |
+| `transform`, `check` | 0.3 ms | 15 ms |
+
+From a JSON string to HTML, a page takes 0.6 ms, about 5 times less than with prosemirror_to_html. HTML import takes twice as long as html_to_prosemirror's, which does less: it drops text in nested marks, ignores styles, and doesn't follow the schema. See [`benchmark/run.rb`](benchmark/run.rb) to measure on your machine.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests, and `rake` to also run [Standard](https://github.com/standardrb/standard). You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+
+`benchmark/run.rb` measures each operation on a page and a long document, and compares with the gems this one replaces. It has its own Gemfile:
+
+```sh
+BUNDLE_GEMFILE=benchmark/Gemfile bundle install
+BUNDLE_GEMFILE=benchmark/Gemfile bundle exec ruby benchmark/run.rb
+```
 
 To install this gem onto your local machine, run `bundle exec rake install`.
 
