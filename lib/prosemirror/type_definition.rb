@@ -48,10 +48,12 @@ module Prosemirror
 
     # The attributes read from an HTML element, by JSON name, without the missing ones.
     def attrs_from_html(element)
-      attribute_names.each_value.with_object({}) do |names, attrs|
+      attrs = {}
+      attribute_names.each_value do |names|
         value = names[:parse_html] ? names[:parse_html].call(element) : element[names[:json]]
         attrs[names[:json]] = value unless value.nil?
       end
+      attrs
     end
 
     def attribute_names

@@ -34,6 +34,8 @@ module Prosemirror
 
     # The state after these node types, or nil when they don't match.
     def match_types(types)
+      return self if types.empty?
+
       types.reduce(self) { |match, type| match&.match_type(type) }
     end
 
@@ -49,6 +51,10 @@ module Prosemirror
     # The node types to insert before `types` so that they match, possibly none, or nil when no
     # insertion works. With `to_end`, the content must also be able to end after them.
     def fill_before(types, schema, to_end: false)
+      # Most content needs nothing: no search.
+      finished = match_types(types)
+      return Node::EMPTY_ARRAY if finished && (!to_end || finished.valid_end?)
+
       seen = [self]
       search = lambda do |match, filled|
         finished = match.match_types(types)

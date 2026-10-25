@@ -76,7 +76,7 @@ module Prosemirror
         case node
         when Herb::AST::HTMLElementNode then add_element(node, target, depth)
         when Herb::AST::HTMLOpenTagNode then add_open_tag(node, target, depth)
-        when Herb::AST::HTMLTextNode then add_text(Entities.decode(node.content.to_s.gsub(BOGUS_COMMENT, "")), target)
+        when Herb::AST::HTMLTextNode then add_text(Entities.decode(without_bogus_comments(node.content.to_s)), target)
         when Herb::AST::LiteralNode then add_text(node.content.to_s, target)
         when Herb::AST::WhitespaceNode then add_text(node.value&.value.to_s, target)
         when Herb::AST::HTMLCommentNode, Herb::AST::HTMLDoctypeNode, Herb::AST::XMLDeclarationNode,
@@ -126,28 +126,46 @@ module Prosemirror
         nil
       end
 
+      def without_bogus_comments(text)
+        text.include?("<!") ? text.gsub(BOGUS_COMMENT, "") : text
+      end
+
       def new_element(open_tag)
-        Element.new(open_tag.tag_name.value.downcase, attributes(open_tag.children))
+        Element.new(lowercase(open_tag.tag_name.value), attributes(open_tag.children))
       end
 
       # The first value wins when an attribute is repeated, as in browsers.
       def attributes(nodes)
-        nodes.grep(Herb::AST::HTMLAttributeNode).each_with_object({}) do |attribute, result|
-          name = text_of(attribute.name&.children).downcase
+        result = {}
+        nodes.each do |attribute|
+          next unless attribute.is_a?(Herb::AST::HTMLAttributeNode)
+
+          name = lowercase(text_of(attribute.name&.children))
           next if name.empty? || result.key?(name)
 
           result[name] = Entities.decode(text_of(attribute.value&.children), attribute: true)
         end
+        result
+      end
+
+      # Names are lowercase in most HTML: only the others are copied.
+      def lowercase(name)
+        name.match?(/[A-Z]/) ? name.downcase : name
       end
 
       def text_of(nodes)
-        Array(nodes).map do |node|
-          if node.respond_to?(:tag_opening) && node.respond_to?(:tag_closing)
-            [node.tag_opening, node.content, node.tag_closing].map { |token| token&.value.to_s }.join
-          else
-            node.content.to_s
-          end
-        end.join
+        return "" if nodes.nil? || nodes.empty?
+        return text_of_node(nodes.first) if nodes.size == 1 # most names and values: no arrays to join
+
+        nodes.map { |node| text_of_node(node) }.join
+      end
+
+      def text_of_node(node)
+        if node.respond_to?(:tag_opening) && node.respond_to?(:tag_closing)
+          [node.tag_opening, node.content, node.tag_closing].map { |token| token&.value.to_s }.join
+        else
+          node.content.to_s
+        end
       end
     end
   end
