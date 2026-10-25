@@ -302,11 +302,11 @@ On a page of 151 nodes (8 KB of JSON: headings, paragraphs with marks and links,
 | `to_text` | 0.06 ms | 3 ms |
 | `to_markdown` | 0.6 ms | 29 ms |
 | `to_h` | 0.2 ms | 10 ms |
-| `from_html` | 2 ms | 98 ms |
-| `from_markdown` | 1.5 ms | 65 ms |
+| `from_html` | 1.2 ms | 68 ms |
+| `from_markdown` | 1 ms | 46 ms |
 | `transform`, `check` | 0.3 ms | 15 ms |
 
-From a JSON string to HTML, a page takes 0.6 ms, about 5 times less than with prosemirror_to_html. HTML import takes twice as long as html_to_prosemirror's, which does less: it drops text in nested marks, ignores styles, and doesn't follow the schema. See [`benchmark/run.rb`](benchmark/run.rb) to measure on your machine.
+From a JSON string to HTML, a page takes 0.6 ms, about 5 times less than with prosemirror_to_html. HTML import takes about 1.5 times as long as html_to_prosemirror's, which does less: it drops text in nested marks, ignores styles, and doesn't follow the schema. See [`benchmark/run.rb`](benchmark/run.rb) to measure on your machine.
 
 ## Development
 
