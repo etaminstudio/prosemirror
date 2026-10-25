@@ -11,16 +11,7 @@ This gem replaces [prosemirror_to_html](https://github.com/etaminstudio/prosemir
 
 ## Why
 
-ProseMirror editors store documents as JSON. Ruby apps need to render this JSON to HTML, extract its text, and import old HTML or Markdown content. Before this gem, that was split across several small gems:
-
-| Gem | Does | Limits |
-|---|---|---|
-| [`prosemirror_to_html`](https://rubygems.org/gems/prosemirror_to_html) | JSON → HTML | Builds HTML strings, then cleans them with Loofah. Deprecated for this gem |
-| [`html_to_prosemirror`](https://rubygems.org/gems/html_to_prosemirror) | HTML → JSON | Few node types, regex-based cleanup. Deprecated for this gem |
-| [`prose_mirror_ruby`](https://rubygems.org/gems/prose_mirror_ruby) | JSON → Markdown | Needs ActiveSupport, no HTML |
-| [`prose_render`](https://github.com/mattbarrry/prose_render) (unreleased) | JSON → HTML | Needs Rails and ViewComponent |
-
-They use different type names (`bullet_list` or `bulletList`, `strong` or `bold`), and none of them uses the same schema for rendering and parsing. Here, one schema renders, imports and exports.
+ProseMirror editors store documents as JSON. Ruby apps need to render this JSON to HTML, extract its text, and import old HTML or Markdown content. This gem does all of it with one schema: a custom type is declared once, and renders, imports and exports the same way.
 
 ## Installation
 
