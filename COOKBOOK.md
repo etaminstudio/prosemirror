@@ -73,6 +73,24 @@ end
 
 A node doesn't see the rest of the document, so two headings with the same text get the same `id`.
 
+## Quotes with their author
+
+A node can render parts of its content in different places, with `node` and `render_content`. Here, a quote's last line, after a line break, is its author:
+
+```ruby
+class Blockquote < Prosemirror::Nodes::Blockquote
+  def view_template
+    inline = node.content.flat_map(&:content)
+    split = inline.rindex { |child| child.type == :hard_break }
+
+    figure do
+      blockquote { render_content(split ? inline[...split] : inline) }
+      figcaption { render_content(inline[(split + 1)..]) } if split
+    end
+  end
+end
+```
+
 ## Render your own components
 
 A node type is a Phlex component, so it can render the app's Phlex components:
