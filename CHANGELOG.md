@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-25
+
 ### Public API
 
 The public API is defined for 1.0: what the README, TYPES.md and the cookbook document. The rest is marked `@api private`.
