@@ -12,9 +12,12 @@ module Prosemirror
   # and `to_h` gives them back unchanged.
   class Node < Literal::Data
     # Whitespace, including non-breaking spaces.
+    # @api private
     BLANK = /\A[[:space:]]*\z/
 
+    # @api private
     EMPTY_HASH = {}.freeze
+    # @api private
     EMPTY_ARRAY = [].freeze
 
     prop :type, Symbol
@@ -32,6 +35,7 @@ module Prosemirror
     end
 
     # The nodes with adjacent text nodes that have the same marks joined, as in ProseMirror.
+    # @api private
     def self.join_text(nodes)
       return nodes unless joinable_text?(nodes)
 

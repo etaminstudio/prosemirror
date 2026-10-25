@@ -3,6 +3,7 @@
 module Prosemirror
   # A parsed content expression, such as `"paragraph block*"` or `"(table_cell | table_header){1,5}"`.
   # See https://prosemirror.net/docs/guide/#schema.content_expressions
+  # @api private
   class ContentExpression
     TOKEN = /\s*(\w+|[()|+*?]|\{\s*\d+\s*(?:,\s*\d*\s*)?\})/
 

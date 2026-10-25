@@ -5,6 +5,7 @@ module Prosemirror
     # The CSS selectors parse rules need, matched against one element: lists of compound selectors,
     # with a type (`p`, `*`), `#id`, `.class`, attribute selectors (`[href]`, `[a=b]`, `[a^=b]`,
     # `[a$=b]`, `[a*=b]`, `[a~=b]`, `[a|=b]`) and `:not(…)`. Combinators aren't supported.
+    # @api private
     class Selector
       IDENTIFIER = /-?[_a-zA-Z][-\w]*/
       ATTRIBUTE = /\[\s*(#{IDENTIFIER})\s*(?:([~|^$*]?=)\s*(?:"([^"]*)"|'([^']*)'|(#{IDENTIFIER}))\s*)?\]/

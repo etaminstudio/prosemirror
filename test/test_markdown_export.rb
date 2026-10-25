@@ -40,7 +40,7 @@ class TestMarkdownExport < Minitest::Test
       schema = Prosemirror::Schema.tiptap(case: :camel)
       document = schema.parse(fixture["doc"])
 
-      assert_equal document.to_h, schema.parse_markdown(document.to_markdown).to_h
+      assert_equal document.to_h, schema.from_markdown(document.to_markdown).to_h
     end
   end
 
@@ -157,7 +157,7 @@ class TestMarkdownExport < Minitest::Test
     document = schema.parse(doc({"type" => "blockquote", "content" => [details]}))
 
     assert_equal "> <details>\n> <summary>a &lt; <strong>b</strong></summary>\n>\n> *c*\n>\n> - d\n>\n> </details>\n", document.to_markdown
-    assert_equal document.to_h, schema.parse_markdown(document.to_markdown).to_h
+    assert_equal document.to_h, schema.from_markdown(document.to_markdown).to_h
   end
 
   # A mention is its text, or with `html: true`, HTML that Markdown import reads back.
@@ -167,7 +167,7 @@ class TestMarkdownExport < Minitest::Test
       {"type" => "mention", "attrs" => {"id" => "release", "label" => nil, "mentionSuggestionChar" => "#"}, "marks" => [bold]})))
 
     assert_equal "Hi @Ada \\***#release**\n", document.to_markdown
-    assert_equal document.to_h, schema.parse_markdown(document.to_markdown(html: true)).to_h
+    assert_equal document.to_h, schema.from_markdown(document.to_markdown(html: true)).to_h
   end
 
   def test_prosemirror_schema

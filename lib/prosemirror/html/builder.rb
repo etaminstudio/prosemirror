@@ -9,6 +9,7 @@ module Prosemirror
     # - applies an opening tag without a closing tag to the rest of its parent, as browsers do;
     # - drops comments (including Word's `<![if …]>`), doctypes and CDATA;
     # - walks the tree without recursion, and flattens elements nested deeper than MAX_DEPTH.
+    # @api private
     class Builder
       MAX_DEPTH = 256
       # The size of the pieces Herb parses, in bytes. See Splitter.

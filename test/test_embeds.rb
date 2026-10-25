@@ -85,6 +85,6 @@ class TestEmbeds < Minitest::Test
     document = schema.parse(doc(youtube("https://www.youtube.com/watch?v=abc"), twitch("https://www.twitch.tv/videos/1")))
 
     assert_equal "<https://www.youtube.com/watch?v=abc>\n\n<https://www.twitch.tv/videos/1>\n", document.to_markdown
-    assert_equal document.to_h, schema.parse_markdown(document.to_markdown(html: true)).to_h
+    assert_equal document.to_h, schema.from_markdown(document.to_markdown(html: true)).to_h
   end
 end

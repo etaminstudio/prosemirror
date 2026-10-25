@@ -10,6 +10,7 @@ module Prosemirror
   # - required content is filled in (an empty list item gets a paragraph);
   # - elements without a rule are unwrapped, and `head`, `noscript`, `object`, `script`, `style` and `title`
   #   are ignored.
+  # @api private
   class HTMLParser
     BLOCK_TAGS = %w[
       address article aside blockquote canvas dd div dl fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6

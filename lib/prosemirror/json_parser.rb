@@ -4,6 +4,7 @@ module Prosemirror
   # Builds nodes from ProseMirror JSON, and normalizes them as ProseMirror does:
   # marks sorted in schema order, adjacent text with the same marks joined, empty text removed.
   # Invalid parts are fixed and reported to the schema (which raises in strict mode).
+  # @api private
   class JSONParser
     MAX_DEPTH = 100
     EMPTY = [].freeze
@@ -28,7 +29,7 @@ module Prosemirror
       invalid("the top node is #{root.type}, not #{@schema.top_node}")
       Node.new(type: @schema.top_node, content: [root])
     rescue JSON::NestingError
-      raise InvalidDocument, "the document is nested more than #{MAX_DEPTH} levels deep"
+      raise TooDeep, "the document is nested more than #{MAX_DEPTH} levels deep"
     end
 
     private

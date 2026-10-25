@@ -6,6 +6,7 @@ module Prosemirror
   #
   # Rendering and JSON parsing don't need valid content: they render what they get. This checks what
   # they don't: node and mark types, attributes, content expressions, and the marks each node allows.
+  # @api private
   class Checker
     def initialize(schema)
       @schema = schema

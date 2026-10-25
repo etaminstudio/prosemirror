@@ -4,6 +4,7 @@ module Prosemirror
   # Extracts the text of a document, as ProseMirror's `textBetween` and Tiptap's `getText` do:
   # textblocks and leaf blocks with text are separated by `block_separator`,
   # and leaf nodes such as hard breaks are replaced by their `leaf_text`.
+  # @api private
   class TextSerializer
     def initialize(schema, block_separator: "\n\n")
       @schema = schema

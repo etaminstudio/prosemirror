@@ -20,10 +20,12 @@ module Prosemirror
       parse_html tag: "ol"
 
       # From the `type` attribute, or the list style of the list or of its first item.
+      # @api private
       def self.type_from_html(element)
         element["type"] || list_style_type(element) || element.query("li")&.then { |item| list_style_type(item) }
       end
 
+      # @api private
       def self.list_style_type(element)
         LIST_STYLE_TYPES[element.style["list-style-type"].to_s.downcase]
       end
@@ -38,6 +40,7 @@ module Prosemirror
 
       # Items numbered from `start`, with the numbers aligned. `)` instead of `.` keeps a list right after
       # another ordered list apart from it.
+      # @api private
       def self.numbered(markdown, node, start, delimiter = ".")
         width = (start + node.content.size - 1).to_s.length
         markdown.render_list(node, " " * (width + 2)) { |index| "#{(start + index).to_s.rjust(width)}#{delimiter} " }

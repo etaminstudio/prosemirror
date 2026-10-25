@@ -2,6 +2,7 @@
 
 module Prosemirror
   # Converts names between snake_case (`bullet_list`) and camelCase (`bulletList`).
+  # @api private
   module Naming
     module_function
 

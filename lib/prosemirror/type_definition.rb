@@ -42,11 +42,13 @@ module Prosemirror
       (@parse_rules ||= []) << ParseRule.new(type: self, tag:, style:, get_attrs:, **options)
     end
 
+    # @api private
     def parse_rules
       inherited_setting(:@parse_rules, [])
     end
 
     # The attributes read from an HTML element, by JSON name, without the missing ones.
+    # @api private
     def attrs_from_html(element)
       attrs = {}
       attribute_names.each_value do |names|
@@ -56,6 +58,7 @@ module Prosemirror
       attrs
     end
 
+    # @api private
     def attribute_names
       @attribute_names ||= concrete_superclass ? concrete_superclass.attribute_names.dup : {}
     end
@@ -63,6 +66,7 @@ module Prosemirror
     # Build valid attributes from JSON attributes (a Hash with String or Symbol keys).
     # Invalid values are converted when the meaning is clear, or replaced by their default.
     # Returns nil when a required attribute is missing or invalid.
+    # @api private
     def build_attrs(given, report:)
       given = if !given.is_a?(Hash) then EMPTY_HASH
       elsif keys?(given) { |key| key.is_a?(String) } then given
@@ -88,16 +92,19 @@ module Prosemirror
     end
 
     # Whether an attribute has no default, so that a node of this type can't be created empty.
+    # @api private
     def required_attrs?
       literal_properties.any? { |property| !optional_attribute?(property) }
     end
 
     # The attributes of a node of this type created empty: the defaults.
+    # @api private
     def default_attrs
       build_attrs({}, report: ->(_) {})
     end
 
     # The JSON attributes this type doesn't declare, with String keys, so that `to_h` gives them back.
+    # @api private
     def unknown_attrs(given)
       return EMPTY_HASH unless given.is_a?(Hash)
 
@@ -108,20 +115,24 @@ module Prosemirror
     end
 
     # The JSON keys of the declared attributes, in all their spellings.
+    # @api private
     def known_keys
       @known_keys ||= attribute_names.each_value.flat_map { |names| names[:keys] }.to_set.freeze
     end
 
     # The names of the attributes declared with `url: true`.
+    # @api private
     def url_attributes
       @url_attributes ||= attribute_names.filter_map { |name, names| name if names[:url] }.freeze
     end
 
     # Attributes as JSON, with their JSON names.
+    # @api private
     def serialize_attrs(attrs)
       attrs.to_h { |name, value| [attribute_names.dig(name, :json) || name.to_s, value] }
     end
 
+    # @api private
     def base_type?
       false
     end

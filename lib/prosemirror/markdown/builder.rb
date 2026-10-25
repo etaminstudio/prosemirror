@@ -13,6 +13,7 @@ module Prosemirror
     #   stays as text.
     # - Code blocks lose their final newline, as in prosemirror-markdown.
     # - YAML front matter, between `---` lines at the start, is dropped.
+    # @api private
     class Builder
       MAX_DEPTH = HTML::Builder::MAX_DEPTH
       EXTENSIONS = {
@@ -69,7 +70,7 @@ module Prosemirror
       def parse(markdown)
         Commonmarker.parse(markdown, options: {extension: EXTENSIONS})
       rescue Commonmarker::NestingDepthExceededError => error
-        raise Error, "Markdown nested too deeply: #{error.message}"
+        raise TooDeep, "Markdown nested too deeply: #{error.message}"
       end
 
       # Walks the tree without recursion. Each item of the stack is a node, the element to add it to, and

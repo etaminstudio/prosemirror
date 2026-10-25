@@ -15,6 +15,7 @@ module Prosemirror
     include Rendering
 
     class << self
+      # @api private
       def base_type?
         self == MarkType
       end
@@ -55,6 +56,7 @@ module Prosemirror
         @markdown_spec = {open:, close:, mixable:, expel_enclosing_whitespace:, escape:}.freeze
       end
 
+      # @api private
       def markdown_spec
         inherited_setting(:@markdown_spec, nil)
       end

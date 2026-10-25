@@ -30,6 +30,7 @@ module Prosemirror
         markdown.close_block(node) unless parent.content[index + 1]&.type == node.type
       end
 
+      # @api private
       def self.markdown_image(markdown, src, alt, title)
         "![#{markdown.esc(alt.to_s)}](#{markdown.url(src)}#{markdown.title(title)})"
       end

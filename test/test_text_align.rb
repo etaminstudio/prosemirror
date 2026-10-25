@@ -44,7 +44,7 @@ class TestTextAlign < Minitest::Test
       type_name :callout
       group :block
       content "inline*"
-      include Prosemirror::TextAlign
+      include Prosemirror::Extensions::TextAlign
 
       def view_template(&) = aside(style: text_align_style, &)
     end

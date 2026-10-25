@@ -120,7 +120,7 @@ It reads GitHub Flavored Markdown: tables, strikethrough, autolinks and task lis
 
 Raw HTML in Markdown goes through HTML import when the herb gem is installed, and stays as text otherwise.
 
-YAML front matter, between `---` lines at the start, is dropped. Footnotes aren't supported yet: `[^1]: Note` reads as a link definition, as in CommonMark. Markdown nested more than 1,000 levels deep raises `Prosemirror::Error`.
+YAML front matter, between `---` lines at the start, is dropped. Footnotes aren't supported yet: `[^1]: Note` reads as a link definition, as in CommonMark. Markdown nested more than 1,000 levels deep raises `Prosemirror::TooDeep`.
 
 ## Markdown export
 
@@ -182,6 +182,12 @@ The two schemas differ in more than names:
 | Link | `href`, `target`, `rel`, `class`, `title` | `href`, `title` |
 
 Each accepts the other's names on input (`strong` for `bold`, `order` for `start`), and the types that are the same in both, like paragraphs, headings and lists, are the same classes.
+
+Schemas are immutable. `with` returns a copy with more types (see [Custom nodes and marks](#custom-nodes-and-marks)), and `with_options` a copy with other options, like a stricter one for an import:
+
+```ruby
+strict = Prosemirror.schema.with_options(strict: true)
+```
 
 `text_align: true` adds Tiptap's TextAlign extension, configured for headings and paragraphs: a `textAlign` attribute, `left`, `center`, `right` or `justify`, rendered as a `text-align` style. HTML import also reads the old `align` attribute. Markdown has no syntax for it: Markdown export leaves it out. Without the option, `textAlign` is kept in `to_h`, but not rendered.
 
@@ -268,6 +274,8 @@ Prosemirror::Schema.tiptap(strict: true)  # raises Prosemirror::InvalidDocument
 
 A URL that `resolve_url` or `resolve_urls` resolves to nil, like a link to a deleted record, is reported as `Prosemirror::UnresolvedURL`, a subclass of `InvalidDocument` with the `url`, so that error trackers group dead links apart from other problems.
 
+A JSON string or Markdown nested too deeply to import raises `Prosemirror::TooDeep`, in any mode: JSON deeper than 100 levels, Markdown deeper than 1,000. A Hash nested too deeply is cut and reported instead.
+
 ## URLs
 
 Links and images allow `http`, `https`, `mailto`, `tel` and relative URLs. Change the list with `url_schemes:`, or rewrite URLs before they are checked with `resolve_url:`:
@@ -307,6 +315,10 @@ On a page of 151 nodes (8 KB of JSON: headings, paragraphs with marks and links,
 | `transform`, `check` | 0.3 ms | 15 ms |
 
 From a JSON string to HTML, a page takes 0.6 ms, about 5 times less than with prosemirror_to_html. HTML import takes about 1.5 times as long as html_to_prosemirror's, which does less: it drops text in nested marks, ignores styles, and doesn't follow the schema. See [`benchmark/run.rb`](benchmark/run.rb) to measure on your machine.
+
+## Versioning
+
+The gem follows [semantic versioning](https://semver.org). Its public API is what this README, [Node and mark types](TYPES.md) and the [cookbook](COOKBOOK.md) document: it only changes in a major version. The rest, marked `@api private` in the code, like the parsers and the schema's internal methods, can change in any version.
 
 ## Development
 

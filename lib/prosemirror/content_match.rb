@@ -6,6 +6,7 @@ module Prosemirror
   #
   # Edges go from one state to the next for a node type. Their order matters: the first generatable
   # type is used to fill required content.
+  # @api private
   class ContentMatch
     attr_reader :edges
 

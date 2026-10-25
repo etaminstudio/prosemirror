@@ -140,7 +140,7 @@ class TestSecurity < Minitest::Test
     opening = '{"type":"blockquote","content":['
     json = "#{opening * 200}{\"type\":\"paragraph\"}#{"]}" * 200}"
 
-    assert_raises(Prosemirror::InvalidDocument) { Prosemirror.parse(json) }
+    assert_raises(Prosemirror::TooDeep) { Prosemirror.parse(json) }
   end
 
   def test_cuts_deeply_nested_hashes

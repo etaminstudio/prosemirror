@@ -42,6 +42,7 @@ module Prosemirror
       end
 
       # The video, clip or channel of a Twitch URL, as `[kind, id]`, or nil.
+      # @api private
       def self.identify(src)
         return unless src.match?(URL)
 
@@ -56,6 +57,7 @@ module Prosemirror
       end
 
       # The embed URL, as Tiptap builds it, or nil.
+      # @api private
       def self.embed_url(src, parent:, autoplay: false, muted: false, time: nil)
         kind, id = identify(src)
         return unless kind
@@ -71,6 +73,7 @@ module Prosemirror
       end
 
       # The URL and options of an embed URL, as Tiptap reads them, or nil.
+      # @api private
       def self.from_embed_url(url)
         uri = URI.parse(url.to_s)
         return unless uri.is_a?(URI::HTTP)

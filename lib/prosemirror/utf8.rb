@@ -2,6 +2,7 @@
 
 module Prosemirror
   # Imported HTML, Markdown and text, as valid UTF-8.
+  # @api private
   module UTF8
     module_function
 

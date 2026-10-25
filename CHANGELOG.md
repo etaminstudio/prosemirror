@@ -1,5 +1,16 @@
 ## [Unreleased]
 
+### Public API
+
+The public API is defined for 1.0: what the README, TYPES.md and the cookbook document. The rest is marked `@api private`.
+
+- **Breaking:** `Schema#parse_html`, `#parse_markdown` and `#parse_text` are renamed `#from_html`, `#from_markdown` and `#from_text`, as `Prosemirror.from_html`, `.from_markdown` and `.from_text`, which are unchanged.
+- **Breaking:** `Prosemirror::TextAlign` moves to `Prosemirror::Extensions::TextAlign`, with its `Paragraph` and `Heading`.
+- **Breaking:** a JSON string or Markdown nested too deeply raises `Prosemirror::TooDeep`, a subclass of `Prosemirror::Error`. JSON raised `InvalidDocument`, and Markdown `Error`.
+- `Schema#with_options` is documented: a copy of the schema with other options.
+
+### Performance
+
 - Faster HTML and Markdown import: about a quarter less time, with the same results. Imports allocate a third fewer objects, so they also spend less time in garbage collection.
 
 ## [0.7.1] - 2026-10-24

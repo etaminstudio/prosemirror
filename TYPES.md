@@ -261,11 +261,11 @@ Prosemirror.schema = Prosemirror::Schema.tiptap.with(Paragraph)
 
 A subclass that declares parse rules replaces the rules of its parent. See the [cookbook](COOKBOOK.md) for more examples.
 
-With `Schema.tiptap(text_align: true)`, paragraphs and headings are `Prosemirror::TextAlign::Paragraph` and `Prosemirror::TextAlign::Heading`: subclass these to keep the alignment. Other types get it by including `Prosemirror::TextAlign`, which declares the `text_align` attribute, and rendering `text_align_style`:
+With `Schema.tiptap(text_align: true)`, paragraphs and headings are `Prosemirror::Extensions::TextAlign::Paragraph` and `Prosemirror::Extensions::TextAlign::Heading`: subclass these to keep the alignment. Other types get it by including `Prosemirror::Extensions::TextAlign`, which declares the `text_align` attribute, and rendering `text_align_style`:
 
 ```ruby
 class Callout < Prosemirror::NodeType
-  include Prosemirror::TextAlign
+  include Prosemirror::Extensions::TextAlign
   group :block
   content "inline*"
 

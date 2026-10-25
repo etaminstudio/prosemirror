@@ -9,14 +9,18 @@ module Prosemirror
     INTEGER = proc { |value| (value.is_a?(String) && value.match?(/\A\s*-?\d+\s*\z/)) ? value.to_i : value }
 
     # "bullet_list" becomes :bullet_list.
+    # @api private
     SYMBOL = proc { |value| value.is_a?(String) ? value.to_sym : value }
 
     # A frozen copy, unless the value is already frozen.
+    # @api private
     FROZEN = proc { |value| value.frozen? ? value : value.dup.freeze }
 
     # The coercions above, which don't use `self`.
+    # @api private
     PLAIN = [INTEGER, SYMBOL, FROZEN].freeze
 
+    # @api private
     def self.frozen(value)
       value.frozen? ? value : value.dup.freeze
     end

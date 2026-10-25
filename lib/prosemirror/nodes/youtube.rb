@@ -41,6 +41,7 @@ module Prosemirror
       end
 
       # The embed URL of a video or playlist, as Tiptap builds it, or nil.
+      # @api private
       def self.embed_url(src, start: 0, host: "https://www.youtube.com")
         return unless src.match?(URL)
 
@@ -53,6 +54,7 @@ module Prosemirror
       end
 
       # The video URL and start time of an embed URL, as Tiptap reads them, or nil.
+      # @api private
       def self.from_embed_url(url)
         uri = URI.parse(url.to_s)
         return unless uri.is_a?(URI::HTTP) && EMBED_HOSTS.include?(uri.host.to_s.delete_prefix("www."))
