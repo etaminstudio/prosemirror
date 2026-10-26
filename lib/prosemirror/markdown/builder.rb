@@ -13,6 +13,7 @@ module Prosemirror
     #   stays as text.
     # - Code blocks lose their final newline, as in prosemirror-markdown.
     # - YAML front matter, between `---` lines at the start, is dropped.
+    # - U+0000 is replaced with U+FFFD, as the CommonMark spec requires.
     # @api private
     class Builder
       MAX_DEPTH = HTML::Builder::MAX_DEPTH
@@ -47,7 +48,7 @@ module Prosemirror
       # A root Element holding the content.
       def call(markdown)
         self.class.load_commonmarker
-        markdown = UTF8.string(markdown)
+        markdown = UTF8.string(markdown).tr("\u0000", "\uFFFD")
         document = parse(markdown)
         return from_html(document) if raw_html?(document) && HTML::Builder.herb?
 
