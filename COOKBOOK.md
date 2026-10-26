@@ -170,3 +170,23 @@ Prosemirror::Schema.tiptap(
   end
 )
 ```
+
+## Word count
+
+Count the words of a document from its text. A hyphenated word or an elision, like `well-known` or `l’été`, counts as one word, as in word processors:
+
+```ruby
+WORD = /[[:alnum:]]+(?:[-'’][[:alnum:]]+)*/
+
+def word_count(document)
+  document.to_text.scan(WORD).size
+end
+```
+
+To leave code blocks out of the count, remove them first:
+
+```ruby
+word_count(document.transform { |node| (node.type == :code_block) ? nil : node })
+```
+
+Languages written without spaces between words, like Chinese or Japanese, need a segmenter instead.

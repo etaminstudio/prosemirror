@@ -27,6 +27,12 @@ class TestCookbook < Minitest::Test
     end
   end
 
+  WORD = /[[:alnum:]]+(?:[-'’][[:alnum:]]+)*/
+
+  def word_count(document)
+    document.to_text.scan(WORD).size
+  end
+
   class Heading < Prosemirror::Nodes::Heading
     prop :id, _String?
 
@@ -110,6 +116,15 @@ class TestCookbook < Minitest::Test
 
     assert_equal "<figure><blockquote><strong>To be </strong>or not</blockquote>" \
                  "<figcaption>Shakespeare</figcaption></figure>", render(json, schema: schema)
+  end
+
+  def test_word_count
+    document = Prosemirror.parse(doc({"type" => "heading", "attrs" => {"level" => 2}, "content" => [text("Two words")]},
+      paragraph(text("L’été, c'est la saison — "), text("well-known", [{"type" => "bold"}]), text(" in 2026!")),
+      {"type" => "codeBlock", "content" => [text("puts 1 + 2")]}))
+
+    assert_equal 12, word_count(document)
+    assert_equal 9, word_count(document.transform { |node| (node.type == :code_block) ? nil : node })
   end
 
   def test_render_your_own_components
