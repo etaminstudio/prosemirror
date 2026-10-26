@@ -200,10 +200,9 @@ module Prosemirror
       id if id.is_a?(String) && !id.empty?
     end
 
-    # "Café & co" becomes "cafe-co". Text without letters or digits becomes "section".
+    # As Rails' `parameterize`: "Café & co" becomes "cafe-co". Text without letters or digits becomes "section".
     def slug(text)
-      slug = text.unicode_normalize(:nfkd).gsub(/\p{Mn}/, "").downcase.gsub(/[^a-z0-9]+/, "-")
-      slug = slug.delete_prefix("-").delete_suffix("-")
+      slug = Slug.call(text)
       slug.empty? ? "section" : slug
     end
 
