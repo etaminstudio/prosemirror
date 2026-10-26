@@ -45,6 +45,14 @@ module Prosemirror
         inherited_setting(:@group, [])
       end
 
+      # The mark's place in its schema, as Tiptap's `priority`: marks with a higher priority come first, and
+      # marks with the same priority keep the schema's order. Defaults to 100.
+      def priority(value = nil)
+        return @priority = value if value
+
+        inherited_setting(:@priority, 100)
+      end
+
       # The mark's Markdown syntax, as prosemirror-markdown's MarkSerializerSpec:
       # - `open` and `close`: strings, or blocks called with the MarkdownSerializer, the mark, the parent node
       #   and the index of the marked node;

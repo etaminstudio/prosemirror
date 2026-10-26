@@ -5,7 +5,7 @@ require "test_helper"
 class TestTextStyle < Minitest::Test
   include TestHelpers
 
-  def schema(**) = Prosemirror::Schema.tiptap(case: :camel, text_style: true, **)
+  def schema(**) = Prosemirror::Schema.tiptap(case: :camel, **).with(Prosemirror::Marks::TextStyle)
 
   def styled(value, **attrs) = text(value, [{"type" => "textStyle", "attrs" => attrs.transform_keys(&:to_s)}])
 

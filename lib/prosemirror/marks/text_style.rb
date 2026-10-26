@@ -3,11 +3,13 @@
 module Prosemirror
   module Marks
     # Tiptap's TextStyle, with the attributes of its TextStyleKit: Color, BackgroundColor, FontFamily, FontSize
-    # and LineHeight, each rendered as a CSS property of a span. In `Schema.tiptap(text_style: true)`.
+    # and LineHeight, each rendered as a CSS property of a span. Not in `Schema.tiptap`, as in Tiptap's
+    # StarterKit: add it with `Schema.tiptap.with(Prosemirror::Marks::TextStyle)`.
     #
     # Unlike Tiptap, a span without any of these properties gets no mark, and a missing property is nil rather
     # than "". Values that could load or run something, like `url()`, are invalid.
     class TextStyle < MarkType
+      priority 101 # As in Tiptap: right after links.
       # CSS values without `url()`, `expression()`, escapes or comments, nor `;` or braces that would end the
       # declaration.
       VALUE = %r{\A(?!.*(?:url\s*\(|expression\s*\(|\\|/\*))[\w\s#%.,'"()+-]+\z}im
