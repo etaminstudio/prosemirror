@@ -137,6 +137,13 @@ class TestMarkdownImport < Minitest::Test
     assert_equal "caf\uFFFD x", Prosemirror.from_markdown("caf\xE9 *x*".dup.force_encoding("UTF-8")).text_content
   end
 
+  # As the CommonMark spec requires, for security: HTML drops it, so that the text would change once rendered.
+  def test_null_characters_are_replaced
+    document = Prosemirror.from_markdown("# a\u0000\n\n![b\u0000](c \"d\u0000\")")
+
+    assert_equal ["a\uFFFD", "b\uFFFD", "d\uFFFD"], [document.text_content, *document.to_h.dig("content", 2, "attrs").values_at("alt", "title")]
+  end
+
   def test_too_deep_nesting_raises
     error = assert_raises(Prosemirror::TooDeep) { Prosemirror.from_markdown(("*a " * 2000) + "x" + (" a*" * 2000)) }
 
