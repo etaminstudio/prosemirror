@@ -200,9 +200,14 @@ module Prosemirror
       id if id.is_a?(String) && !id.empty?
     end
 
-    # As Rails' `parameterize`: "Café & co" becomes "cafe-co". Text without letters or digits becomes "section".
+    # "Café & co" becomes "cafe-co", with Rails' `parameterize` when ActiveSupport is loaded, so that the
+    # app's I18n transliteration rules apply. Text without letters or digits becomes "section".
     def slug(text)
-      slug = Slug.call(text)
+      slug = if defined?(ActiveSupport::Inflector.parameterize)
+        ActiveSupport::Inflector.parameterize(text)
+      else
+        text.unicode_normalize(:nfkd).gsub(/\p{Mn}/, "").downcase.gsub(/[^a-z0-9]+/, "-").delete_prefix("-").delete_suffix("-")
+      end
       slug.empty? ? "section" : slug
     end
 

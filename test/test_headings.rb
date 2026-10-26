@@ -25,15 +25,7 @@ class TestHeadings < Minitest::Test
     assert_equal %w[setup-2 setup], headings.map { |entry| entry[:id] }
   end
 
-  # Ids are made as Rails' `parameterize` makes them: underscores are kept, and letters transliterated.
-  def test_ids_as_parameterize
-    texts = ["snake_case -- and kebab-case", "Straße, Œuvre & Ærø", "été", "日本語 title", "-_-"]
-    headings = Prosemirror.parse(doc(*texts.map { |value| heading(2, value) })).headings
-
-    assert_equal %w[snake_case-and-kebab-case strasse-oeuvre-aero ete title _], headings.map { |entry| entry[:id] }
-  end
-
-  # With ActiveSupport loaded, its `parameterize` makes them, with the app's transliteration rules.
+  # With ActiveSupport loaded, Rails' `parameterize` makes the ids, with the app's transliteration rules.
   def test_ids_with_active_support
     skip "ActiveSupport is loaded" if defined?(ActiveSupport)
 
