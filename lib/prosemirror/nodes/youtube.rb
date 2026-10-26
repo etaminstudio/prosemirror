@@ -20,9 +20,11 @@ module Prosemirror
       prop :width, _Integer?(1..), default: 640, &Coerce::INTEGER
       prop :height, _Integer?(1..), default: 480, &Coerce::INTEGER
 
-      # Tiptap's markup, `<div data-youtube-video><iframe>`, or an iframe of a YouTube embed URL.
+      # Tiptap's markup, `<div data-youtube-video><iframe>`, or an iframe of a YouTube embed URL. Not with a URL
+      # it can't render.
       parse_html(tag: "iframe[src]") do |element|
-        (element.parent&.key?("data-youtube-video") || Youtube.from_embed_url(element["src"])) ? {} : false
+        src = element["src"]
+        (Youtube.from_embed_url(src) || (element.parent&.key?("data-youtube-video") && Youtube.embed_url(src))) ? {} : false
       end
 
       def view_template

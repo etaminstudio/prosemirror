@@ -6,6 +6,7 @@
 - Mark types declare a `priority`, as in Tiptap: the schema orders marks by priority, then as listed, so a mark added with `with` takes its place among the others. Tiptap's link has 1000, and its TextStyle 101.
 - `to_json` raised `JSON::NestingError` for documents nested more than about 50 levels deep, and HTML and Markdown import gave documents up to about 190 levels deep, more than `Prosemirror.parse` accepts. Import now flattens nodes from 90 levels deep, and `to_json` writes documents as deep as `parse` reads: 100 levels.
 - Table cells render their `colwidth` as an attribute, as Tiptap does, so that HTML import gives it back: it was lost. An empty `colwidth` attribute imports as nil, as in Tiptap, rather than an empty array.
+- HTML import reads Tiptap's YouTube and Twitch markup only around a YouTube or Twitch URL. With another URL, it gave an embed that rendered nothing.
 
 ## [1.0.0] - 2026-10-25
 
