@@ -96,6 +96,31 @@ module Prosemirror
       Document.new(Transformer.new(schema, &).call(root), schema: schema)
     end
 
+    # A shorter document, for previews: about `length` characters of text, cut at the end of a word, with
+    # `omission` after it. It keeps its structure: the marks and blocks the text is in, and what comes before
+    # the cut. What comes after is left out. The document itself when its text is short enough.
+    #
+    #   doc.truncate(200).to_html # => "<p>The first <strong>words</strong>…</p>"
+    def truncate(length, omission: "…")
+      cut_index, cut_text = cut(length)
+      return self unless cut_index
+
+      seen = 0
+      content = Transformer.new(schema, report: false) do |node|
+        if node.text?
+          seen += 1
+          if seen - 1 < cut_index then node
+          elsif seen - 1 == cut_index then node.with(text: cut_text + omission)
+          end
+        elsif seen > cut_index && (node.content.empty? || schema.node_type(node.type)&.leaf?)
+          nil
+        else
+          node
+        end
+      end.call(root)
+      Document.new(content, schema: schema)
+    end
+
     # Raises InvalidDocument for the first problem with the schema: an unknown node or mark type, invalid
     # attributes, content that doesn't match a content expression, or marks a node doesn't allow. Returns
     # the document.
@@ -121,6 +146,33 @@ module Prosemirror
     end
 
     private
+
+    # Where to cut the text to keep about `length` characters, at the end of a word: the index of the last
+    # text node to keep, and its kept text, without trailing spaces and punctuation. Nil when the text is
+    # short enough. A first word longer than `length` is cut inside it.
+    def cut(length)
+      texts = select(&:text?)
+      remaining = length
+      texts.each_with_index do |node, index|
+        text = node.text
+        if text.length <= remaining
+          remaining -= text.length
+          next unless remaining.zero? && index < texts.size - 1
+
+          return [index, trim_end(text)]
+        end
+
+        word_end = text[0, remaining + 1].rindex(/\s/)
+        kept = word_end ? trim_end(text[0, word_end]) : ""
+        return [index, kept] unless kept.empty?
+        return [index, text[0, remaining]] if index.zero?
+
+        return [index - 1, trim_end(texts[index - 1].text)]
+      end
+      nil
+    end
+
+    def trim_end(text) = text.sub(/[[:space:][:punct:]]+\z/, "")
 
     def add_urls(urls, type, attrs)
       type&.url_attributes&.each do |name|

@@ -79,6 +79,13 @@ end
 doc.check  # raises "doc.content[0]: invalid content for blockquote: paragraph text"
 ```
 
+`truncate` gives a shorter document, for previews and listings: about that many characters of text, cut at the end of a word, followed by `omission` (`"…"` by default). It keeps the marks and blocks the text is in, and leaves out what comes after the cut. Trailing punctuation is dropped before the omission, and a block isn't started for less than one of its words. A document short enough is returned as it is.
+
+```ruby
+doc.truncate(200).to_html                 # => "<p>The first <strong>words</strong>…</p>"
+doc.truncate(200, omission: " [more]").to_text
+```
+
 ## HTML import
 
 HTML import uses [Herb](https://herb-tools.dev)'s parser, which never raises on malformed HTML. Add it to your Gemfile:

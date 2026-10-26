@@ -10,10 +10,12 @@ module Prosemirror
   # Document#check.
   # @api private
   class Transformer
-    def initialize(schema, &block)
+    # With `report: false`, the required nodes are added without reporting them, when adding them is expected.
+    def initialize(schema, report: true, &block)
       raise ArgumentError, "transform needs a block" unless block
 
       @schema = schema
+      @report = report
       @block = block
     end
 
@@ -75,7 +77,7 @@ module Prosemirror
       return nil if nodes.include?(nil)
 
       names = types.map { |type| @schema.json_type_name(type.type_name) }.join(", ")
-      @schema.report("added required #{names} to #{@schema.json_type_name(node.type)}", path: path)
+      @schema.report("added required #{names} to #{@schema.json_type_name(node.type)}", path: path) if @report
       nodes
     end
   end
