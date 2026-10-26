@@ -19,6 +19,12 @@ module Prosemirror
       prosemirror_schema.safe_url(url, @_prosemirror_urls)
     end
 
+    # The heading's id from `Document#headings`, when the document is rendered with `heading_ids: true`.
+    # Otherwise nil.
+    def heading_id
+      @_prosemirror_heading_ids&.[](node)
+    end
+
     private
 
     def render_fragment(nodes, depth)
@@ -65,6 +71,7 @@ module Prosemirror
     def prepare(component)
       component.instance_variable_set(:@_prosemirror_schema, prosemirror_schema)
       component.instance_variable_set(:@_prosemirror_urls, @_prosemirror_urls)
+      component.instance_variable_set(:@_prosemirror_heading_ids, @_prosemirror_heading_ids)
       component
     end
   end

@@ -33,17 +33,38 @@ module Prosemirror
       end.to_a
     end
 
-    # The document as HTML. The string is `html_safe` when ActiveSupport is loaded.
-    def to_html
-      html = to_phlex.call
+    # The headings, for a table of contents, with their level, their text, and an id unique in the document:
+    #
+    #   doc.headings # => [{level: 2, text: "Café & co", id: "cafe-co"}, {level: 2, text: "Café & co", id: "cafe-co-2"}]
+    #
+    # A heading's own `id`, an attribute its type declares or one the editor added, like Tiptap's UniqueID
+    # extension, is its id. Others get one from their text. `to_html(heading_ids: true)` renders the same ids.
+    def headings
+      heading_ids.map { |node, id| {level: node.attrs[:level], text: node.text_content, id:} }
+    end
+
+    # The document as HTML, with `heading_ids: true` the ids of `headings` on the headings. The string is
+    # `html_safe` when ActiveSupport is loaded.
+    def to_html(heading_ids: false)
+      html = to_phlex(heading_ids:).call
       html.respond_to?(:html_safe) ? html.html_safe : html
     end
 
     # A Phlex component rendering the document, to render it inside another Phlex component:
     #
     #   render doc.to_phlex
-    def to_phlex
-      HTMLRenderer.new(self)
+    def to_phlex(heading_ids: false)
+      HTMLRenderer.new(self, heading_ids:)
+    end
+
+    # The id of each heading node, in order. Keyed by identity: two headings with the same text are equal.
+    # @api private
+    def heading_ids
+      nodes = select { |node| schema.node_type(node.type)&.<=(Nodes::Heading) }
+      taken = nodes.filter_map { |node| own_id(node) }.to_set
+      nodes.each_with_object({}.compare_by_identity) do |node, ids|
+        ids[node] = own_id(node) || unique_id(slug(node.text_content), taken)
+      end
     end
 
     # Lets Rails render the document in ERB templates and ViewComponents: `<%= render doc %>`.
@@ -173,6 +194,31 @@ module Prosemirror
     end
 
     def trim_end(text) = text.sub(/[[:space:][:punct:]]+\z/, "")
+
+    def own_id(node)
+      id = node.attrs[:id] || node.unknown_attrs["id"]
+      id if id.is_a?(String) && !id.empty?
+    end
+
+    # "Café & co" becomes "cafe-co", with Rails' `parameterize` when ActiveSupport is loaded, so that the
+    # app's I18n transliteration rules apply. Text without letters or digits becomes "section".
+    def slug(text)
+      slug = if defined?(ActiveSupport::Inflector.parameterize)
+        ActiveSupport::Inflector.parameterize(text)
+      else
+        text.unicode_normalize(:nfkd).gsub(/\p{Mn}/, "").downcase.gsub(/[^a-z0-9]+/, "-").delete_prefix("-").delete_suffix("-")
+      end
+      slug.empty? ? "section" : slug
+    end
+
+    # The slug, or with a number after it when it's taken: "setup", "setup-2".
+    def unique_id(slug, taken)
+      id = slug
+      number = 1
+      id = "#{slug}-#{number += 1}" while taken.include?(id)
+      taken << id
+      id
+    end
 
     def add_urls(urls, type, attrs)
       type&.url_attributes&.each do |name|

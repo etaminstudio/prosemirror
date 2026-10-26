@@ -123,6 +123,7 @@ Without `view_template`, the content is rendered without a wrapping element. The
 | `render_content(nodes)` | Renders any list of nodes, with their marks, for example only some of the node's children. |
 | `safe_url(url)` | The URL after the schema's `resolve_url`, when its scheme is allowed, or nil. Use it for every URL from the document. |
 | `prosemirror_schema` | The schema of the document being rendered. |
+| `heading_id` | In a heading type, its id from `Document#headings`, when the document is rendered with `heading_ids: true`, or nil. A subclass of the built-in heading renders it with `id: heading_id`. |
 
 Phlex escapes text and attribute values, but doesn't check URLs: pass them through `safe_url`.
 

@@ -33,19 +33,19 @@ class TestCookbook < Minitest::Test
     document.to_text.scan(WORD).size
   end
 
-  class Heading < Prosemirror::Nodes::Heading
-    prop :id, _String?
-
-    def view_template(&)
-      tag(:"h#{@level}", id: @id || slug, &)
+  class TableOfContents < Phlex::HTML
+    def initialize(document)
+      @document = document
     end
 
-    private
-
-    def slug
-      slug = node.text_content.unicode_normalize(:nfkd).gsub(/\p{Mn}/, "").downcase.gsub(/[^a-z0-9]+/, "-")
-      slug = slug.delete_prefix("-").delete_suffix("-")
-      slug unless slug.empty?
+    def view_template
+      nav do
+        ul do
+          @document.headings.each do |heading|
+            li(class: "level-#{heading[:level]}") { a(href: "##{heading[:id]}") { heading[:text] } }
+          end
+        end
+      end
     end
   end
 
@@ -98,13 +98,13 @@ class TestCookbook < Minitest::Test
       render(json, schema: Prosemirror::Schema.tiptap.with(ListItem))
   end
 
-  def test_heading_anchors
-    schema = Prosemirror::Schema.tiptap.with(Heading)
-    json = doc({"type" => "heading", "attrs" => {"level" => 2}, "content" => [text("Café & co!")]},
-      {"type" => "heading", "attrs" => {"level" => 2, "id" => "custom"}, "content" => [text("Other")]},
-      {"type" => "heading", "attrs" => {"level" => 3}, "content" => [text("?")]})
+  def test_table_of_contents
+    document = Prosemirror.parse(doc({"type" => "heading", "attrs" => {"level" => 2}, "content" => [text("Setup")]},
+      {"type" => "heading", "attrs" => {"level" => 3}, "content" => [text("Setup")]}))
 
-    assert_equal '<h2 id="cafe-co">Café &amp; co!</h2><h2 id="custom">Other</h2><h3>?</h3>', render(json, schema: schema)
+    assert_equal %(<nav><ul><li class="level-2"><a href="#setup">Setup</a></li><li class="level-3"><a href="#setup-2">Setup</a></li></ul></nav>),
+      TableOfContents.new(document).call
+    assert_equal %(<h2 id="setup">Setup</h2><h3 id="setup-2">Setup</h3>), document.to_html(heading_ids: true)
   end
 
   def test_quotes_with_their_author

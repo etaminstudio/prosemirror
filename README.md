@@ -53,6 +53,15 @@ doc.select { |node| node in { type: :heading, attrs: { level: 1 } } }
 doc.content.first.text_content
 ```
 
+`headings` lists the headings, for a table of contents, with an id unique in the document. `to_html(heading_ids: true)`, or `to_phlex(heading_ids: true)`, renders the same ids on the headings, so the links work:
+
+```ruby
+doc.headings  # => [{level: 2, text: "Café & co", id: "cafe-co"}, {level: 3, text: "Setup", id: "setup"}]
+doc.to_html(heading_ids: true)  # => "<h2 id=\"cafe-co\">Café &amp; co</h2>…"
+```
+
+Ids come from the heading's text, with a number when two are the same (`setup-2`). A heading's own id, an attribute its type declares or one the editor saved, like Tiptap's UniqueID extension, is kept.
+
 ## Transforming documents
 
 `transform` builds a new document from a block called with each node. The block returns the node to keep, another node, an array of nodes to put in its place, or nil to remove it:

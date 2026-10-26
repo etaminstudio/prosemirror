@@ -9,7 +9,7 @@ module Prosemirror
       prop :level, _Integer(1..6), default: 1, &Coerce::INTEGER
       (1..6).each { |level| parse_html tag: "h#{level}", attrs: {level:} }
 
-      def view_template(&) = tag(:"h#{@level}", &)
+      def view_template(&) = tag(:"h#{@level}", id: heading_id, &)
 
       def to_markdown(markdown, _parent, _index)
         markdown.write("#{"#" * @level} ")

@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 - `Document#truncate(length, omission: "…")` gives a shorter document, for previews: about that many characters of text, cut at the end of a word, keeping the marks and blocks the text is in.
+- `Document#headings` lists the headings, for a table of contents, with an id unique in the document, made from their text (with Rails' `parameterize` when ActiveSupport is loaded), and `to_html(heading_ids: true)` renders the same ids on them. A heading's own id is kept. The cookbook's heading anchors recipe becomes a table of contents recipe.
 - Tiptap's TextStyle mark, `Prosemirror::Marks::TextStyle`, with the attributes of its TextStyleKit (`color`, `backgroundColor`, `fontFamily`, `fontSize`, `lineHeight`), rendered as a span's `style` and imported from it. As in Tiptap, it isn't in the default schema: add it with `Schema.tiptap.with(Prosemirror::Marks::TextStyle)`. Unsafe CSS values, like `url()`, are invalid.
 - Mark types declare a `priority`, as in Tiptap: the schema orders marks by priority, then as listed, so a mark added with `with` takes its place among the others. Tiptap's link has 1000, and its TextStyle 101.
 
