@@ -15,6 +15,22 @@ class TestSecurity < Minitest::Test
     assert_equal %(<img src="a.png" alt="&quot;><script>alert(1)</script>">), render(json)
   end
 
+  # Phlex only escapes `"` in attribute values, so that a browser read `&amp;` in a title as `&`.
+  def test_escapes_ampersands_in_attribute_values
+    value = "a &amp; b &#0 &copy"
+    link = {"type" => "link", "attrs" => {"href" => "/", "target" => value, "rel" => value, "class" => value, "title" => value}}
+    json = doc(paragraph(text("l", [link]), {"type" => "mention", "attrs" => {"id" => value, "label" => value}}),
+      {"type" => "image", "attrs" => {"src" => "/i.png", "alt" => value, "title" => value}},
+      {"type" => "heading", "attrs" => {"level" => 2, "id" => value}, "content" => [text("h")]})
+    document = Prosemirror.parse(json)
+    again = Prosemirror.from_html(document.to_html).to_h
+
+    assert_equal [value] * 4, again.dig("content", 0, "content", 0, "marks", 0, "attrs").values_at("target", "rel", "class", "title")
+    assert_equal [value] * 2, again.dig("content", 0, "content", 1, "attrs").values_at("id", "label")
+    assert_equal [value] * 2, again.dig("content", 1, "attrs").values_at("alt", "title")
+    assert_includes document.to_html(heading_ids: true), %(<h2 id="a &amp;amp; b &amp;#0 &amp;copy">)
+  end
+
   # GHSA-6gj3-5qf2-wwvv: attribute names came from the document.
   def test_ignores_attribute_names_from_the_document
     json = doc({"type" => "heading", "attrs" => {"level" => 1, "onmouseover" => "alert(1)"},

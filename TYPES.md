@@ -124,8 +124,9 @@ Without `view_template`, the content is rendered without a wrapping element. The
 | `safe_url(url)` | The URL after the schema's `resolve_url`, when its scheme is allowed, or nil. Use it for every URL from the document. |
 | `prosemirror_schema` | The schema of the document being rendered. |
 | `heading_id` | In a heading type, its id from `Document#headings`, when the document is rendered with `heading_ids: true`, or nil. A subclass of the built-in heading renders it with `id: heading_id`. |
+| `attribute_text(value)` | Text from the document for an attribute value, like a title, with `&` escaped. |
 
-Phlex escapes text and attribute values, but doesn't check URLs: pass them through `safe_url`.
+Phlex escapes text, but in attribute values only `"`: a browser would read `&amp;` in a title as `&`. Pass text from the document through `attribute_text`, and URLs through `safe_url`, which also checks them.
 
 ## Parse rules
 

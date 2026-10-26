@@ -15,7 +15,7 @@ module Prosemirror
 
       def view_template
         src = safe_url(@src)
-        img(src: src, alt: @alt, title: @title, width: @width, height: @height) if src
+        img(src: src, alt: attribute_text(@alt), title: attribute_text(@title), width: @width, height: @height) if src
       end
 
       # `![alt](src "title")`, or HTML with `html: true` when it has dimensions. Images in a row share a line,

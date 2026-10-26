@@ -16,7 +16,8 @@ module Prosemirror
       parse_html tag: %(span[data-type="mention"])
 
       def view_template
-        span(data: {type: "mention", id: @id, label: @label, mention_suggestion_char: @mention_suggestion_char}) do
+        span(data: {type: "mention", id: attribute_text(@id), label: attribute_text(@label),
+                    mention_suggestion_char: attribute_text(@mention_suggestion_char)}) do
           self.class.display_text(node.attrs)
         end
       end

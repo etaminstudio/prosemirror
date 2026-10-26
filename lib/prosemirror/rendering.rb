@@ -22,7 +22,13 @@ module Prosemirror
     # The heading's id from `Document#headings`, when the document is rendered with `heading_ids: true`.
     # Otherwise nil.
     def heading_id
-      @_prosemirror_heading_ids&.[](node)
+      attribute_text(@_prosemirror_heading_ids&.[](node))
+    end
+
+    # Text for an attribute value, like a title: Phlex only escapes `"` in attribute values, so a browser
+    # would read `&amp;` in the text as `&`. `safe_url` and `heading_id` already give attribute values.
+    def attribute_text(value)
+      (value.is_a?(String) && value.include?("&")) ? value.gsub("&", "&amp;") : value
     end
 
     private

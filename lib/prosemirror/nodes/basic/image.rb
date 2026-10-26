@@ -15,7 +15,7 @@ module Prosemirror
 
         def view_template
           src = safe_url(@src)
-          img(src: src, alt: @alt, title: @title) if src
+          img(src: src, alt: attribute_text(@alt), title: attribute_text(@title)) if src
         end
 
         def to_markdown(markdown, _parent, _index)

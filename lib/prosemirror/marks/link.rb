@@ -18,7 +18,8 @@ module Prosemirror
         href = safe_url(@href)
         return yield unless href
 
-        a(href: href, target: @target, rel: @rel, class: @css_class, title: @title, &)
+        a(href: href, target: attribute_text(@target), rel: attribute_text(@rel), class: attribute_text(@css_class),
+          title: attribute_text(@title), &)
       end
     end
   end
