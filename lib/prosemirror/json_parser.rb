@@ -7,6 +7,9 @@ module Prosemirror
   # @api private
   class JSONParser
     MAX_DEPTH = 100
+    # The JSON nesting of a document MAX_DEPTH deep: a node at that depth is an object nested 2 × MAX_DEPTH + 1
+    # deep, and its marks, a mark, the mark's attributes and an array in them add 4.
+    MAX_NESTING = (MAX_DEPTH * 2) + 5
     EMPTY = [].freeze
 
     def initialize(schema)
@@ -19,7 +22,7 @@ module Prosemirror
 
     def parse(json)
       # Frozen strings go into nodes without being copied.
-      hash = json.is_a?(String) ? JSON.parse(json, max_nesting: (MAX_DEPTH * 2) + 2, freeze: true) : json
+      hash = json.is_a?(String) ? JSON.parse(json, max_nesting: MAX_NESTING, freeze: true) : json
       raise ArgumentError, "expected a Hash or a JSON String, got #{json.class}" unless hash.is_a?(Hash)
 
       @path = ["doc"]

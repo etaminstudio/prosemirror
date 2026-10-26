@@ -11,6 +11,11 @@ Rake::TestTask.new(:test) do |t|
   t.warning = false
 end
 
+desc "Import random HTML and Markdown, for SECONDS (60 by default), and report failures"
+task :fuzz do
+  ruby "-Ilib", "test/fuzz.rb"
+end
+
 require "standard/rake"
 
 task default: %i[test standard]

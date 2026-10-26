@@ -87,6 +87,15 @@ class TestHTMLImport < Minitest::Test
     assert_equal "deep", document.text_content
   end
 
+  # Nodes nested deeper than JSON documents can be are flattened, so that the document can be saved and parsed again.
+  def test_deep_nodes_are_flattened
+    ["<td>" * 64, "<td" * 64, "<blockquote>" * 200, "<ul><li>" * 100].each do |html|
+      document = Prosemirror.from_html(html + "deep")
+
+      assert_equal document, Prosemirror.parse(document.to_json)
+    end
+  end
+
   # Herb stops after a second by default, and returns what it parsed so far: an 11 MB document came out empty.
   def test_herb_has_no_time_limit
     Prosemirror::HTML::Builder.load_herb
