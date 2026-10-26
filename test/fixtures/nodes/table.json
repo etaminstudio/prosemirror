@@ -98,6 +98,6 @@
       }
     ]
   },
-  "html": "<table><tbody><tr><th><p>Header</p></th><th colspan=\"2\"><p>Wide</p></th></tr><tr><td rowspan=\"2\"><p>A</p></td><td><p>B</p></td><td><p>C</p></td></tr></tbody></table>",
+  "html": "<table><tbody><tr><th><p>Header</p></th><th colspan=\"2\"><p>Wide</p></th></tr><tr><td rowspan=\"2\" colwidth=\"100\"><p>A</p></td><td><p>B</p></td><td><p>C</p></td></tr></tbody></table>",
   "text": "Header\n\nWide\n\nA\n\nB\n\nC"
 }
