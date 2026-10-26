@@ -19,6 +19,11 @@ module Prosemirror
     IGNORE_TAGS = %w[head noscript object script style title].to_set.freeze
     LIST_TAGS = %w[ol ul].to_set.freeze
 
+    # How many nodes can be open before elements stop opening new ones, and are unwrapped like elements without
+    # a rule, so that documents aren't deeper than JSON documents can be. The rest leaves room for the nodes
+    # that wrap content where it doesn't fit, like a table's row and cell.
+    MAX_OPEN = JSONParser::MAX_DEPTH - 10
+
     PRESERVE_WS = 1
     PRESERVE_WS_FULL = 2
 
@@ -284,7 +289,7 @@ module Prosemirror
 
         if rule ? rule.ignore : IGNORE_TAGS.include?(dom.name)
           ignore_fallback(dom, marks)
-        elsif !rule || rule.skip || rule.close_parent
+        elsif !rule || rule.skip || rule.close_parent || (rule.node? && !match.type.leaf? && @nodes.size >= MAX_OPEN)
           add_element_without_rule(dom, marks, rule, top)
         else
           inner_marks = read_styles(dom, marks)

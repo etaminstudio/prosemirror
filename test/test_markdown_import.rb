@@ -116,6 +116,13 @@ class TestMarkdownImport < Minitest::Test
     assert_equal "deep", Prosemirror.from_markdown(("> " * 300) + "deep").text_content
   end
 
+  # Nodes nested deeper than JSON documents can be are flattened, so that the document can be saved and parsed again.
+  def test_deep_nodes_are_flattened
+    document = Prosemirror.from_markdown(("> " * 300) + "deep")
+
+    assert_equal document, Prosemirror.parse(document.to_json)
+  end
+
   def test_front_matter_is_dropped
     assert_equal [{"type" => "heading", "attrs" => {"level" => 1}, "content" => [{"type" => "text", "text" => "Body"}]}],
       content("---\ntitle: Hello\ntags: [a]\n---\n\n# Body\n")
