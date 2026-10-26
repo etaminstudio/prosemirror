@@ -10,7 +10,7 @@ module Prosemirror
       prop :colspan, _Integer(1..), default: 1, &Coerce::INTEGER
       prop :rowspan, _Integer(1..), default: 1, &Coerce::INTEGER
       prop :colwidth, _Array?(_Integer(1..)),
-        parse_html: ->(element) { element["colwidth"]&.split(",")&.map(&:to_i) }
+        parse_html: ->(element) { element["colwidth"].then { |value| value.split(",").map(&:to_i) unless value.to_s.empty? } }
       # From the `text-align` style, or the old `align` attribute.
       prop :align, _Union?(*ALIGNMENTS), parse_html: lambda { |element|
         (element.style["text-align"] || element["align"]).to_s.strip.downcase.then { |value| value if ALIGNMENTS.include?(value) }
@@ -26,7 +26,7 @@ module Prosemirror
 
       def cell_attributes
         {colspan: (@colspan unless @colspan == 1), rowspan: (@rowspan unless @rowspan == 1),
-         style: @align && "text-align: #{@align}"}
+         colwidth: @colwidth&.join(","), style: @align && "text-align: #{@align}"}
       end
     end
   end
