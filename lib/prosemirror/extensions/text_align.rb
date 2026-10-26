@@ -27,7 +27,7 @@ module Prosemirror
       class Heading < Nodes::Heading
         include TextAlign
 
-        def view_template(&) = tag(:"h#{@level}", style: text_align_style, &)
+        def view_template(&) = tag(:"h#{@level}", id: heading_id, style: text_align_style, &)
       end
     end
   end

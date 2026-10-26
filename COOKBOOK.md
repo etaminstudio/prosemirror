@@ -65,30 +65,32 @@ end
 
 Items with several paragraphs or a nested list, and items left empty, render as before.
 
-## Heading anchors
+## Table of contents
 
-To link to a section, give each heading an `id` made from its text, unless the document already has one:
+List the headings as links, and render the document with the same ids on its headings:
 
 ```ruby
-class Heading < Prosemirror::Nodes::Heading
-  prop :id, _String?
-
-  def view_template(&)
-    tag(:"h#{@level}", id: @id || slug, &)
+class TableOfContents < Phlex::HTML
+  def initialize(document)
+    @document = document
   end
 
-  private
-
-  # "Café & co" becomes "cafe-co". In Rails, `node.text_content.parameterize` does the same.
-  def slug
-    slug = node.text_content.unicode_normalize(:nfkd).gsub(/\p{Mn}/, "").downcase.gsub(/[^a-z0-9]+/, "-")
-    slug = slug.delete_prefix("-").delete_suffix("-")
-    slug unless slug.empty?
+  def view_template
+    nav do
+      ul do
+        @document.headings.each do |heading|
+          li(class: "level-#{heading[:level]}") { a(href: "##{heading[:id]}") { heading[:text] } }
+        end
+      end
+    end
   end
 end
+
+render TableOfContents.new(doc)
+render doc.to_phlex(heading_ids: true)
 ```
 
-A node doesn't see the rest of the document, so two headings with the same text get the same `id`.
+Ids are unique in the document: two headings with the same text get `setup` and `setup-2`.
 
 ## Quotes with their author
 
