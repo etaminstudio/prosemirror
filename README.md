@@ -353,6 +353,14 @@ BUNDLE_GEMFILE=benchmark/Gemfile bundle install
 BUNDLE_GEMFILE=benchmark/Gemfile bundle exec ruby benchmark/run.rb
 ```
 
+`rake fuzz` imports random HTML and Markdown, made by mutating the test fixtures, for a minute. It reports inputs that raise, give an invalid document, or don't survive rendering and importing again, each shrunk to a small example to add as a fixture:
+
+```sh
+SECONDS=600 bundle exec rake fuzz   # longer
+SEED=1234 bundle exec rake fuzz     # repeat a run
+STRICT=1 bundle exec rake fuzz      # a round trip must give the same document
+```
+
 To install this gem onto your local machine, run `bundle exec rake install`.
 
 To release a new version, update the version number in `version.rb` and the changelog, and merge them into main. Then tag the version and push the tag:
