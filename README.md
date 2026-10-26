@@ -132,7 +132,7 @@ doc.to_markdown(html: true)  # underline, highlight, subscript, superscript and 
 ```
 
 - Text is escaped, so that it reads back as text: `*`, `_`, `[`, a `#` or `-` that would start a block, HTML-like `<b>`, and URLs that GitHub would turn into links.
-- Markdown has no syntax for underline, highlight, subscript, superscript, image sizes or mentions: by default, only their text or image is written, like `@Ada` for a mention. With `html: true`, they are written as HTML.
+- Markdown has no syntax for underline, highlight, subscript, superscript, text styles, image sizes or mentions: by default, only their text or image is written, like `@Ada` for a mention. With `html: true`, they are written as HTML.
 - Emphasis that CommonMark can't write where it is, like bold on a comma between two letters, is dropped and its text kept.
 - Tables are written as GFM tables. A cell's paragraphs and line breaks are joined with `<br>`, and its other blocks, like lists, are written as HTML.
 - Details are written as `<details>` HTML, as on GitHub, with their content in Markdown.
@@ -193,6 +193,12 @@ strict = Prosemirror.schema.with_options(strict: true)
 
 ```ruby
 Prosemirror::Schema.tiptap(text_align: true)
+```
+
+Tiptap's TextStyle mark isn't in its StarterKit, nor in `Schema.tiptap`: add `Prosemirror::Marks::TextStyle`, with the attributes of its TextStyleKit: `color`, `backgroundColor`, `fontFamily`, `fontSize` and `lineHeight`, rendered as a span's `style`. HTML import reads them from spans' styles, merging nested spans as Tiptap does. Unlike Tiptap, a span without any of them gets no mark, and values that could load or run something, like `url()`, are invalid.
+
+```ruby
+Prosemirror::Schema.tiptap.with(Prosemirror::Marks::TextStyle)
 ```
 
 YouTube and Twitch embeds store the video's URL in `src`, and render an iframe of its embed URL, built from the video's id: other URLs render nothing. HTML import reads Tiptap's markup, and also iframes of embed URLs without it. Twitch only plays embeds on the domain they name, so set it in a subclass, as Tiptap's `parent` option. YouTube's `nocookie` option is a subclass too:

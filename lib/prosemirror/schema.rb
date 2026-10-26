@@ -39,7 +39,7 @@ module Prosemirror
           Nodes::TaskItem, Nodes::Details, Nodes::DetailsSummary, Nodes::DetailsContent, Nodes::Youtube,
           Nodes::Twitch, Nodes::Mention
         ],
-        # In Tiptap's order, which sorts and nests marks.
+        # In Tiptap's order, which sorts and nests marks: by priority, then as listed.
         marks: [
           Marks::Link, Marks::Bold, Marks::Code, Marks::Italic, Marks::Strike, Marks::Underline,
           Marks::Subscript, Marks::Superscript, Marks::Highlight
@@ -62,6 +62,8 @@ module Prosemirror
     end
 
     def after_initialize
+      # Marks sort and nest in this order, so a mark added with `with` takes its place by priority.
+      @marks = @marks.each_with_index.sort_by { |type, index| [-type.priority, index] }.map(&:first).freeze
       @node_lookup = lookup(@nodes)
       @mark_lookup = lookup(@marks)
       @node_names = spellings(@node_lookup)

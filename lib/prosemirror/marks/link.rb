@@ -4,6 +4,7 @@ module Prosemirror
   module Marks
     # Tiptap's link. Without an allowed `href`, its text is rendered without a link.
     class Link < MarkType
+      priority 1000 # As in Tiptap: the outermost mark.
       prop :href, _String(length: 1..), url: true
       prop :target, _String?
       prop :rel, _String?

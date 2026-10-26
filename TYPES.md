@@ -60,8 +60,9 @@ Type names are snake_case Symbols in Ruby. On input, camelCase works too (`image
 | `excludes "_"` | marks of the same type | The marks this one can't be combined with: names or groups, `"_"` for all. A link excludes other links, and Tiptap's `code` excludes all marks. |
 | `spanning false` | true | Render one element per text node, instead of one for adjacent nodes with the same mark. |
 | `code` | false | The mark holds code, as ProseMirror's `code`. Not used by this gem yet. |
+| `priority 101` | 100 | The mark's place in the schema, as Tiptap's `priority`: higher first. Tiptap's link has 1000, and its TextStyle 101. |
 
-The order of marks in the schema sorts the marks of a node, and nests their elements: the first mark is the outermost element.
+The order of marks in the schema sorts the marks of a node, and nests their elements: the first mark is the outermost element. Marks are ordered by priority, then in the order they're listed and added with `with`, so a mark added with `with` takes the same place as in Tiptap when it declares Tiptap's priority.
 
 ## Content expressions
 

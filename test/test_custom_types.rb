@@ -114,6 +114,22 @@ class TestCustomTypes < Minitest::Test
     assert_raises(ArgumentError) { Prosemirror::Schema.tiptap.with(String) }
   end
 
+  # Marks added with `with` take their place by priority, as in Tiptap: higher first, then in order.
+  def test_mark_priority
+    mark = lambda do |name, priority = nil|
+      Class.new(Prosemirror::MarkType) do
+        type_name name
+        priority(priority) if priority
+      end
+    end
+    schema = Prosemirror::Schema.tiptap.with(mark.call(:kbd), mark.call(:pinned, 500))
+
+    assert_equal %i[link pinned bold code italic strike underline subscript superscript highlight kbd], schema.marks.map(&:type_name)
+    assert_equal schema.marks, schema.with_options(strict: true).marks
+    assert_equal %w[pinned kbd],
+      schema.parse(doc(paragraph(text("a", [{"type" => "kbd"}, {"type" => "pinned"}])))).to_h.dig("content", 0, "content", 0, "marks").map { |m| m["type"] }
+  end
+
   def test_default_schema
     original = Prosemirror.schema
     Prosemirror.schema = Prosemirror::Schema.tiptap.with(ImageBlock)
