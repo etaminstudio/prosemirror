@@ -143,6 +143,16 @@ class TestSecurity < Minitest::Test
     assert_raises(Prosemirror::TooDeep) { Prosemirror.parse(json) }
   end
 
+  # The JSON gem's default limit of 100 nested arrays and objects is about 50 nodes.
+  def test_json_of_documents_as_deep_as_allowed
+    json = {"type" => "text", "text" => "deep", "marks" => [{"type" => "link", "attrs" => {"href" => "/"}}]}
+    json = {"type" => "paragraph", "content" => [json]}
+    98.times { json = {"type" => "blockquote", "content" => [json]} }
+    document = Prosemirror.parse({"type" => "doc", "content" => [json]})
+
+    assert_equal document, Prosemirror.parse(document.to_json)
+  end
+
   def test_cuts_deeply_nested_hashes
     json = {"type" => "paragraph"}
     200.times { json = {"type" => "blockquote", "content" => [json]} }

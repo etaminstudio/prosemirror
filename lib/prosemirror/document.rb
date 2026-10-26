@@ -92,8 +92,9 @@ module Prosemirror
       to_h
     end
 
-    def to_json(*)
-      to_h.to_json(*)
+    # As deep as `Prosemirror.parse` accepts: the JSON gem's default limit allows about 50 nodes.
+    def to_json(*args)
+      args.empty? ? JSON.generate(to_h, max_nesting: JSONParser::MAX_NESTING) : to_h.to_json(*args)
     end
 
     def text_content
