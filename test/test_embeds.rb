@@ -73,6 +73,13 @@ class TestEmbeds < Minitest::Test
       Prosemirror.from_html(html, schema:).to_h["content"]
   end
 
+  # Tiptap's markup around another URL isn't an embed: it would render nothing.
+  def test_tiptaps_markup_without_a_video_url
+    html = %(<div data-youtube-video><iframe src="https://example.com/"></iframe></div><div data-twitch-video><iframe src="p"></iframe></div>)
+
+    assert_equal [{"type" => "paragraph"}], Prosemirror.from_html(html, schema:).to_h["content"]
+  end
+
   # Tiptap keeps `"100%"`: HTML's `width` only takes integers.
   def test_dimensions_are_integers
     html = %(<div data-youtube-video><iframe src="https://www.youtube.com/embed/abc" width="100%"></iframe></div>)

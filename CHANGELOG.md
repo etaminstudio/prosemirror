@@ -7,6 +7,7 @@
 - `to_json` raised `JSON::NestingError` for documents nested more than about 50 levels deep, and HTML and Markdown import gave documents up to about 190 levels deep, more than `Prosemirror.parse` accepts. Import now flattens nodes from 90 levels deep, and `to_json` writes documents as deep as `parse` reads: 100 levels.
 - Table cells render their `colwidth` as an attribute, as Tiptap does, so that HTML import gives it back: it was lost. An empty `colwidth` attribute imports as nil, as in Tiptap, rather than an empty array.
 - Markdown import replaces U+0000 with U+FFFD, as the CommonMark spec requires. It was kept, and dropped once the document was rendered to HTML.
+- HTML import reads Tiptap's YouTube and Twitch markup only around a YouTube or Twitch URL. With another URL, it gave an embed that rendered nothing.
 
 ## [1.0.0] - 2026-10-25
 

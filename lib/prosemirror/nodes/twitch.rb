@@ -20,9 +20,11 @@ module Prosemirror
       prop :muted, _Boolean, default: false, parse_html: ->(element) { Twitch.from_embed_url(element["src"])&.fetch(:muted) }
       prop :time, _String?, parse_html: ->(element) { Twitch.from_embed_url(element["src"])&.fetch(:time) }
 
-      # Tiptap's markup, `<div data-twitch-video><iframe>`, or an iframe of a Twitch embed URL.
+      # Tiptap's markup, `<div data-twitch-video><iframe>`, or an iframe of a Twitch embed URL. Not with a URL
+      # it can't render.
       parse_html(tag: "iframe[src]") do |element|
-        (element.parent&.key?("data-twitch-video") || Twitch.from_embed_url(element["src"])) ? {} : false
+        src = element["src"]
+        (Twitch.from_embed_url(src) || (element.parent&.key?("data-twitch-video") && Twitch.identify(src))) ? {} : false
       end
 
       def view_template
