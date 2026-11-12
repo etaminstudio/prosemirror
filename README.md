@@ -1,6 +1,6 @@
 # ProseMirror
 
-Render [ProseMirror](https://prosemirror.net) and [Tiptap](https://tiptap.dev) documents to HTML and text, and import HTML, Markdown and text into them, in Ruby.
+Render [ProseMirror](https://prosemirror.net) and [Tiptap](https://tiptap.dev) documents to HTML, Markdown and text, and import HTML, Markdown and text into them, in Ruby.
 
 - HTML is built with [Phlex](https://www.phlex.fun) and escaped as it is written.
 - Attributes are typed with [Literal](https://literal.fun).
@@ -11,7 +11,7 @@ This gem replaces [prosemirror_to_html](https://github.com/etaminstudio/prosemir
 
 ## Why
 
-ProseMirror editors store documents as JSON. Ruby apps need to render this JSON to HTML, extract its text, and import old HTML or Markdown content. This gem does all of it with one schema: a custom type is declared once, and renders, imports and exports the same way.
+ProseMirror editors store documents as JSON. Ruby apps need to render this JSON to HTML or Markdown, extract its text, and import old HTML or Markdown content. This gem does all of it with one schema: a custom type is declared once, and renders, imports and exports the same way.
 
 ## Installation
 
