@@ -1,9 +1,9 @@
 PATH
   remote: ..
   specs:
-    prosemirror (1.1.0)
+    prosemirror (1.1.1)
       literal (~> 1.9)
-      phlex (~> 2.4)
+      phlex (~> 2.4, >= 2.4.2)
       zeitwerk (~> 2.6)
 
 GEM
@@ -50,7 +50,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.4-x86_64-linux-musl)
       racc (~> 1.4)
-    phlex (2.4.1)
+    phlex (2.4.2)
       refract (~> 1.0)
       zeitwerk (~> 2.7)
     prism (2.0.0-aarch64-linux-gnu)
@@ -121,7 +121,7 @@ CHECKSUMS
   nokogiri (1.19.4-x86_64-darwin) sha256=7fd17057d3e1f00e9954a74b3cd76595d3d4a5ef233b7ed9599047c204f70551
   nokogiri (1.19.4-x86_64-linux-gnu) sha256=379fae440b28915e3f19d752ce2dcf8465ed2b2fbefd2a7ca0dd497bc981a06a
   nokogiri (1.19.4-x86_64-linux-musl) sha256=17dfb7c1fa194ae02fbf7c51a7afc8d278045ab3fdacfd86f91d02d7b274470b
-  phlex (2.4.1) sha256=e596717fbfe38b5271840266758779ebe75092e02629f0c170287e6290a70b12
+  phlex (2.4.2) sha256=383b7082a84a0cb88efb672c53985567535237a35f1e047ccab564b3b8e8e206
   prism (2.0.0-aarch64-linux-gnu) sha256=7df16d47ce2b1f771eaf63137213d84e98495e3f325043bcc09202d7e5730900
   prism (2.0.0-aarch64-linux-musl) sha256=3140d10be2ea36122af23c1b8af946ca2f09c8f9e7b13f11d77ae13fe68e2681
   prism (2.0.0-arm-linux-gnu) sha256=2712f462524a202f98c1fd0a59a609fa94937aa53347371726f72a7a8309a13c
@@ -130,7 +130,7 @@ CHECKSUMS
   prism (2.0.0-x86_64-darwin) sha256=9600064b7637a867bdb788dd45d5f5366d4acff2d0884cfe936463d7ab4a250d
   prism (2.0.0-x86_64-linux-gnu) sha256=e0b4830c94d9dc59e80ad34d98096797f514c9e097b677c4947d89598c7f5cd1
   prism (2.0.0-x86_64-linux-musl) sha256=69a76ee43c2a671dca88d97658a619b1bd4ec743dd903ccded70fd8f7897eec5
-  prosemirror (1.1.0)
+  prosemirror (1.1.1)
   prosemirror_to_html (0.4.1) sha256=e77c7f8992b60613d0ea911385c42ac1980b6969d53fb8524fa2130042d49e20
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
   refract (1.1.0) sha256=ee3b9627e39f7692831101e2fedd73e0d09a592ff5d5c05f171d14211fc7a9c7

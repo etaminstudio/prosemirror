@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [1.1.1] - 2026-11-23
+
 - **Security:** requires Phlex 2.4.2 or later, which fixes two XSS protection bypasses ([GHSA-4859-2mvh-r787](https://github.com/yippee-fun/phlex/security/advisories/GHSA-4859-2mvh-r787), [GHSA-fxxw-9rf3-3f2w](https://github.com/yippee-fun/phlex/security/advisories/GHSA-fxxw-9rf3-3f2w)) and a memory exhaustion ([GHSA-jjpx-qcfc-pqwp](https://github.com/yippee-fun/phlex/security/advisories/GHSA-jjpx-qcfc-pqwp)). Phlex 2.4.2 also escapes `<` and `>` in attribute values, so the HTML they render in differs, but not what it means.
 
 ## [1.1.0] - 2026-10-26
