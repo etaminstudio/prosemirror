@@ -35,6 +35,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "literal", "~> 1.9"
-  spec.add_dependency "phlex", "~> 2.4"
+  # 2.4.2 fixes XSS protection bypasses (GHSA-4859-2mvh-r787, GHSA-fxxw-9rf3-3f2w) and a memory
+  # exhaustion (GHSA-jjpx-qcfc-pqwp)
+  spec.add_dependency "phlex", "~> 2.4", ">= 2.4.2"
   spec.add_dependency "zeitwerk", "~> 2.6"
 end
