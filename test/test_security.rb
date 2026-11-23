@@ -12,7 +12,7 @@ class TestSecurity < Minitest::Test
   def test_escapes_attribute_values
     json = doc({"type" => "image", "attrs" => {"src" => "a.png", "alt" => %("><script>alert(1)</script>)}})
 
-    assert_equal %(<img src="a.png" alt="&quot;><script>alert(1)</script>">), render(json)
+    assert_equal %(<img src="a.png" alt="&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;">), render(json)
   end
 
   # GHSA-6gj3-5qf2-wwvv: attribute names came from the document.
